@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>GitBacket 安装部署</title>
+    <url>/2019/11/05/GitBacket-introduction/</url>
+    <content><![CDATA[<h1 id="GitBacket-介绍"><a href="#GitBacket-介绍" class="headerlink" title="GitBacket 介绍"></a>GitBacket 介绍</h1><ul>
+<li>GitHub 地址<br>gitbucket/gitbucket: A Git platform powered by Scala with easy installation, high extensibility &amp; GitHub API compatibility<br><a href="https://github.com/gitbucket/gitbucket" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket</a> </li>
+</ul>]]></content>
+      <categories>
+        <category>职业技能</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>在线协同电子表格 EtherCalc 安装部署详细步骤</title>
+    <url>/2019/11/04/EtherCalc-introduction/</url>
+    <content><![CDATA[<h1 id="EtherCalc-介绍"><a href="#EtherCalc-介绍" class="headerlink" title="EtherCalc 介绍"></a>EtherCalc 介绍</h1><p>EtherCalc 可以满足多人在线协同编辑表格的需求，安装简单，使用方便。<br>本文主要是介绍在 CentOS 7 中安装 EtherCalc 的详细步骤</p><h2 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h2><p>EtherCalc: 多人即时协作电子表格<br><a href="http://cn.ethercalc.net/" target="_blank" rel="noopener">http://cn.ethercalc.net/</a> </p><h2 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h2><p>audreyt/ethercalc: Node.js port of Multi-user SocialCalc<br><a href="https://github.com/audreyt/ethercalc" target="_blank" rel="noopener">https://github.com/audreyt/ethercalc</a> </p><a id="more"></a>
+
+
+<h1 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="安装 node.js"></a>安装 node.js</h1><p>EtherCalc 使用 <code>npm</code>直接安装，所以需要先安装 node.js</p>
+<ul>
+<li>下载<br>node.js 下载地址：<br>Node.js 中文网：<a href="http://nodejs.cn/download/" target="_blank" rel="noopener">http://nodejs.cn/download/</a></li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20191105212020245.png" alt></p>
+<ul>
+<li>上传文件<br>创建 node.js 的存放路径</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/app/</span><br><span class="line">mkdir nodejs</span><br></pre></td></tr></table></figure>
+<p>然后上传刚下载的文件到 <code>/home/app/nodejs</code>目录中</p>
+<ul>
+<li>解压</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tar -xvf node-v10.16.0-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建软链接</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ln -s /home/app/nodejs/node-v10.16.0-linux-x64/bin/npm /usr/<span class="built_in">local</span>/bin/</span><br><span class="line">ln -s /home/app/nodejs/node-v10.16.0-linux-x64/bin/node /usr/<span class="built_in">local</span>/bin/</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看版本信息<br><img src="https://img-blog.csdnimg.cn/20191105212919381.png" alt></li>
+</ul>
+<h1 id="安装-EtherCalc"><a href="#安装-EtherCalc" class="headerlink" title="安装 EtherCalc"></a>安装 EtherCalc</h1><ul>
+<li>安装</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g ethercalc</span><br></pre></td></tr></table></figure>
+
+<p>创建软连接</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ln -s /home/app/nodejs/node-v10.16.0-linux-x64/bin/ethercalc /usr/<span class="built_in">local</span>/bin/</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动<br>创建启动脚本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/app/</span><br><span class="line">mkdir ethercalc</span><br><span class="line">vim start_ethercalc.sh</span><br></pre></td></tr></table></figure>
+
+<p>在 shell 脚本中加入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nohup ethercalc &gt; /home/app/ethercalc/ethercalc.log &amp;</span><br></pre></td></tr></table></figure>
+
+<p>设置权限并启动</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod 777 start_ethercalc.sh</span><br><span class="line">./start_ethercalc.sh</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Web 页面<br>启动后可以在 web 页面中查看，网址为：<a href="http://yourIP:8000/" target="_blank" rel="noopener">http://yourIP:8000/</a></li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20191105213456996.png" alt><br>点击“Create Spreadsheet”即可创建在线表格。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>在Linux系统安装Nodejs 最简单步骤 - liuqiceshi - 博客园<br><a href="https://www.cnblogs.com/liuqi/p/6483317.html" target="_blank" rel="noopener">https://www.cnblogs.com/liuqi/p/6483317.html</a> </p>
+]]></content>
+      <categories>
+        <category>软件工具</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>使用 GitHub 和 Hexo 搭建个人博客</title>
+    <url>/2019/11/03/GitHub-and-Hexo-create-blogs/</url>
+    <content><![CDATA[<h1 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h1><p>首先展示下使用 GitHub 和 Hexo 搭建的个人博客效果</p><p>Erik-ly<br><a href="http://www.erik-ly.com/" target="_blank" rel="noopener">http://www.erik-ly.com/</a></p><h1 id="Hexo-简介"><a href="#Hexo-简介" class="headerlink" title="Hexo 简介"></a>Hexo 简介</h1><ul>
+<li><p>Hexo 官网：<a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">https://hexo.io/zh-cn/</a></p>
+</li>
+<li><p>Hexo 文档：<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a></p>
+</li>
+<li><p>Hexo 视频教程</p>
+<p>  YouTube：<a href="https://www.youtube.com/playlist?list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX" target="_blank" rel="noopener">https://www.youtube.com/playlist?list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX</a><br>  Bilibili：<a href="https://space.bilibili.com/362224537/channel/detail?cid=61636" target="_blank" rel="noopener">https://space.bilibili.com/362224537/channel/detail?cid=61636</a></p>
+</li>
+</ul><a id="more"></a>
+
+
+<h1 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h1><p>首先，本地需要有<code>node.js</code>和<code>git</code>，我的软件版本为：</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215005614.png" alt></p>
+<p>然后安装<code>Hexo</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191105215115643.png" alt></p>
+<h1 id="创建博客"><a href="#创建博客" class="headerlink" title="创建博客"></a>创建博客</h1><h2 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h2><p>首先创建一个文件夹，用于存放博客项目，我的博客项目文件夹名为<code>erik-ly-blog</code>，因此</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo init erik-ly-blog</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191105215144543.png" alt></p>
+<p>创建完项目后可以切换到目录并查看目录结构</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215321256.png" alt></p>
+<h2 id="生成静态文件"><a href="#生成静态文件" class="headerlink" title="生成静态文件"></a>生成静态文件</h2><p>因为初始化项目后，项目中已经包含了一篇<code>hello world</code>的博客，所以先看下效果，可以使用以下命令生成静态文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191105215411634.png" alt></p>
+<h2 id="本地部署"><a href="#本地部署" class="headerlink" title="本地部署"></a>本地部署</h2><p>使用以下命令进行本地部署，查看效果</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191105215507467.png" alt></p>
+<p>然后打开网页 <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> ，显示效果为：</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215541604.png" alt></p>
+<h1 id="写作"><a href="#写作" class="headerlink" title="写作"></a>写作</h1><p>现在开始写第一篇文章，我这里为了方便使用，暂时使用 IDEA 打开项目并编辑文章，准备写第一篇文章，可以使用如下命令:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo new &quot;GitHub and Hexo create blogs&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20191105215738167.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<p>然后使用 Markdown 语法编辑文章</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215928579.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<p>编辑好后依次执行如下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>查看网页显示效果</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215945833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>现在对博客进行一些简单的设置，打开设置文件<code>_config.yml</code>，然后依据自己情况进行设置</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105220029159.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<p>更多配置参数说明可以查看：<a href="https://hexo.io/zh-cn/docs/configuration" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/configuration</a></p>
+<p>修改好后可以使用<code>hexo g</code>和<code>hexo s</code>命令查看效果</p>
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><h2 id="创建-GitHub-仓库"><a href="#创建-GitHub-仓库" class="headerlink" title="创建 GitHub 仓库"></a>创建 GitHub 仓库</h2><p>在 GitHub 上创建一个<code>用户名.github.io</code>的仓库，这个是固定写法，比如我的 GitHub 用户名为<code>Erik-ly</code>，那么我就要新建一个名为<code>Erik-ly.github.io</code>的仓库。</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105221954833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h2 id="安装-Hexo-插件"><a href="#安装-Hexo-插件" class="headerlink" title="安装 Hexo 插件"></a>安装 Hexo 插件</h2><p>安装插件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>然后配置<code>_config.yml</code>，</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/deployment.html</span><br><span class="line">deploy:</span><br><span class="line">  type: &apos;git&apos;</span><br><span class="line">  repo: https://github.com/Erik-ly/Erik-ly.github.io.git</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署-1"><a href="#部署-1" class="headerlink" title="部署"></a>部署</h2><p>使用下面命令部署到 GitHub 上</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>部署完成后，打开 <a href="https://erik-ly.github.io/" target="_blank" rel="noopener">https://erik-ly.github.io/</a> 查看效果，这个是和你自己的仓库名称一致的，网页效果为</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222016249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h1 id="绑定域名"><a href="#绑定域名" class="headerlink" title="绑定域名"></a>绑定域名</h1><h2 id="查看仓库-IP"><a href="#查看仓库-IP" class="headerlink" title="查看仓库 IP"></a>查看仓库 IP</h2><p>如果想要一个自己的域名，可以在阿里云或腾讯云上购买域名，这里以阿里云为例示范域名解析过程。<br>首先使用<code>ping</code>查看自己 GitHub 上<code>用户名.github.io</code>的 IP 地址，</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222033945.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h2 id="设置域名解析"><a href="#设置域名解析" class="headerlink" title="设置域名解析"></a>设置域名解析</h2><p>然后在阿里云上进行域名解析</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105223355405.png" alt><br><img src="https://img-blog.csdnimg.cn/20191105222045758.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<p>分别添加如下两条记录</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222126549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<p><img src="https://img-blog.csdnimg.cn/2019110522213891.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<p>查看域名解析效果</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222152698.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h1 id="配置-CNAME"><a href="#配置-CNAME" class="headerlink" title="配置 CNAME"></a>配置 CNAME</h1><p>在 Hexo 文件夹的<code>source</code>目录下创建一个名为<code>CNAME</code>的文件，然后输入你的域名</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222222584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h1 id="部署-2"><a href="#部署-2" class="headerlink" title="部署"></a>部署</h1><p>使用<code>hexo d</code>部署，然后访问网页查看效果，我这里是 <a href="http://www.erik-ly.com/" target="_blank" rel="noopener">http://www.erik-ly.com/</a></p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222239293.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p>文档 | Hexo<br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a></p>
+</li>
+<li><p>Hexo教程 - YouTube<br><a href="https://www.youtube.com/watch?v=PsXWbI2Mqu0&amp;list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX&amp;index=7" target="_blank" rel="noopener">https://www.youtube.com/watch?v=PsXWbI2Mqu0&amp;list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX&amp;index=7</a></p>
+</li>
+<li><p>GitHub+Hexo 搭建个人网站详细教程 - 知乎<br><a href="https://zhuanlan.zhihu.com/p/26625249" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/26625249</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>软件工具</category>
+      </categories>
+  </entry>
+</search>
