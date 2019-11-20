@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>GitBacket 安装部署</title>
-    <url>/2019/11/05/GitBacket-introduction/</url>
-    <content><![CDATA[<h1 id="GitBacket-介绍"><a href="#GitBacket-介绍" class="headerlink" title="GitBacket 介绍"></a>GitBacket 介绍</h1><ul>
+    <title>GitBucket 安装部署</title>
+    <url>/2019/11/05/GitBucket-introduction/</url>
+    <content><![CDATA[<h1 id="GitBucket-介绍"><a href="#GitBucket-介绍" class="headerlink" title="GitBucket 介绍"></a>GitBucket 介绍</h1><ul>
 <li>GitHub 地址<br>gitbucket/gitbucket: A Git platform powered by Scala with easy installation, high extensibility &amp; GitHub API compatibility<br><a href="https://github.com/gitbucket/gitbucket" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket</a> </li>
 </ul>]]></content>
       <categories>
