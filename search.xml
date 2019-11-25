@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>IDEA 常用快捷键和设置</title>
+    <url>/2019/11/25/Idea-common-shortcuts-and-settings/</url>
+    <content><![CDATA[<h1 id="IDEA-常用快捷键"><a href="#IDEA-常用快捷键" class="headerlink" title="IDEA 常用快捷键"></a>IDEA 常用快捷键</h1><ul>
+<li>alt + Insert ：生成 get/set 方法</li>
+<li>Ctrl + Alt + t ：    使用 try/catch </li>
+<li>Ctrl+Alt+Left/Right ：光标定位到上一个/下一个浏览位置处</li>
+<li>Ctrl+Shift+Backspace：光标定位到上次修改的地方</li>
+</ul><h1 id="IDEA-常用设置"><a href="#IDEA-常用设置" class="headerlink" title="IDEA 常用设置"></a>IDEA 常用设置</h1><a id="more"></a>
+<h2 id="设置字体大小"><a href="#设置字体大小" class="headerlink" title="设置字体大小"></a>设置字体大小</h2><p><img src="https://img-blog.csdnimg.cn/20191125212156656.png" alt><br><img src="https://img-blog.csdnimg.cn/20191125212209817.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h2 id="取消默认打开项目"><a href="#取消默认打开项目" class="headerlink" title="取消默认打开项目"></a>取消默认打开项目</h2><p><img src="https://img-blog.csdnimg.cn/20191125212249153.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h2 id="设置头文件"><a href="#设置头文件" class="headerlink" title="设置头文件"></a>设置头文件</h2><p><img src="https://img-blog.csdnimg.cn/2019112521252345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+]]></content>
+      <categories>
+        <category>软件工具</category>
+      </categories>
+      <tags>
+        <tag>IDEA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>GitBucket 安装部署</title>
     <url>/2019/11/05/GitBucket-introduction/</url>
     <content><![CDATA[<h1 id="GitBucket-介绍"><a href="#GitBucket-介绍" class="headerlink" title="GitBucket 介绍"></a>GitBucket 介绍</h1><ul>
