@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Windows 安装 MySQL 5.7详细步骤</title>
+    <url>/2019/12/03/Install-MySQL-5-7-on-Windows/</url>
+    <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>MySQL :: Download MySQL Community Server (Archived Versions)<br><a href="https://downloads.mysql.com/archives/community/" target="_blank" rel="noopener">https://downloads.mysql.com/archives/community/</a><br>选择 5.7.* 版本，然后选择 zip 文件进行下载</p><h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><p>将下载的文件解压到自己安装软件的目录，我这里是<code>C:\Software\mysql-5.7.28</code><br><img src="https://img-blog.csdnimg.cn/20191203215208716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt></p><a id="more"></a>
+
+<h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><p>依次点击 此电脑 — 属性 — 高级系统设置 — 环境变量，然后新建系统变量<br><img src="https://img-blog.csdnimg.cn/20191203215603211.png" alt></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">MYSQL_HOME</span><br><span class="line">C:\Software\mysql-5.7.28</span><br></pre></td></tr></table></figure>
+<p>在 “Path”变量中添加<code>%MYSQL_HOME%\bin</code><br><img src="https://img-blog.csdnimg.cn/20191203215746366.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt></p>
+<h2 id="创建数据目录"><a href="#创建数据目录" class="headerlink" title="创建数据目录"></a>创建数据目录</h2><p>在<code>C:\Software\mysql-5.7.28\</code>目录中分别创建<code>data</code>和<code>uploads</code>文件夹，分别存放MySQL数据和导入导出文件。<br><img src="https://img-blog.csdnimg.cn/20191203220151594.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt></p>
+<h2 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h2><p>在<code>C:\Software\mysql-5.7.28\</code>目录中创建<code>my.ini</code>文件，涉及到目录文件的跟进自己情况做修改。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">port=3306</span><br><span class="line">character_set_server=utf8</span><br><span class="line">basedir=C:\Software\mysql-5.7.28</span><br><span class="line">datadir=C:\Software\mysql-5.7.28\data</span><br><span class="line">server-id=1</span><br><span class="line">sql_mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</span><br><span class="line">lower_case_table_names=1</span><br><span class="line">innodb_file_per_table = 1</span><br><span class="line">log_timestamps=SYSTEM</span><br><span class="line"></span><br><span class="line"><span class="built_in">log</span>-error   = error.log</span><br><span class="line">slow_query_log = 1</span><br><span class="line">slow_query_log_file = slow.log</span><br><span class="line">long_query_time = 5</span><br><span class="line"><span class="built_in">log</span>-bin = binlog</span><br><span class="line">binlog_format = row</span><br><span class="line">expire_logs_days = 15</span><br><span class="line">log_bin_trust_function_creators = 1</span><br><span class="line">secure-file-priv=C:\Software\mysql-5.7.28\uploads</span><br><span class="line"></span><br><span class="line">[client]   </span><br><span class="line">default-character-set=utf8</span><br></pre></td></tr></table></figure>
+<p>整体目录结构为<br><img src="https://img-blog.csdnimg.cn/20191203220433705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt></p>
+<h2 id="初始化数据库"><a href="#初始化数据库" class="headerlink" title="初始化数据库"></a>初始化数据库</h2><p>以管理员的身份运行 CMD<br><img src="https://img-blog.csdnimg.cn/20191203220552315.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt><br>切换到 MySQL 的HOME 目录，然后执行<code>mysqld --initialize-insecure</code><br><img src="https://img-blog.csdnimg.cn/2019120322090666.png" alt></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> c:\Software\mysql-5.7.28</span><br><span class="line">mysqld --initialize-insecure</span><br></pre></td></tr></table></figure>
+<h2 id="安装并启动"><a href="#安装并启动" class="headerlink" title="安装并启动"></a>安装并启动</h2><p>切换到<code>bin</code>目录中，执行<code>mysqld –install MySQL57</code>安装，然后再执行<code>net start MySQL57</code>启动 MySQL<br><img src="https://img-blog.csdnimg.cn/20191203221147764.png" alt></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> bin</span><br><span class="line">mysqld –install MySQL57</span><br><span class="line">net start MySQL57</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置登录密码"><a href="#设置登录密码" class="headerlink" title="设置登录密码"></a>设置登录密码</h2><p>先使用<code>mysql -uroot</code>登录 MySQL<br><img src="https://img-blog.csdnimg.cn/20191203221340429.png" alt><br>设置本地登录密码为“Root-123”和远程登录密码“Root-123456”<br><img src="https://img-blog.csdnimg.cn/20191203221547471.png" alt></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -uroot</span><br><span class="line">SET PASSWORD FOR <span class="string">'root'</span>@<span class="string">'localhost'</span>= <span class="string">"Root-123"</span>;</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO <span class="string">'root'</span>@<span class="string">'%'</span> IDENTIFIED BY <span class="string">'Root-123456'</span> WITH GRANT OPTION;</span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>Windows安装MySQL5.7教程 - 简书<br><a href="https://www.jianshu.com/p/a41d45890ab2" target="_blank" rel="noopener">https://www.jianshu.com/p/a41d45890ab2</a></p>
+]]></content>
+      <categories>
+        <category>软件工具</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>IDEA 常用快捷键和设置</title>
     <url>/2019/11/25/Idea-common-shortcuts-and-settings/</url>
     <content><![CDATA[<h1 id="IDEA-常用快捷键"><a href="#IDEA-常用快捷键" class="headerlink" title="IDEA 常用快捷键"></a>IDEA 常用快捷键</h1><ul>
