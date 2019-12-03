@@ -42,14 +42,21 @@
   <entry>
     <title>GitBucket 安装部署</title>
     <url>/2019/11/05/GitBucket-introduction/</url>
-    <content><![CDATA[<h1 id="GitBucket-介绍"><a href="#GitBucket-介绍" class="headerlink" title="GitBucket 介绍"></a>GitBucket 介绍</h1><ul>
+    <content><![CDATA[<h1 id="GitBucket-介绍"><a href="#GitBucket-介绍" class="headerlink" title="GitBucket 介绍"></a>GitBucket 介绍</h1><p>GitBucket 可以看做一款是GitHub的私有版，小巧精悍，几乎具有GitHub的所有功能，而且部署简单。</p><ul>
 <li>GitHub 地址<br>gitbucket/gitbucket: A Git platform powered by Scala with easy installation, high extensibility &amp; GitHub API compatibility<br><a href="https://github.com/gitbucket/gitbucket" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket</a> </li>
-</ul>]]></content>
+</ul><a id="more"></a>
+
+<p>可以直接下载 war 包进行安装：<a href="https://github.com/gitbucket/gitbucket/releases" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket/releases</a></p>
+<h1 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h1><p>因为是 war 包，可以直接使用 <code>java -jar</code>启动，为了后台启动，可以运行脚本<code>start_gitbucket.sh</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">nohup java -jar /opt/gitbucket/gitbucket.war &gt; /opt/gitbucket/gitbucket.log &amp;</span><br></pre></td></tr></table></figure>
+
+]]></content>
       <categories>
         <category>职业技能</category>
       </categories>
       <tags>
         <tag>GitBucket</tag>
+        <tag>Git</tag>
       </tags>
   </entry>
   <entry>
@@ -104,6 +111,7 @@
 <li>Web 页面<br>启动后可以在 web 页面中查看，网址为：<a href="http://yourIP:8000/" target="_blank" rel="noopener">http://yourIP:8000/</a></li>
 </ul>
 <p><img src="https://img-blog.csdnimg.cn/20191105213456996.png" alt><br>点击“Create Spreadsheet”即可创建在线表格。</p>
+<p><img src="https://img-blog.csdnimg.cn/20191203210335588.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>在Linux系统安装Nodejs 最简单步骤 - liuqiceshi - 博客园<br><a href="https://www.cnblogs.com/liuqi/p/6483317.html" target="_blank" rel="noopener">https://www.cnblogs.com/liuqi/p/6483317.html</a> </p>
 ]]></content>
       <categories>
