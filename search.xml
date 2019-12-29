@@ -1,6 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ZooKeeper从源码到RPM包制作过程详解</title>
+    <url>/2019/12/29/ZooKeeper-rpm/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>在使用 Ambari 安装或集成大数据组件时， CentOS 系统下，需要将组件格式制作成 rpm 格式，这里总结一种通用简便的从大数据组件源码制作 rpm 格式文件的方法：<strong>将源码编译成<code>tar</code>包，然后再将<code>tar</code>包打成 <code>rpm</code> 包</strong>。</p><p>这里以HDP版本的 ZooKeeper 为例介绍这种方法，其实 ZooKeeper 是可以直接从源码制作成rpm包的，这里为了介绍通用的做法，采用先将 ZooKeeper 的源码编译成 <code>tar.gz</code> 包，然后再制作成 <code>rpm</code>的方式。</p><a id="more"></a>
+
+<h1 id="源码编译"><a href="#源码编译" class="headerlink" title="源码编译"></a>源码编译</h1><h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><p>Release HDP-2.6.4.91-3-tag: Modify HDP-CHANGES.txt to include ZOOKEEPER-2146 · hortonworks/zookeeper-release<br><a href="https://github.com/hortonworks/zookeeper-release/releases/tag/HDP-2.6.4.91-3-tag" target="_blank" rel="noopener">https://github.com/hortonworks/zookeeper-release/releases/tag/HDP-2.6.4.91-3-tag</a> </p>
+<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar -zxvf zookeeper-release-HDP-2.6.4.91-3-tag.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h2 id="制作-tar-包"><a href="#制作-tar-包" class="headerlink" title="制作 tar 包"></a>制作 tar 包</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install ant -y</span><br><span class="line">yum install cppunit-devel -y</span><br><span class="line">yum install libtool</span><br></pre></td></tr></table></figure>
+
+<h2 id="ant-打包"><a href="#ant-打包" class="headerlink" title="ant 打包"></a>ant 打包</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd zookeeper-release-HDP-2.6.5.148-3-tag/</span><br><span class="line">ant tar</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看-tar-包"><a href="#查看-tar-包" class="headerlink" title="查看 tar 包"></a>查看 tar 包</h2><p>打包后的tar.gz位于zookeeper下的build目录<br><img src="https://img-blog.csdnimg.cn/20191229125039319.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt></p>
+<h1 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h1><p>所用命名未特殊说明的情况下均为使用root用户执行</p>
+<h2 id="安装-rpm-build-包"><a href="#安装-rpm-build-包" class="headerlink" title="安装 rpm-build 包"></a>安装 rpm-build 包</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install rpm-build</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装-rpmdevtools"><a href="#安装-rpmdevtools" class="headerlink" title="安装 rpmdevtools"></a>安装 rpmdevtools</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install rpmdevtools</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建工作空间"><a href="#创建工作空间" class="headerlink" title="创建工作空间"></a>创建工作空间</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rpmdev-setuptree</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20191229125221940.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt></p>
+<h1 id="制作-rpm-包"><a href="#制作-rpm-包" class="headerlink" title="制作 rpm 包"></a>制作 rpm 包</h1><h2 id="编辑-spec-文件"><a href="#编辑-spec-文件" class="headerlink" title="编辑 spec 文件"></a>编辑 spec 文件</h2><p>制作 rpm 包需要用到一个 <code>spec</code> 格式的文件，这里使用<code>zookeeper.spec</code> 文件的内容为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Name: 		zookeeper</span><br><span class="line">Version: 	3.4.6</span><br><span class="line"># Avoid some silly dependencies and allow</span><br><span class="line"># symlink in the init.d folder</span><br><span class="line">AutoReqProv: 	no</span><br><span class="line">Release: 	0</span><br><span class="line">Summary: 	Zookeeper is a highly reliable distributed coordination service.</span><br><span class="line">License: 	Apache 2.0</span><br><span class="line">Group: 		Applications/Internet</span><br><span class="line">Source0: 	zookeeper-3.4.6.tar.gz</span><br><span class="line">Prefix:		/opt</span><br><span class="line">BuildArch: 	noarch</span><br><span class="line">BuildRoot: 	%&#123;_tmppath&#125;/%&#123;name&#125;-root</span><br><span class="line">Provides: 	zookeeper</span><br><span class="line">Requires(post): /sbin/chkconfig, /sbin/service</span><br><span class="line">Requires(preun): /sbin/chkconfig, /sbin/service</span><br><span class="line">%description</span><br><span class="line">ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. All of these kinds of services are used in some form or another by distributed applications. Each time they are implemented there is a lot of work that goes into fixing the bugs and race conditions that are inevitable. Because of the difficulty of implementing these kinds of services, applications initially usually skimp on them ,which make them brittle in the presence of change and difficult to manage. Even when done correctly, different implementations of these services lead to management complexity when the applications are deployed.</span><br><span class="line"></span><br><span class="line">%prep</span><br><span class="line"></span><br><span class="line">%build</span><br><span class="line"></span><br><span class="line">%install</span><br><span class="line">rm -rf $RPM_BUILD_ROOT</span><br><span class="line">mkdir -p $RPM_BUILD_ROOT/opt/zookeeper</span><br><span class="line">mkdir -p $RPM_BUILD_ROOT/etc/init.d</span><br><span class="line">mkdir -p %&#123;_localstatedir&#125;/lib/zookeeper</span><br><span class="line">tar xfz $RPM_SOURCE_DIR/zookeeper-%&#123;version&#125;.tar.gz</span><br><span class="line">cp -r $RPM_BUILD_DIR/zookeeper-%&#123;version&#125;/* $RPM_BUILD_ROOT/opt/zookeeper</span><br><span class="line"></span><br><span class="line">#cp /opt/zookeeper/bin/zkEnv.sh %&#123;_sysconfdir&#125;/init.d/zkEnv.sh</span><br><span class="line">cp $RPM_BUILD_ROOT/opt/zookeeper/conf/zoo_sample.cfg $RPM_BUILD_ROOT/opt/zookeeper/conf/zoo.cfg</span><br><span class="line"></span><br><span class="line">#%pre</span><br><span class="line">#%preun</span><br><span class="line">#/sbin/service zookeeper stop &gt; /dev/null 2&gt;&amp;1</span><br><span class="line">#/sbin/chkconfig --del zookeeper</span><br><span class="line"></span><br><span class="line">#%clean</span><br><span class="line">rm -rf $RPM_BUILD_ROOT</span><br><span class="line"></span><br><span class="line">%post</span><br><span class="line">cp /opt/zookeeper/bin/zkEnv.sh %&#123;_sysconfdir&#125;/init.d/zkEnv.sh</span><br><span class="line">ln -sf /opt/zookeeper/bin/zkServer.sh %&#123;_sysconfdir&#125;/init.d/zookeeper</span><br><span class="line">/sbin/chkconfig zookeeper on</span><br><span class="line">#/sbin/service zookeeper start</span><br><span class="line"></span><br><span class="line">%files</span><br><span class="line">%defattr(-,root,root,-)</span><br><span class="line">/opt/zookeeper</span><br><span class="line"></span><br><span class="line">%changelog</span><br><span class="line">* Tue Aug 19 2014 - daniel.beneyto at abiquo dot com</span><br><span class="line">- Initial release.</span><br></pre></td></tr></table></figure>
+
+<h2 id="放置文件"><a href="#放置文件" class="headerlink" title="放置文件"></a>放置文件</h2><p>将<code>zookeeper.spec</code>文件放到<code>/root/rpmbuild/SPECS</code> 文件夹中，将编译好的<code>zookeeper-3.4.6.tar.gz</code>放在<code>/root/rpmbuild/SOURCES</code> 文件夹中</p>
+<h2 id="执行打-rpm-包命令"><a href="#执行打-rpm-包命令" class="headerlink" title="执行打 rpm 包命令"></a>执行打 rpm 包命令</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /root/rpmbuild/SPECS</span><br><span class="line">rpmbuild -ba zookeeper.spec</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看-rpm-包"><a href="#查看-rpm-包" class="headerlink" title="查看 rpm 包"></a>查看 rpm 包</h2><p>打包好的rpm包在<code>/root/rpmbuild/RPMS</code>文件夹中</p>
+<p><img src="https://img-blog.csdnimg.cn/20191229164729376.png" alt></p>
+<h1 id="安装测试"><a href="#安装测试" class="headerlink" title="安装测试"></a>安装测试</h1><p>现在将制作出来的 rpm 包安装测试。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rpm -Uvh zookeeper-3.4.6-0.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /opt/zookeeper/bin/</span><br><span class="line">./zkServer.sh start</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20191229164842155.png" alt></p>
+<h2 id="查看状态"><a href="#查看状态" class="headerlink" title="查看状态"></a>查看状态</h2><p><img src="https://img-blog.csdnimg.cn/20191229164903476.png" alt></p>
+<p>至此，说明制作的 rpm 包是可用的。</p>
+<h1 id="spec-文件解析"><a href="#spec-文件解析" class="headerlink" title="spec 文件解析"></a>spec 文件解析</h1><p>这个方法的关键在于先后步骤及 spec 文件，现在来看下 spec 文件的几点注意事项</p>
+<p><img src="https://img-blog.csdnimg.cn/20191229165008256.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt><br>Version中不能出现“-”等字符<br>Source0需要与SOURCES中的文件名一致</p>
+<p><img src="https://img-blog.csdnimg.cn/20191229165235914.png" alt><br>创建打包过程中文件存放位置，解压并复制文件</p>
+<p><img src="https://img-blog.csdnimg.cn/2019122916525678.png" alt><br>复制zookeeper配置文件，也可不在此设置，启动之前手动配置</p>
+<p><img src="https://img-blog.csdnimg.cn/20191229165320611.png" alt><br>创建软连接</p>
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><p>实际上使用”下载源码”中的链接下载的源码包在编译成 tar 包的过程中是会报错的，为了不打乱步骤介绍，特在这里说明。<br>在执行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rpmbuild -ba zookeeper.spec</span><br></pre></td></tr></table></figure>
+<p>后，会出现如下错误：<br><img src="https://img-blog.csdnimg.cn/20191229165933932.png" alt><br>可以看出是源码中的加注释时格式出错了，解决办法为修改源码后重新打包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /root/rpmbuild/SOURCES</span><br><span class="line">mv zookeeper-3.4.6.tar.gz zookeeper-3.4.6.tar.gz.bak</span><br><span class="line">tar -xvf zookeeper-3.4.6.tar.gz</span><br><span class="line">cd zookeeper-3.4.6/</span><br></pre></td></tr></table></figure>
+<p>修改文件<code>/root/rpmbuild/SOURCES/zookeeper-3.4.6/contrib/zkpython/src/python/zk.py</code>和<code>/root/rpmbuild/SOURCES/zookeeper-3.4.6/src/contrib/zkpython/src/python/zk.py</code>两个文件,<br><img src="https://img-blog.csdnimg.cn/20191229170055623.png" alt><br><img src="https://img-blog.csdnimg.cn/20191229170058838.png" alt><br>将两个zk.py文件中去掉如下图红框中的一行代码<br><img src="https://img-blog.csdnimg.cn/20191229170122791.png" alt><br>重新打成 tar 包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /root/rpmbuild/SOURCES/</span><br><span class="line">tar zcvf zookeeper-2.6.4.tar.gz zookeeper-2.6.4</span><br></pre></td></tr></table></figure>
+<p>这时重新打包rpm<br>首先清空BUILD、BUILDROOT、RPMS、SRPMS文件夹，重新执行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /root/rpmbuild/SPECS</span><br><span class="line">rpmbuild -ba zookeeper.spec</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p>RPM打包原理、示例、详解及备查 - 刘康的专栏 - CSDN博客<br><a href="https://blog.csdn.net/get_set/article/details/53453320" target="_blank" rel="noopener">https://blog.csdn.net/get_set/article/details/53453320</a> </p>
+</li>
+<li><p>[ZOOKEEPER-2777] There is a typo in zk.py which prevents from using/compiling it. - ASF JIRA<br><a href="https://issues.apache.org/jira/browse/ZOOKEEPER-2777" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/ZOOKEEPER-2777</a> </p>
+</li>
+<li><p>CentOS7环境下zookeeper-release-HDP-2.6.5.148-3-tag编译打RPM包 - 汤昕的博客 - CSDN博客<br><a href="https://blog.csdn.net/Happy_Sunshine_Boy/article/details/90479508" target="_blank" rel="noopener">https://blog.csdn.net/Happy_Sunshine_Boy/article/details/90479508</a> </p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>BigData</tag>
+        <tag>ZooKeeper</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CentOS 7 安装 MySQL 5.7 详细步骤</title>
     <url>/2019/12/03/Install-MySQL-5-7-on-CentOS-7/</url>
     <content><![CDATA[<h2 id="查看当前安装-MySQL-情况"><a href="#查看当前安装-MySQL-情况" class="headerlink" title="查看当前安装 MySQL 情况"></a>查看当前安装 MySQL 情况</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rpm -qa|grep -i mysql</span><br></pre></td></tr></table></figure><p>如果有，全部删除所列的内容，直至<code>rpm -qa|grep -i mysql</code>时没有内容</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rpm -ev mysql-community-libs-5.6.37-2.el7.x86_64</span><br></pre></td></tr></table></figure><h2 id="安装MySQL"><a href="#安装MySQL" class="headerlink" title="安装MySQL"></a>安装MySQL</h2><ul>
