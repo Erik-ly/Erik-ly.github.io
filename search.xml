@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>ZooKeeper Introduction</title>
+    <title>ZooKeeper 介绍</title>
     <url>/2020/10/31/ZooKeeper-Introduction/</url>
     <content><![CDATA[<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>ZooKeeper是一个高性能、高可靠的分布式协调服务，分布式应用可以基于ZooKeeper实现Master选举、负载均衡、集群管理、命名服务、数据发布/订阅、分布式协调/通知、分布式锁、分布式队列等功能。</p><h1 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h1><ol>
 <li>集群角色</li>
