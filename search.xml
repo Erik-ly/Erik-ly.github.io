@@ -1,6 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ZooKeeper Introduction</title>
+    <url>/2020/10/31/ZooKeeper-Introduction/</url>
+    <content><![CDATA[<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>ZooKeeper是一个高性能、高可靠的分布式协调服务，分布式应用可以基于ZooKeeper实现Master选举、负载均衡、集群管理、命名服务、数据发布/订阅、分布式协调/通知、分布式锁、分布式队列等功能。</p><h1 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h1><ol>
+<li>集群角色</li>
+</ol><p>ZooKeeper集群中的节点分为三种角色：Leader、Follower和Observer。<br>Leader：在ZooKeeper集群中只有一个节点作为集群的领导者，由各Follower通过ZooKeeper Atomic Broadcast(ZAB)协议选举产生，主要负责接收和协调所有写请求，并把写入的信息同步到Follower和Observer。<br>Follower：Follower主要负责处理客户端的读请求，将写请求转发给Leader。每个Follower都作为Leader的储备，当Leader发生故障时参与投票重新选举Leader，避免单点故障。<br>Observer: Observer只负责处理读请求、并向Leader转发写请求，不参与Leader选举。</p><a id="more"></a>
+
+
+<ol start="2">
+<li>数据模型</li>
+</ol>
+<p><strong>znode模型</strong></p>
+<p>ZooKeeper提供了类似于文件系统的层级命名空间，所有分布式协调功能均可以借助作用在该命名空间上的原语实现。<br>每个ZNode拥有一个数据域，记录了用户数据，该域的数据类型为字节数组。ZooKeeper通过多副本方式保证数据的可靠存储。<br>znode分为persistent，ephemeral，persistent_sequential和ephemeral_sequential四种类型。<br>persistent：持久性节点，能够一直可靠地保存该节点，除非用户执行删除操作。<br>ephemeral：临时节点，该节点的生命周期与客户端相关，只要客户端保持与ZooKeeper server的session不断开，该节点会一直存在，反之，一旦两者之间断开连接，则该节点会被自动删除。<br>sequential：自动在文件名默认追加一个增量的唯一数字，以记录文件创建顺序，通常与persistent和ephemeral连用，产生persistent_sequential和ephemeral_sequential两种类型。</p>
+<p><strong>Watcher</strong></p>
+<p>Watcher（事件监听器）是ZooKeeper提供的发布/订阅机制，用户可在某个znode上注册watcher以监听它的变化，一旦对应的znode被特定事件触发（包括删除、数据域被修改、子节点发生变化等），ZooKeeper将以事件的形式将变化内容发送给监听者。</p>
+<p><strong>Session</strong></p>
+<p>Session是客户端与ZooKeeper服务端之间的通信通道。同一个session中的消息是有序的。Session具有容错性：如果客户端连接的ZooKeeper服务器宕机，客户端会自动连接到其他活着的服务器上。</p>
+<h1 id="使用场景与规格"><a href="#使用场景与规格" class="headerlink" title="使用场景与规格"></a>使用场景与规格</h1><p>ZooKeeper是一个高可用的分布式数据管理与协调框架。基于对ZAB算法的实现，该框架能够很好地保证分布式环境中的数据一致性。也正是基于这样的特性，使得ZooKeeper适用于数据发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理等多种场景。</p>
+<ol>
+<li>数据发布/订阅</li>
+</ol>
+<p>数据发布/订阅系统，即配置中心，发布者将数据发布到ZooKeeper的一个或系列节点上，供订阅者进行数据订阅，进而达到动态获取数据的目的，实现配置信息的集中式管理和数据的动态更新。<br>ZooKeeper采用推拉结合方式：客户端向服务端注册自己需要关注的节点，一旦节点的数据发生变更，服务端会向相应的客户端发送Watcher事件通知，客户端接收到这个消息通知后，需要主动到服务端获取最新的数据。<br>如果将配置信息存放到ZooKeeper上进行集中管理，通常情况下，应用在启动的时候都会主动到ZooKeeper服务器上进行一次配置信息的获取，同时，在指定节点上注册一个Watcher监听，从而达到实时获取最新配置信息的目的。</p>
+<ol start="2">
+<li>负载均衡</li>
+</ol>
+<p>在分布式系统中，负载均衡是一种普遍的技术，基本上每一个分布式系统都需要使用负载均衡。分布式系统具有对等性，为了保证系统的高可用性，通常采用副本的方式来对数据和服务进行部署。而对于消费者而言，则需要在这些对等的服务提供方中选择一个来执行相关的业务逻辑，ZooKeeper可以很好的解决该问题。</p>
+<ol start="3">
+<li>命名服务</li>
+</ol>
+<p>命名服务也是分布式系统中比较常见的一类场景，在分布式系统中，被命名的实体通常可以是集群中机器、提供的服务地址或远程对象等，通过使用命名服务，客户端应用能够根据指定名字来获取资源的实体、服务地址和提供者的信息等。<br>ZooKeeper提供的命名服务功能帮助应用通过一个资源引用的方式来实现对资源的定位与使用，并且能够使用ZooKeeper实现一套分布式全局唯一ID的分配机制。</p>
+<ol start="4">
+<li>分布式协调/通知</li>
+</ol>
+<p>分布式协调/通知服务是分布式系统中不可缺少的一个环节，是将不同的分布式组件有机结合起来的关键所在。对于一个在多台机器上部署运行的应用而言，通常需要一个协调者来控制整个系统的运行流程。<br>ZooKeeper中特有的Watcher注册与异步通知机制，能够很好地实现分布式环境下不同机器，甚至是不同系统之间的协调与通知，通常的做法是在不同客户端都对ZooKeeper上同一个数据节点进行Watcher注册，监听数据节点的变化，如果数据节点发生变化，那么所有订阅的客户端都能接收到相应的Watcher通知，并做出相应的处理。</p>
+<ol start="5">
+<li>集群管理</li>
+</ol>
+<p>随着分布式系统规模的日益扩大，集群中的机器规模也随之变大，集群管理也越来越重要。客户端如果对ZooKeeper的一个数据节点注册Watcher监听，那么当该数据节点的内容或其子节点的列表发生变更时，ZooKeeper服务器就会向订阅的客户端发送变更通知。对在ZooKeeper上创建的临时节点，一旦客户端与服务器之间的会话失效，那么该临时节点也就被自动清除。</p>
+<ol start="6">
+<li>Master选举</li>
+</ol>
+<p>Master选举是一个在分布式系统中非常常见的应用场景。分布式最核心的特性就是能够将具有独立计算能力的系统单元部署在不同的机器上，构成一个完整的分布式系统。在分布式系统中，Master往往用来协调集群中其他系统单元，具有对分布式系统变更的决定权。<br>利用Zookeeper的强一致性，能够很好地保证在分布式高并发情况下节点的创建一定能够保证全局唯一性，即ZooKeeper将会保证客户端无法重复创建一个已经存在的数据节点。也就是说，如果同时有多个客户端请求创建同一个节点，那么最终一定只有一个客户端请求能够创建成功。利用这个特性，就能够很容易地在分布式环境中进行Master选举了。</p>
+<ol start="7">
+<li>分布式锁</li>
+</ol>
+<p>分布式锁是控制分布式系统之间同步访问共享资源的一种方式。如果不同的系统或是同一个系统的不同主机之间共享了一个或一组资源，那么访问这些资源的时候，往往需要通过一些互斥手段来防止彼此之间的干扰，以保证一致性，在这种情况下，就需要使用分布式锁了。排他锁可以通过ZooKeeper上的数据节点来表示一个锁，ZooKeeper会保证在所有的客户端中，最终只有一个客户端能够创建成功，那么就可以认为该客户端获取了锁。正常执行完业务逻辑后，客户端就会主动将自己创建的临时节点删除，此时即认为是客户端释放锁。</p>
+<ol start="8">
+<li>分布式队列</li>
+</ol>
+<p>分布式队列可以分为两大类，一种是常规的先入先出队列，另一种则是需要等到队列元素集聚之后才统一安排执行的Barrier模型。<br>先入先出队列：所有客户端都到特定节点下面创建一个临时有序节点，创建完节点之后，客户端通过获取队列中的所有子节点，即获取队列中所有的元素，然后判断自己是否是队列中的最小元素，如果是则执行，如果不是则进入等待，同时向比自己序号小的最后一个节点注册Watcher监听，当收到Watcher通知后执行，从而实现一个分布式先入先出队列。<br>Barrier模型：在分布式系统中，Barrier特指系统之间的一个协调条件，规定了一个队列的元素必须都聚集后才能统一进行安排，否则一直等待。这往往出现在大规模分布式并行计算的应用场景上：最终的合并计算需要基于很多并行计算的子结果来进行。通过在ZooKeeper中创建一个节点作为默认节点，并将其节点的数据内容赋值为一个数字n代表Barrier值，只有默认节点下的子节点个数达到n后，才会打开Barrier。之后，所有客户端都会在默认节点下创建一个临时节点，当节点个数为n后，满足执行条件。</p>
+<h1 id="价值"><a href="#价值" class="headerlink" title="价值"></a>价值</h1><p>在分布式系统中，服务或组件之间的协调非常重要，它构成了分布式系统基础。然而，由于分布式环境的复杂性，尤其是在网络故障、死锁、竞争等已变为常见现象的情况下，实现一个鲁棒的协调服务是极其困难的事情。为了实现一个通用的分布式协调服务，避免每个分布式系统从头实现造成不必要的工作冗余，ZooKeeper应运而生。<br>ZooKeeper通过引入类似于文件系统的层级命名空间，并在此基础上提供了一套简单易用的原语，能够帮助用户轻易实现Leader选举、分布式锁、分布式队列等功能，ZooKeeper已被大量开源系统采用。</p>
+<h1 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h1><p>在Insight HD平台中，ZooKeeper为系统提供分布式协调服务，为其他组件提供诸如Leader选举、数据发布/订阅、分布式锁、元数据存储等服务。</p>
+<p><img src="https://img-blog.csdnimg.cn/20201031154214335.jpeg" alt="ZooKeeper 基本架构"></p>
+<p>ZooKeeper服务通常由奇数个ZooKeeper实例构成，其中一个实例为leader角色，其他为follower角色，它们同时维护了层级目录结构的一个副本，并通过ZAB（ZooKeeper Atomic Broadcast）协议维持副本之间的一致性。ZooKeeper将所有数据保存到内存中，具有吞吐率高、延迟低等优点。<br>读路径：任意一个Zookeeper实例均可为客户端提供读服务。Zookeeper实例数目越多，读吞吐率越高。<br>写路径：任意一个Zookeeper实例均可接受客户端的写请求，但需进一步转发给leader协调完成分布式写。因为Zookeeper使用ZAB协议，只要多数Zookeeper实例写成功即为成功，所以2N+1和2N+2个实例都是N+1个实例成功即可，所以最大容忍失败实例数均为N，这也是部署奇数个实例的最主要原因，而且Zookeeper实例数目越多，写延迟越高。</p>
+]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>BigData</tag>
+        <tag>ZooKeeper</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用rpmrebuild从rpm包中提取spec文件</title>
     <url>/2019/12/29/Rpm-extract-spec/</url>
     <content><![CDATA[<h2 id="rpmrebuild-官网"><a href="#rpmrebuild-官网" class="headerlink" title="rpmrebuild 官网"></a>rpmrebuild 官网</h2><p>rpmrebuild<br><a href="http://rpmrebuild.sourceforge.net/" target="_blank" rel="noopener">http://rpmrebuild.sourceforge.net/</a></p><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>RPM resource rpmrebuild<br><a href="http://rpmfind.net/linux/rpm2html/search.php?query=rpmrebuild" target="_blank" rel="noopener">http://rpmfind.net/linux/rpm2html/search.php?query=rpmrebuild</a> </p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>rpmrebuild 依赖 rpm-built，所以首先执行：</p><a id="more"></a>
