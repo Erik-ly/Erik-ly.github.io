@@ -11,12 +11,9 @@
 <ol start="2">
 <li>数据模型</li>
 </ol>
-<p><strong>znode模型</strong></p>
-<p>ZooKeeper提供了类似于文件系统的层级命名空间，所有分布式协调功能均可以借助作用在该命名空间上的原语实现。<br>每个ZNode拥有一个数据域，记录了用户数据，该域的数据类型为字节数组。ZooKeeper通过多副本方式保证数据的可靠存储。<br>znode分为persistent，ephemeral，persistent_sequential和ephemeral_sequential四种类型。<br>persistent：持久性节点，能够一直可靠地保存该节点，除非用户执行删除操作。<br>ephemeral：临时节点，该节点的生命周期与客户端相关，只要客户端保持与ZooKeeper server的session不断开，该节点会一直存在，反之，一旦两者之间断开连接，则该节点会被自动删除。<br>sequential：自动在文件名默认追加一个增量的唯一数字，以记录文件创建顺序，通常与persistent和ephemeral连用，产生persistent_sequential和ephemeral_sequential两种类型。</p>
-<p><strong>Watcher</strong></p>
-<p>Watcher（事件监听器）是ZooKeeper提供的发布/订阅机制，用户可在某个znode上注册watcher以监听它的变化，一旦对应的znode被特定事件触发（包括删除、数据域被修改、子节点发生变化等），ZooKeeper将以事件的形式将变化内容发送给监听者。</p>
-<p><strong>Session</strong></p>
-<p>Session是客户端与ZooKeeper服务端之间的通信通道。同一个session中的消息是有序的。Session具有容错性：如果客户端连接的ZooKeeper服务器宕机，客户端会自动连接到其他活着的服务器上。</p>
+<p><strong>znode模型</strong><br>ZooKeeper提供了类似于文件系统的层级命名空间，所有分布式协调功能均可以借助作用在该命名空间上的原语实现。<br>每个ZNode拥有一个数据域，记录了用户数据，该域的数据类型为字节数组。ZooKeeper通过多副本方式保证数据的可靠存储。<br>znode分为persistent，ephemeral，persistent_sequential和ephemeral_sequential四种类型。<br>persistent：持久性节点，能够一直可靠地保存该节点，除非用户执行删除操作。<br>ephemeral：临时节点，该节点的生命周期与客户端相关，只要客户端保持与ZooKeeper server的session不断开，该节点会一直存在，反之，一旦两者之间断开连接，则该节点会被自动删除。<br>sequential：自动在文件名默认追加一个增量的唯一数字，以记录文件创建顺序，通常与persistent和ephemeral连用，产生persistent_sequential和ephemeral_sequential两种类型。</p>
+<p><strong>Watcher</strong><br>Watcher（事件监听器）是ZooKeeper提供的发布/订阅机制，用户可在某个znode上注册watcher以监听它的变化，一旦对应的znode被特定事件触发（包括删除、数据域被修改、子节点发生变化等），ZooKeeper将以事件的形式将变化内容发送给监听者。</p>
+<p><strong>Session</strong><br>Session是客户端与ZooKeeper服务端之间的通信通道。同一个session中的消息是有序的。Session具有容错性：如果客户端连接的ZooKeeper服务器宕机，客户端会自动连接到其他活着的服务器上。</p>
 <h1 id="使用场景与规格"><a href="#使用场景与规格" class="headerlink" title="使用场景与规格"></a>使用场景与规格</h1><p>ZooKeeper是一个高可用的分布式数据管理与协调框架。基于对ZAB算法的实现，该框架能够很好地保证分布式环境中的数据一致性。也正是基于这样的特性，使得ZooKeeper适用于数据发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理等多种场景。</p>
 <ol>
 <li>数据发布/订阅</li>
