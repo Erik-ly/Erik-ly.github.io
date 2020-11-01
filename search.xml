@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>ZooKeeper 介绍</title>
-    <url>/2020/10/31/ZooKeeper-Introduction/</url>
+    <url>/Erik_ly_blog/2020/10/31/ZooKeeper-Introduction/</url>
     <content><![CDATA[<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>ZooKeeper是一个高性能、高可靠的分布式协调服务，分布式应用可以基于ZooKeeper实现Master选举、负载均衡、集群管理、命名服务、数据发布/订阅、分布式协调/通知、分布式锁、分布式队列等功能。</p><h1 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h1><ol>
 <li>集群角色</li>
 </ol><p>ZooKeeper集群中的节点分为三种角色：Leader、Follower和Observer。<br>Leader：在ZooKeeper集群中只有一个节点作为集群的领导者，由各Follower通过ZooKeeper Atomic Broadcast(ZAB)协议选举产生，主要负责接收和协调所有写请求，并把写入的信息同步到Follower和Observer。<br>Follower：Follower主要负责处理客户端的读请求，将写请求转发给Leader。每个Follower都作为Leader的储备，当Leader发生故障时参与投票重新选举Leader，避免单点故障。<br>Observer: Observer只负责处理读请求、并向Leader转发写请求，不参与Leader选举。</p><a id="more"></a>
@@ -62,7 +62,7 @@
   </entry>
   <entry>
     <title>使用rpmrebuild从rpm包中提取spec文件</title>
-    <url>/2019/12/29/Rpm-extract-spec/</url>
+    <url>/Erik_ly_blog/2019/12/29/Rpm-extract-spec/</url>
     <content><![CDATA[<h2 id="rpmrebuild-官网"><a href="#rpmrebuild-官网" class="headerlink" title="rpmrebuild 官网"></a>rpmrebuild 官网</h2><p>rpmrebuild<br><a href="http://rpmrebuild.sourceforge.net/" target="_blank" rel="noopener">http://rpmrebuild.sourceforge.net/</a></p><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>RPM resource rpmrebuild<br><a href="http://rpmfind.net/linux/rpm2html/search.php?query=rpmrebuild" target="_blank" rel="noopener">http://rpmfind.net/linux/rpm2html/search.php?query=rpmrebuild</a> </p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>rpmrebuild 依赖 rpm-built，所以首先执行：</p><a id="more"></a>
 
 
@@ -90,7 +90,7 @@
   </entry>
   <entry>
     <title>ZooKeeper从源码到RPM包制作过程详解</title>
-    <url>/2019/12/29/ZooKeeper-rpm/</url>
+    <url>/Erik_ly_blog/2019/12/29/ZooKeeper-rpm/</url>
     <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>在使用 Ambari 安装或集成大数据组件时， CentOS 系统下，需要将组件格式制作成 rpm 格式，这里总结一种通用简便的从大数据组件源码制作 rpm 格式文件的方法：<strong>将源码编译成<code>tar</code>包，然后再将<code>tar</code>包打成 <code>rpm</code> 包</strong>。</p><p>这里以HDP版本的 ZooKeeper 为例介绍这种方法，其实 ZooKeeper 是可以直接从源码制作成rpm包的，这里为了介绍通用的做法，采用先将 ZooKeeper 的源码编译成 <code>tar.gz</code> 包，然后再制作成 <code>rpm</code>的方式。</p><a id="more"></a>
 
 <h1 id="源码编译"><a href="#源码编译" class="headerlink" title="源码编译"></a>源码编译</h1><h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><p>Release HDP-2.6.4.91-3-tag: Modify HDP-CHANGES.txt to include ZOOKEEPER-2146 · hortonworks/zookeeper-release<br><a href="https://github.com/hortonworks/zookeeper-release/releases/tag/HDP-2.6.4.91-3-tag" target="_blank" rel="noopener">https://github.com/hortonworks/zookeeper-release/releases/tag/HDP-2.6.4.91-3-tag</a> </p>
@@ -155,7 +155,7 @@
   </entry>
   <entry>
     <title>CentOS 7 安装 MySQL 5.7 详细步骤</title>
-    <url>/2019/12/03/Install-MySQL-5-7-on-CentOS-7/</url>
+    <url>/Erik_ly_blog/2019/12/03/Install-MySQL-5-7-on-CentOS-7/</url>
     <content><![CDATA[<h2 id="查看当前安装-MySQL-情况"><a href="#查看当前安装-MySQL-情况" class="headerlink" title="查看当前安装 MySQL 情况"></a>查看当前安装 MySQL 情况</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rpm -qa|grep -i mysql</span><br></pre></td></tr></table></figure><p>如果有，全部删除所列的内容，直至<code>rpm -qa|grep -i mysql</code>时没有内容</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rpm -ev mysql-community-libs-5.6.37-2.el7.x86_64</span><br></pre></td></tr></table></figure><h2 id="安装MySQL"><a href="#安装MySQL" class="headerlink" title="安装MySQL"></a>安装MySQL</h2><ul>
 <li><p>下载mysql的repo源</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget http://repo.mysql.com/mysql57-community-release-el7-8.noarch.rpm</span><br></pre></td></tr></table></figure>
@@ -201,7 +201,7 @@
   </entry>
   <entry>
     <title>Windows 安装 MySQL 5.7详细步骤</title>
-    <url>/2019/12/03/Install-MySQL-5-7-on-Windows/</url>
+    <url>/Erik_ly_blog/2019/12/03/Install-MySQL-5-7-on-Windows/</url>
     <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>MySQL :: Download MySQL Community Server (Archived Versions)<br><a href="https://downloads.mysql.com/archives/community/" target="_blank" rel="noopener">https://downloads.mysql.com/archives/community/</a><br>选择 5.7.* 版本，然后选择 zip 文件进行下载</p><h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><p>将下载的文件解压到自己安装软件的目录，我这里是<code>C:\Software\mysql-5.7.28</code><br><img src="https://img-blog.csdnimg.cn/20191203215208716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p><a id="more"></a>
 
 <h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><p>依次点击 此电脑 — 属性 — 高级系统设置 — 环境变量，然后新建系统变量<br><img src="https://img-blog.csdnimg.cn/20191203215603211.png" alt></p>
@@ -230,7 +230,7 @@
   </entry>
   <entry>
     <title>IDEA 常用快捷键和设置</title>
-    <url>/2019/11/25/Idea-common-shortcuts-and-settings/</url>
+    <url>/Erik_ly_blog/2019/11/25/Idea-common-shortcuts-and-settings/</url>
     <content><![CDATA[<h1 id="IDEA-常用快捷键"><a href="#IDEA-常用快捷键" class="headerlink" title="IDEA 常用快捷键"></a>IDEA 常用快捷键</h1><ul>
 <li>alt + Insert ：生成 get/set 方法</li>
 <li>Ctrl + Alt + t ：    使用 try/catch </li>
@@ -271,7 +271,7 @@
   </entry>
   <entry>
     <title>GitBucket 安装部署</title>
-    <url>/2019/11/05/GitBucket-introduction/</url>
+    <url>/Erik_ly_blog/2019/11/05/GitBucket-introduction/</url>
     <content><![CDATA[<h1 id="GitBucket-介绍"><a href="#GitBucket-介绍" class="headerlink" title="GitBucket 介绍"></a>GitBucket 介绍</h1><p>GitBucket 可以看做一款是GitHub的私有版，小巧精悍，几乎具有GitHub的所有功能，而且部署简单。</p><ul>
 <li>GitHub 地址<br>gitbucket/gitbucket: A Git platform powered by Scala with easy installation, high extensibility &amp; GitHub API compatibility<br><a href="https://github.com/gitbucket/gitbucket" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket</a> </li>
 </ul><a id="more"></a>
@@ -291,7 +291,7 @@
   </entry>
   <entry>
     <title>在线协同电子表格 EtherCalc 安装部署详细步骤</title>
-    <url>/2019/11/04/EtherCalc-introduction/</url>
+    <url>/Erik_ly_blog/2019/11/04/EtherCalc-introduction/</url>
     <content><![CDATA[<h1 id="EtherCalc-介绍"><a href="#EtherCalc-介绍" class="headerlink" title="EtherCalc 介绍"></a>EtherCalc 介绍</h1><p>EtherCalc 可以满足多人在线协同编辑表格的需求，安装简单，使用方便。<br>本文主要是介绍在 CentOS 7 中安装 EtherCalc 的详细步骤</p><h2 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h2><p>EtherCalc: 多人即时协作电子表格<br><a href="http://cn.ethercalc.net/" target="_blank" rel="noopener">http://cn.ethercalc.net/</a> </p><h2 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h2><p>audreyt/ethercalc: Node.js port of Multi-user SocialCalc<br><a href="https://github.com/audreyt/ethercalc" target="_blank" rel="noopener">https://github.com/audreyt/ethercalc</a> </p><a id="more"></a>
 
 
@@ -353,7 +353,7 @@
   </entry>
   <entry>
     <title>使用 GitHub 和 Hexo 搭建个人博客</title>
-    <url>/2019/11/03/GitHub-and-Hexo-create-blogs/</url>
+    <url>/Erik_ly_blog/2019/11/03/GitHub-and-Hexo-create-blogs/</url>
     <content><![CDATA[<h1 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h1><p>首先展示下使用 GitHub 和 Hexo 搭建的个人博客效果</p><p>Erik-ly<br><a href="http://www.erik-ly.com/" target="_blank" rel="noopener">http://www.erik-ly.com/</a></p><h1 id="Hexo-简介"><a href="#Hexo-简介" class="headerlink" title="Hexo 简介"></a>Hexo 简介</h1><ul>
 <li><p>Hexo 官网：<a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">https://hexo.io/zh-cn/</a></p>
 </li>
