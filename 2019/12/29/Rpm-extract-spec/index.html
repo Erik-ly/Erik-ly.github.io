@@ -15,52 +15,22 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '7.5.0',
-    exturl: false,
-    sidebar: {"position":"left","display":"always","offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":"flat"},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: '复制',
-      copy_success: '复制成功',
-      copy_failure: '复制失败'
-    },
-    sidebarPadding: 40
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
-  <meta name="description" content="rpmrebuild 官网rpmrebuildhttp:&#x2F;&#x2F;rpmrebuild.sourceforge.net&#x2F;下载RPM resource rpmrebuildhttp:&#x2F;&#x2F;rpmfind.net&#x2F;linux&#x2F;rpm2html&#x2F;search.php?query=rpmrebuild 安装rpmrebuild 依赖 rpm-built，所以首先执行：">
+  <meta name="description" content="rpmrebuild 官网rpmrebuildhttp:&#x2F;&#x2F;rpmrebuild.sourceforge.net&#x2F; 下载RPM resource rpmrebuildhttp:&#x2F;&#x2F;rpmfind.net&#x2F;linux&#x2F;rpm2html&#x2F;search.php?query=rpmrebuild">
 <meta name="keywords" content="BigData">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用rpmrebuild从rpm包中提取spec文件">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;29&#x2F;Rpm-extract-spec&#x2F;index.html">
 <meta property="og:site_name" content="Erik-ly">
-<meta property="og:description" content="rpmrebuild 官网rpmrebuildhttp:&#x2F;&#x2F;rpmrebuild.sourceforge.net&#x2F;下载RPM resource rpmrebuildhttp:&#x2F;&#x2F;rpmfind.net&#x2F;linux&#x2F;rpm2html&#x2F;search.php?query=rpmrebuild 安装rpmrebuild 依赖 rpm-built，所以首先执行：">
+<meta property="og:description" content="rpmrebuild 官网rpmrebuildhttp:&#x2F;&#x2F;rpmrebuild.sourceforge.net&#x2F; 下载RPM resource rpmrebuildhttp:&#x2F;&#x2F;rpmfind.net&#x2F;linux&#x2F;rpm2html&#x2F;search.php?query=rpmrebuild">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;2019122917413936.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;201912291746090.png?x-oss-process=image&#x2F;watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2019-12-29T09:52:09.176Z">
+<meta property="og:updated_time" content="2020-11-03T14:39:13.343Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;2019122917413936.png">
 
@@ -71,10 +41,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -117,18 +86,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Erik-ly</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">技术源于分享</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="切换导航栏">
       <span class="toggle-line toggle-line-first"></span>
@@ -136,11 +93,28 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -172,29 +146,34 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
+
+
+
+  <div class="search-pop-overlay">
     <div class="popup search-popup">
-    <div class="search-header">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+    <input autocomplete="off" autocapitalize="off"
            placeholder="搜索..." spellcheck="false"
-           type="text" id="search-input">
+           type="search" class="search-input">
   </div>
   <span class="popup-btn-close">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
   </div>
+</div>
+
+    </div>
+  </div>
+
 </div>
     </header>
 
@@ -203,6 +182,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -210,14 +190,13 @@
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/29/Rpm-extract-spec/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -240,19 +219,23 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2019-12-29 17:49:09 / 修改时间：17:52:09" itemprop="dateCreated datePublished" datetime="2019-12-29T17:49:09+08:00">2019-12-29</time>
+              <time title="创建时间：2019-12-29 17:49:09" itemprop="dateCreated datePublished" datetime="2019-12-29T17:49:09+08:00">2019-12-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-03 22:39:13" itemprop="dateModified" datetime="2020-11-03T22:39:13+08:00">2020-11-03</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index">
-                    <span itemprop="name">软件工具</span>
-                  </a>
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
                 </span>
             </span>
 
@@ -274,20 +257,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="rpmrebuild-官网"><a href="#rpmrebuild-官网" class="headerlink" title="rpmrebuild 官网"></a>rpmrebuild 官网</h2><p>rpmrebuild<br><a href="http://rpmrebuild.sourceforge.net/" target="_blank" rel="noopener">http://rpmrebuild.sourceforge.net/</a></p><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>RPM resource rpmrebuild<br><a href="http://rpmfind.net/linux/rpm2html/search.php?query=rpmrebuild" target="_blank" rel="noopener">http://rpmfind.net/linux/rpm2html/search.php?query=rpmrebuild</a> </p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>rpmrebuild 依赖 rpm-built，所以首先执行：</p><a id="more"></a>
+        <h2 id="rpmrebuild-官网"><a href="#rpmrebuild-官网" class="headerlink" title="rpmrebuild 官网"></a>rpmrebuild 官网</h2><p>rpmrebuild<br><a href="http://rpmrebuild.sourceforge.net/" target="_blank" rel="noopener">http://rpmrebuild.sourceforge.net/</a></p>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>RPM resource rpmrebuild<br><a href="http://rpmfind.net/linux/rpm2html/search.php?query=rpmrebuild" target="_blank" rel="noopener">http://rpmfind.net/linux/rpm2html/search.php?query=rpmrebuild</a> </p>
+<a id="more"></a>
 
-
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>rpmrebuild 依赖 rpm-built，所以首先执行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install rpm-built</span><br></pre></td></tr></table></figure>
 <p>然后安装 rpmrebuild</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -Uvh rpmrebuild-2.14-1.2.noarch.rpm</span><br></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/2019122917413936.png" alt></p>
+<p><img src="https://img-blog.csdnimg.cn/2019122917413936.png" alt=""></p>
 <h2 id="提取-spec-文件"><a href="#提取-spec-文件" class="headerlink" title="提取 spec 文件"></a>提取 spec 文件</h2><p>这里以提取 MySQL 的 rpm 包的 spec文件为例</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpmrebuild --package --notest-install --spec-only=mysql.spec mysql57-community-release-el7-8.noarch.rpm</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>–spec-only=mysql.spec<br>这里的<code>mysql.spec</code>即为要保存的 spec 文件名</li>
 </ul>
-<h2 id="帮助文档"><a href="#帮助文档" class="headerlink" title="帮助文档"></a>帮助文档</h2><p><img src="https://img-blog.csdnimg.cn/201912291746090.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt></p>
+<h2 id="帮助文档"><a href="#帮助文档" class="headerlink" title="帮助文档"></a>帮助文档</h2><p><img src="https://img-blog.csdnimg.cn/201912291746090.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
 <li>linux – 从rpm包中提取spec文件 - 代码日志<br><a href="https://codeday.me/bug/20180226/137445.html" target="_blank" rel="noopener">https://codeday.me/bug/20180226/137445.html</a> </li>
 </ul>
@@ -305,21 +290,18 @@
 
         
 
-          <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-                <a href="/2019/12/29/ZooKeeper-rpm/" rel="next" title="ZooKeeper从源码到RPM包制作过程详解">
-                  <i class="fa fa-chevron-left"></i> ZooKeeper从源码到RPM包制作过程详解
-                </a>
-            </div>
 
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
-                <a href="/2020/10/31/ZooKeeper-Introduction/" rel="prev" title="ZooKeeper 介绍">
-                  ZooKeeper 介绍 <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/29/ZooKeeper-rpm/" rel="prev" title="ZooKeeper从源码到RPM包制作过程详解">
+      <i class="fa fa-chevron-left"></i> ZooKeeper从源码到RPM包制作过程详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/31/ZooKeeper-Introduction/" rel="next" title="ZooKeeper 介绍">
+      ZooKeeper 介绍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
     
   </article>
@@ -327,11 +309,32 @@
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -362,8 +365,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <img class="site-author-image" itemprop="image" alt="Erik_ly"
-    src="/images/avatar.png">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="/images/avatar.png">
   <p class="site-author-name" itemprop="name">Erik_ly</p>
   <div class="site-description" itemprop="description">我渴望的必将得到</div>
 </div>
@@ -392,10 +395,10 @@
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/Erik-ly" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://erik-ly.blog.csdn.net/" title="CSDN &amp;rarr; https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
       </span>
   </div>
 
@@ -415,6 +418,8 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 2019 – 
@@ -424,10 +429,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Erik_ly</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.5.0
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
 
         
@@ -459,11 +461,6 @@
 
 
 
-
-
-
-
-        
       </div>
     </footer>
   </div>
@@ -493,7 +490,6 @@
 
 
   <script src="/js/local-search.js"></script>
-
 
 
 
