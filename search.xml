@@ -210,10 +210,10 @@
     <title>Windows 安装 MySQL 5.7详细步骤</title>
     <url>/2019/12/03/Install-MySQL-5-7-on-Windows/</url>
     <content><![CDATA[<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>MySQL :: Download MySQL Community Server (Archived Versions)<br><a href="https://downloads.mysql.com/archives/community/" target="_blank" rel="noopener">https://downloads.mysql.com/archives/community/</a><br>选择 5.7.* 版本，然后选择 zip 文件进行下载</p>
-<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><p>将下载的文件解压到自己安装软件的目录，我这里是<code>C:\Software\mysql-5.7.28</code><br><img src="https://img-blog.csdnimg.cn/20191203215208716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
-<h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><p>依次点击 此电脑 — 属性 — 高级系统设置 — 环境变量，然后新建系统变量<br><img src="https://img-blog.csdnimg.cn/20191203215603211.png" alt=""></p>
 <a id="more"></a>
 
+<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><p>将下载的文件解压到自己安装软件的目录，我这里是<code>C:\Software\mysql-5.7.28</code><br><img src="https://img-blog.csdnimg.cn/20191203215208716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><p>依次点击 此电脑 — 属性 — 高级系统设置 — 环境变量，然后新建系统变量<br><img src="https://img-blog.csdnimg.cn/20191203215603211.png" alt=""></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">MYSQL_HOME</span><br><span class="line">C:\Software\mysql-5.7.28</span><br></pre></td></tr></table></figure>
 <p>在 “Path”变量中添加<code>%MYSQL_HOME%\bin</code><br><img src="https://img-blog.csdnimg.cn/20191203215746366.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
 <h2 id="创建数据目录"><a href="#创建数据目录" class="headerlink" title="创建数据目录"></a>创建数据目录</h2><p>在<code>C:\Software\mysql-5.7.28\</code>目录中分别创建<code>data</code>和<code>uploads</code>文件夹，分别存放MySQL数据和导入导出文件。<br><img src="https://img-blog.csdnimg.cn/20191203220151594.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
