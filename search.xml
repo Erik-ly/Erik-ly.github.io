@@ -588,8 +588,10 @@
   <entry>
     <title>使用 GitHub 和 Hexo 搭建个人博客</title>
     <url>/2019/11/03/GitHub-and-Hexo-create-blogs/</url>
-    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p> 最终效果<br>首先展示下使用 GitHub 和 Hexo 搭建的个人博客效果</p>
+    <content><![CDATA[<p>本文主要介绍使用 GitHub 和 Hexo 搭建个人博客的详细方法步骤，包括安装配置 Hexo、配置个人域名、编写并发布博客的详细步骤，最后介绍 Next 主题及设置，最终效果：</p>
 <p>Erik-ly<br><a href="http://www.erik-ly.com/" target="_blank" rel="noopener">http://www.erik-ly.com/</a></p>
+<a id="more"></a>
+
 <h1 id="Hexo-简介"><a href="#Hexo-简介" class="headerlink" title="Hexo 简介"></a>Hexo 简介</h1><ul>
 <li><p>Hexo 官网：<a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">https://hexo.io/zh-cn/</a></p>
 </li>
@@ -597,7 +599,7 @@
 </li>
 <li><p>Hexo 视频教程</p>
 <p>  YouTube：<a href="https://www.youtube.com/playlist?list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX" target="_blank" rel="noopener">https://www.youtube.com/playlist?list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX</a><br>  Bilibili：<a href="https://space.bilibili.com/362224537/channel/detail?cid=61636" target="_blank" rel="noopener">https://space.bilibili.com/362224537/channel/detail?cid=61636</a></p>
-<a id="more"></a>
+<!-- more -->
 
 </li>
 </ul>
