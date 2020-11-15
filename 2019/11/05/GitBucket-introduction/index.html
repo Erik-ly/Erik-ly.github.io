@@ -17,18 +17,18 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="GitBucket 介绍GitBucket 可以看做一款是GitHub的私有版，小巧精悍，几乎具有GitHub的所有功能，而且部署简单。  GitHub 地址gitbucket&#x2F;gitbucket: A Git platform powered by Scala with easy installation, high extensibility &amp;amp; GitHub API compatib">
+  <meta name="description" content="本文主要介绍了一款 GitHub 的私有版代码管理工具—— GitBucket，相较于 GitLab 更小巧精悍，适合小团队协作开发使用。">
 <meta name="keywords" content="GitBucket,Git">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GitBucket 安装部署">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;05&#x2F;GitBucket-introduction&#x2F;index.html">
 <meta property="og:site_name" content="Erik-ly">
-<meta property="og:description" content="GitBucket 介绍GitBucket 可以看做一款是GitHub的私有版，小巧精悍，几乎具有GitHub的所有功能，而且部署简单。  GitHub 地址gitbucket&#x2F;gitbucket: A Git platform powered by Scala with easy installation, high extensibility &amp;amp; GitHub API compatib">
+<meta property="og:description" content="本文主要介绍了一款 GitHub 的私有版代码管理工具—— GitBucket，相较于 GitLab 更小巧精悍，适合小团队协作开发使用。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-11-03T14:39:13.351Z">
+<meta property="og:updated_time" content="2020-11-15T02:35:09.524Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2019/11/05/GitBucket-introduction/">
@@ -223,7 +223,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-03 22:39:13" itemprop="dateModified" datetime="2020-11-03T22:39:13+08:00">2020-11-03</time>
+                <time title="修改时间：2020-11-15 10:35:09" itemprop="dateModified" datetime="2020-11-15T10:35:09+08:00">2020-11-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,11 +253,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="GitBucket-介绍"><a href="#GitBucket-介绍" class="headerlink" title="GitBucket 介绍"></a>GitBucket 介绍</h1><p>GitBucket 可以看做一款是GitHub的私有版，小巧精悍，几乎具有GitHub的所有功能，而且部署简单。</p>
+        <p>本文主要介绍了一款 GitHub 的私有版代码管理工具—— GitBucket，相较于 GitLab 更小巧精悍，适合小团队协作开发使用。</p>
+<a id="more"></a>
+
+<h1 id="GitBucket-介绍"><a href="#GitBucket-介绍" class="headerlink" title="GitBucket 介绍"></a>GitBucket 介绍</h1><p>GitBucket 可以看做一款是GitHub的私有版，小巧精悍，几乎具有GitHub的所有功能，而且部署简单。</p>
 <ul>
-<li>GitHub 地址<br>gitbucket/gitbucket: A Git platform powered by Scala with easy installation, high extensibility &amp; GitHub API compatibility<br><a href="https://github.com/gitbucket/gitbucket" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket</a> <a id="more"></a>
-可以直接下载 war 包进行安装：<a href="https://github.com/gitbucket/gitbucket/releases" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket/releases</a></li>
+<li>GitHub 地址<br>gitbucket/gitbucket: A Git platform powered by Scala with easy installation, high extensibility &amp; GitHub API compatibility<br><a href="https://github.com/gitbucket/gitbucket" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket</a> </li>
 </ul>
+<p>可以直接下载 war 包进行安装：<a href="https://github.com/gitbucket/gitbucket/releases" target="_blank" rel="noopener">https://github.com/gitbucket/gitbucket/releases</a></p>
 <h1 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h1><p>因为是 war 包，可以直接使用 <code>java -jar</code>启动，为了后台启动，可以运行脚本<code>start_gitbucket.sh</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">nohup java -jar /opt/gitbucket/gitbucket.war &gt; /opt/gitbucket/gitbucket.log &amp;</span><br></pre></td></tr></table></figure>
 
