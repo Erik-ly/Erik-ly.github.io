@@ -20,16 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="我渴望的必将得到">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Erik-ly">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;Git&#x2F;index.html">
+  <meta name="description" content="本文主要介绍 HDFS 常用的命令行基础操作命令，且直接给出操作示例。">
+<meta name="keywords" content="HDFS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HDFS 命令行基本操作">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;11&#x2F;28&#x2F;hdfs-command-line-operations&#x2F;index.html">
 <meta property="og:site_name" content="Erik-ly">
-<meta property="og:description" content="我渴望的必将得到">
+<meta property="og:description" content="本文主要介绍 HDFS 常用的命令行基础操作命令，且直接给出操作示例。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;20201128154658.png">
+<meta property="og:updated_time" content="2020-11-28T07:47:11.081Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;20201128154658.png">
 
-<link rel="canonical" href="http://yoursite.com/tags/Git/">
+<link rel="canonical" href="http://yoursite.com/2020/11/28/hdfs-command-line-operations/">
 
 
 <script id="page-configurations">
@@ -37,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: Git | Erik-ly</title>
+  <title>HDFS 命令行基本操作 | Erik-ly</title>
   
 
 
@@ -184,51 +188,150 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Git
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/28/hdfs-command-line-operations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/Erik_ly/images/raw/master/img/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HDFS 命令行基本操作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-28 11:27:24 / 修改时间：15:47:11" itemprop="dateCreated datePublished" datetime="2020-11-28T11:27:24+08:00">2020-11-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2019</span>
+        <p>本文主要介绍 HDFS 常用的命令行基础操作命令，且直接给出操作示例。</p>
+<a id="more"></a>
+
+<h1 id="Hadoop-fs-与-hdfs-dfs-的区别"><a href="#Hadoop-fs-与-hdfs-dfs-的区别" class="headerlink" title="Hadoop fs 与 hdfs dfs 的区别"></a><code>Hadoop fs</code> 与 <code>hdfs dfs</code> 的区别</h1><p><code>Hadoop fs</code> 使用范围更广，而 <code>hdfs dfs</code> 只适用于HDFS，因此以下操作均使用 <code>hadoop fs</code> 操作<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201128154658.png" alt=""></p>
+<h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><p>切换为hdfs用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su hdfs</span><br></pre></td></tr></table></figure>
+
+<p>查看help信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -help</span><br></pre></td></tr></table></figure>
+
+<p>查看目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -ls /tmp</span><br></pre></td></tr></table></figure>
+
+<p>创建文件夹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -mkdir /tmp/test</span><br></pre></td></tr></table></figure>
+
+<p>创建级联文件夹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -mkdir -p /tmp/test/a/b/c</span><br></pre></td></tr></table></figure>
+
+<p>上传文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -put /home/test/1.txt /tmp/test/1.txt</span><br></pre></td></tr></table></figure>
+
+<p>查看文件内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -cat /tmp/test/1.txt</span><br></pre></td></tr></table></figure>
+
+<p>复制HDFS文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -cp /tmp/test/1.txt /tmp/test/a/1.txt</span><br></pre></td></tr></table></figure>
+
+<p>移动HDFS文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -mv /tmp/test/a/1.txt /tmp/test/a/b/1.txt</span><br></pre></td></tr></table></figure>
+
+<p>下载HDFS文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -get /tmp/test/1.txt /tmp/1.txt</span><br></pre></td></tr></table></figure>
+
+<p>追加文件内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -appendToFile /home/test/2.txt /tmp/test/1.txt</span><br></pre></td></tr></table></figure>
+
+<p>修改文件权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -chmod 755 /tmp/test/1.txt</span><br><span class="line">hadoop fs -chown erik:hdfs /tmp/test/1.txt</span><br></pre></td></tr></table></figure>
+
+<p>查看文件夹大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -du -h /tmp/test</span><br></pre></td></tr></table></figure>
+
+<p>查看文件夹中文件/夹大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -du -s -h /tmp</span><br></pre></td></tr></table></figure>
+
+<p>统计指定文件夹中文件信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -count /tmp</span><br><span class="line">[文件夹总数] [文件总数]   [文件总大小] [指定文件夹]</span><br></pre></td></tr></table></figure>
+
+<p>删除文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -rm /tmp/test/1.txt</span><br></pre></td></tr></table></figure>
+
+<p>删除文件夹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -rm -r /tmp/test</span><br></pre></td></tr></table></figure>
+
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-11-05T23:34:44+08:00"
-              content="2019-11-05">
-          11-05
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/HDFS/" rel="tag"># HDFS</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2019/11/05/GitBucket-introduction/" itemprop="url">
-            <span itemprop="name">GitBucket 安装部署</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/28/zookeeper-deb/" rel="prev" title="ZooKeeper deb 打包方法">
+      <i class="fa fa-chevron-left"></i> ZooKeeper deb 打包方法
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
@@ -281,6 +384,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hadoop-fs-与-hdfs-dfs-的区别"><span class="nav-number">1.</span> <span class="nav-text">Hadoop fs 与 hdfs dfs 的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础命令"><span class="nav-number">2.</span> <span class="nav-text">基础命令</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
