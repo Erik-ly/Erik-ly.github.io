@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>mindoc install and use</title>
+    <title>MinDoc 安装使用介绍</title>
     <url>/2020/11/28/mindoc-install-and-use/</url>
     <content><![CDATA[<p>本文主要介绍在 CentOS 系统中安装使用在线文档管理工具 MinDoc 的安装使用方法，MinDoc使用 markdown 语法写作，简捷方便。</p>
 <a id="more"></a>
@@ -93,7 +93,7 @@
         <category>软件工具</category>
       </categories>
       <tags>
-        <tag>mindoc</tag>
+        <tag>MinDoc</tag>
       </tags>
   </entry>
   <entry>
