@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>飞腾银河麒麟系统安装步骤</title>
+    <url>/2020/12/02/feiteng-kylin-install/</url>
+    <content><![CDATA[<p>本文主要介绍了在飞腾机器上安装银行麒麟操作系统的方法步骤，重点写了制作 U 盘启动盘的方法和在安装时的一些重要步骤。</p>
+<a id="more"></a>
+
+<h1 id="制作-U-盘启动盘"><a href="#制作-U-盘启动盘" class="headerlink" title="制作 U 盘启动盘"></a>制作 U 盘启动盘</h1><p>飞腾麒麟系统的 U 盘启动盘较特殊，首先需要准备一个空的 U 盘，然后插入物理机上。<br><code>fdisk -l</code> 查看 U 盘是哪个设备。这里假设为/dev/sdb。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//卸载u盘(可能显示没有挂载，不影响之后操作)</span><br><span class="line">umount /dev/sdb*</span><br><span class="line"></span><br><span class="line">//清空u盘分区</span><br><span class="line">dd if=/dev/zero of=/dev/sdb bs=1M count=10</span><br><span class="line"></span><br><span class="line">//写入磁盘</span><br><span class="line">partprobe /dev/sdb</span><br><span class="line"></span><br><span class="line">//挂载iso</span><br><span class="line">mount -o loop xxx.iso /mnt</span><br><span class="line"></span><br><span class="line">//格式化u盘</span><br><span class="line">mkfs.ext4 /dev/sdb</span><br><span class="line"></span><br><span class="line">//挂载u盘</span><br><span class="line">mkdir -p /mnt2</span><br><span class="line">mount /dev/sdb /mnt2</span><br><span class="line"></span><br><span class="line">//将iso中的内容同步到u盘中。</span><br><span class="line">rsync -a /mnt/ /mnt2/</span><br><span class="line">//注意/mnt/ 最后是有斜杠的</span><br><span class="line"></span><br><span class="line">//卸载设备(必须等待卸载设备完成才能制作成功，大约20分钟)</span><br><span class="line">umount /mnt2</span><br><span class="line">umount /mnt</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h1><p>系统启动过程中<strong>按 del 键进入 BIOS界面</strong>，修改第一启动项为优盘启动，保存退出</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202191906.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192049.png" alt=""></p>
+<p>以下是安装过程中的重要步骤截图</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192128.png" alt=""><br>选择第一项图形安装界面</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192251.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192349.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192413.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192506.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192530.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192554.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192642.png" alt=""><br>磁盘分区可以选择“向导”或“手动”，选择向导则按提示做即可，如果选择“手动”可以按以下内容分配</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192953.png" alt=""><br>每个分区都要设置“用于”、“格式化分区”、“挂载点”，设置好一个后按“Esc”返回设置其他的。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193011.png" alt=""><br>最终效果是这样的。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193206.png" alt=""></p>
+<p>安装好后，会提示确保光盘已拔出，这时需要把优盘直接拔掉，然后继续，重启机器。</p>
+<h1 id="设置-IP"><a href="#设置-IP" class="headerlink" title="设置 IP"></a>设置 IP</h1><p>查看网线连接的的哪个网卡</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193305.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193340.png" alt=""></p>
+<p>选择对应的网卡点击“编辑”</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193439.png" alt=""></p>
+<p>点击“保存”即可。</p>
+<p>也可以通过修改配置文件设置 IP 和 DNS</p>
+<p>设置IP</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim /etc/network/interfaces</span><br></pre></td></tr></table></figure>
+
+<p>设置 DNS</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim /etc/resolv.conf</span><br></pre></td></tr></table></figure>
+
+<p>重启网络</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">/etc/init.d/network-manager restart</span><br></pre></td></tr></table></figure>
+
+<h1 id="设置root密码"><a href="#设置root密码" class="headerlink" title="设置root密码"></a>设置root密码</h1><p>使用 <code>Ctrl + Alt + T</code> 调出终端，执行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo passwd root</span><br></pre></td></tr></table></figure>
+<p>先输入当前用户密码，然后输入要设置的 root 用户密码。</p>
+<p>使用 <code>su root</code> 切换 root 用户测试密码，平时可以直接使用 <code>sudo -i</code> 切换到 root 用户。</p>
+]]></content>
+      <categories>
+        <category>软件工具</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Zabbix 离线安装及使用方法</title>
     <url>/2020/12/01/zabbix-offline-install-and-use/</url>
     <content><![CDATA[<p>本文主要介绍 Zabbix 的离线安装方法，并且提供一键安装脚本，方便内网安装部署。介绍常用的监控配置包括主机自动发现及磁盘 IO 监控等。</p>
