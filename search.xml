@@ -1,6 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Ambari 安装详细步骤</title>
+    <url>/2020/12/03/ambari-install/</url>
+    <content><![CDATA[<p>本文详细的介绍了 Ambari 安装步骤，包括基础环境设置、准备工作、安装Ambari和创建集群。</p>
+<a id="more"></a>
+
+<h1 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h1><p>Windows 10 安装 VMware虚拟机</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">192.168.72.131 Server1</span><br><span class="line"></span><br><span class="line">192.168.72.132 Server2</span><br><span class="line"></span><br><span class="line">192.168.72.133 Server3</span><br></pre></td></tr></table></figure>
+
+<h1 id="版本信息"><a href="#版本信息" class="headerlink" title="版本信息"></a>版本信息</h1><ul>
+<li><p>Linux:CentOS 7.6（CentOS-7-x86_64-DVD-1810.iso）</p>
+</li>
+<li><p>Java：1.8.0（jdk-8u131-linux-x64.tar.gz）</p>
+</li>
+<li><p>Ambari：2.7.1（ambari-2.7.1.0-centos7.tar.gz）</p>
+</li>
+<li><p>HDP：3.0.1（HDP-3.0.1.0-centos7-rpm.tar.gz.tar）</p>
+</li>
+</ul>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><ul>
+<li>Ambari Repositories - Hortonworks Data Platform</li>
+</ul>
+<p><a href="https://docs.hortonworks.com/HDPDocuments/Ambari-2.7.1.0/bk_ambari-installation/content/ambari_repositories.html" target="_blank" rel="noopener">https://docs.hortonworks.com/HDPDocuments/Ambari-2.7.1.0/bk_ambari-installation/content/ambari_repositories.html</a></p>
+<ul>
+<li>HDP 3.0.1 Repositories - Hortonworks Data Platform</li>
+</ul>
+<p><a href="https://docs.hortonworks.com/HDPDocuments/Ambari-2.7.1.0/bk_ambari-installation/content/hdp_30_repositories.html" target="_blank" rel="noopener">https://docs.hortonworks.com/HDPDocuments/Ambari-2.7.1.0/bk_ambari-installation/content/hdp_30_repositories.html</a></p>
+<h1 id="环境设置"><a href="#环境设置" class="headerlink" title="环境设置"></a>环境设置</h1><h2 id="设置静态-IP"><a href="#设置静态-IP" class="headerlink" title="设置静态 IP"></a>设置静态 IP</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /etc/sysconfig/network-scripts</span><br><span class="line"></span><br><span class="line">cp ifcfg-ens33 ifcfg-ens33.bak</span><br><span class="line"></span><br><span class="line">vim ifcfg-ens33</span><br></pre></td></tr></table></figure>
+
+<p>根据实际情况修改如下信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">TYPE=&quot;Ethernet&quot;</span><br><span class="line"></span><br><span class="line">PROXY_METHOD=&quot;none&quot;</span><br><span class="line"></span><br><span class="line">BROWSER_ONLY=&quot;no&quot;</span><br><span class="line"></span><br><span class="line">BOOTPROTO=&quot;static&quot;</span><br><span class="line"></span><br><span class="line">DEFROUTE=&quot;yes&quot;</span><br><span class="line"></span><br><span class="line">IPV4_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line"></span><br><span class="line">IPV6INIT=&quot;yes&quot;</span><br><span class="line"></span><br><span class="line">IPV6_AUTOCONF=&quot;yes&quot;</span><br><span class="line"></span><br><span class="line">IPV6_DEFROUTE=&quot;yes&quot;</span><br><span class="line"></span><br><span class="line">IPV6_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line"></span><br><span class="line">IPV6_ADDR_GEN_MODE=&quot;stable-privacy&quot;</span><br><span class="line"></span><br><span class="line">NAME=&quot;ens33&quot;</span><br><span class="line"></span><br><span class="line">UUID=&quot;7340f7b1-d3e4-4e2b-a9a3-05d71b8ac8b4&quot;</span><br><span class="line"></span><br><span class="line">DEVICE=&quot;ens33&quot;</span><br><span class="line"></span><br><span class="line">ONBOOT=&quot;yes&quot;</span><br><span class="line"></span><br><span class="line">IPADDR=&quot;192.168.72.131&quot;</span><br><span class="line"></span><br><span class="line">GATEWAY=&quot;192.168.72.2&quot;</span><br><span class="line"></span><br><span class="line">NETMASK=&quot;255.255.255.0&quot;</span><br><span class="line"></span><br><span class="line">DNS1=&quot;192.168.72.2&quot;</span><br><span class="line"></span><br><span class="line">NM_CONTROLLED=&quot;no&quot;</span><br></pre></td></tr></table></figure>
+
+<p>DNS1需要与GATEWAY一样，虚拟机查看子网掩码和网关的路径为：</p>
+<p>VMware —— 编辑 —— 虚拟网络编辑器 —— NAT模式 —— NAT设置</p>
+<p>重启网络</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl restart network</span><br></pre></td></tr></table></figure>
+
+<h2 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h2><ul>
+<li>查看防火墙状态</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl status firewalld</span><br></pre></td></tr></table></figure>
+
+<p>查看开机是否启动防火墙服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl is-enabled firewalld</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>关闭防火墙</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line"></span><br><span class="line">systemctl disable firewalld</span><br></pre></td></tr></table></figure>
+
+<p>再次查看防火墙状态和开机防火墙是否启动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl status firewalld</span><br><span class="line"></span><br><span class="line">systemctl is-enabled firewalld</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>禁用selinux</li>
+</ul>
+<p>永久性关闭selinux（重启服务器生效）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim /etc/sysconfig/selinux</span><br><span class="line"></span><br><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
+
+<p>重启系统</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">shutdown -r now</span><br></pre></td></tr></table></figure>
+
+<p>查看selinux状态</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">getenforce</span><br></pre></td></tr></table></figure>
+
+<p>disabled为永久关闭，permissive为临时关闭，enforcing为开启</p>
+<h2 id="安装工具"><a href="#安装工具" class="headerlink" title="安装工具"></a>安装工具</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install lrzsz -y</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h2><p>jdk 1.8.0_131 版本下载地址：</p>
+<p>链接：<a href="https://pan.baidu.com/s/1jsLxPkmH1nRfnICYOGK_ow" target="_blank" rel="noopener">https://pan.baidu.com/s/1jsLxPkmH1nRfnICYOGK_ow</a> </p>
+<p>提取码：3l6y </p>
+<p>创建存放目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p /usr/local/java</span><br><span class="line"></span><br><span class="line">cd /usr/local/java/</span><br></pre></td></tr></table></figure>
+
+<p>上传 jdk-8u131-linux-x64.tar.gz</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar -xzvf jdk-8u131-linux-x64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>结尾添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">JAVA_HOME=/usr/local/java/jdk1.8.0_131</span><br><span class="line"></span><br><span class="line">CLASSPATH=.:\$JAVA_HOME/lib.tools.jar</span><br><span class="line"></span><br><span class="line">PATH=\$JAVA_HOME/bin:\$PATH</span><br><span class="line"></span><br><span class="line">export JAVA_HOME CLASSPATH PATH</span><br></pre></td></tr></table></figure>
+
+<p>生效配置</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>查看版本信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/ff6af0496bf021398bcc54d5d705f91c.png" alt=""></p>
+<p>将jdk文件传输到其它主机</p>
+<p>在 Server2 和 Server3 中执行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p /usr/local/java</span><br><span class="line"></span><br><span class="line">cd /usr/local/java/</span><br></pre></td></tr></table></figure>
+
+<p>在Server1中执行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">scp -r jdk1.8.0_131/ root@192.168.72.132:/usr/local/java/jdk1.8.0_131</span><br><span class="line">scp -r /usr/local/java/jdk1.8.0_131/ root@192.168.72.132:/usr/local/java/jdk1.8.0_131</span><br><span class="line">scp -r /usr/local/java/jdk1.8.0_131/ root@192.168.72.133:/usr/local/java/jdk1.8.0_131</span><br></pre></td></tr></table></figure>
+
+<p>然后配置环境变量。</p>
+<h2 id="安装MySQL"><a href="#安装MySQL" class="headerlink" title="安装MySQL"></a>安装MySQL</h2><p>只在Server1上安装</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget http://repo.mysql.com/mysql57-community-release-el7-8.noarch.rpm</span><br><span class="line"></span><br><span class="line">rpm -ivh mysql57-community-release-el7-8.noarch.rpm  --nodeps --force</span><br><span class="line"></span><br><span class="line">yum install mysql-server</span><br><span class="line"></span><br><span class="line">service mysqld status</span><br><span class="line"></span><br><span class="line">systemctl start mysqld</span><br></pre></td></tr></table></figure>
+
+<p>MySQL为root用户生成的随机密码通过mysqld.log文件可以查找到：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grep &apos;temporary password&apos; /var/log/mysqld.log</span><br><span class="line"></span><br><span class="line">mysql -u root -p</span><br><span class="line">mysql&gt; Enter password: （输入刚才查询到的随机密码）</span><br><span class="line">mysql&gt; SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos;= &quot;Root-123&quot;;</span><br><span class="line">mysql&gt; exit</span><br></pre></td></tr></table></figure>
+
+
+<p>用root新密码登录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql -u root -pRoot-123</span><br></pre></td></tr></table></figure>
+
+<p>配置远程登录</p>
+<p>允许使用用户名 root 密码 Root-123456 从任何主机连接到mysql服务器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql&gt;GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;%&apos; IDENTIFIED BY &apos;Root-123456&apos; WITH GRANT OPTION;</span><br><span class="line">mysql&gt;FLUSH PRIVILEGES;</span><br><span class="line">mysql&gt;exit;</span><br></pre></td></tr></table></figure>
+
+<p>创建ambari数据库及用户，登录root用户执行下面语句：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">create database ambari character set utf8 ;  </span><br><span class="line">CREATE USER &apos;ambari&apos;@&apos;%&apos;IDENTIFIED BY &apos;Ambari-123&apos;;</span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO &apos;ambari&apos;@&apos;%&apos;;</span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<p>安装mysql jdbc 驱动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install mysql-connector-java</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置host"><a href="#设置host" class="headerlink" title="设置host"></a>设置host</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim /etc/hosts</span><br></pre></td></tr></table></figure>
+<p>输入 ip 和 hostname</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">192.168.72.131 Server1</span><br><span class="line"></span><br><span class="line">192.168.72.132 Server2</span><br><span class="line"></span><br><span class="line">192.168.72.133 Server3</span><br></pre></td></tr></table></figure>
+
+<p>测试下，分别在三台机器上执行，都能ping通则说明配置成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ping Server1</span><br><span class="line"></span><br><span class="line">ping Server2</span><br><span class="line"></span><br><span class="line">ping Server3</span><br></pre></td></tr></table></figure>
+
+<h2 id="SSH免密"><a href="#SSH免密" class="headerlink" title="SSH免密"></a>SSH免密</h2><p>Server1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<p>一路回车</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/8e0efce609ee14153491dad64c5a8771.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh/</span><br><span class="line">cat id_rsa.pub &gt;&gt; authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/fa8158f5ecee7683817eb681a3a7aa40.png" alt=""></p>
+<p>Server2：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh Server2</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/b09bb03187164cd8c42eda7071d18176.png" alt=""></p>
+<p>Server3：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh Server3</span><br></pre></td></tr></table></figure>
+
+<p>Server1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">scp ~/.ssh/authorized_keys Server2:~/.ssh/</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/23943475ac388d33698d91ea8e157f56.png" alt=""></p>
+<p>Server2：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/a72b3ddc9c3d6fb52241e0beb728a8e8.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh/</span><br><span class="line">cat id_rsa.pub &gt;&gt; authorized_keys</span><br><span class="line">scp ~/.ssh/authorized_keys Server3:~/.ssh/</span><br></pre></td></tr></table></figure>
+
+<p>Server3:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line">cd ~/.ssh/</span><br><span class="line">cat id_rsa.pub &gt;&gt; authorized_keys</span><br><span class="line">scp ~/.ssh/authorized_keys Server1:~/.ssh/</span><br><span class="line">scp ~/.ssh/authorized_keys Server2:~/.ssh/</span><br></pre></td></tr></table></figure>
+
+<p>各个节点检查 known_hosts</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat ~/.ssh/known_hosts</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/38875254e06a54267a85861a73e4a5d3.png" alt=""></p>
+<p>如果缺少哪个节点，就ssh 哪个节点</p>
+<p>最后在每个节点验证ssh 其它节点可以免密</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="开启NTP服务"><a href="#开启NTP服务" class="headerlink" title="开启NTP服务"></a>开启NTP服务</h2><p>所有节点执行</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install ntp -y</span><br><span class="line"></span><br><span class="line">systemctl is-enabled ntpd</span><br><span class="line"></span><br><span class="line">systemctl enable ntpd</span><br><span class="line"></span><br><span class="line">systemctl start ntpd</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装HTTP服务"><a href="#安装HTTP服务" class="headerlink" title="安装HTTP服务"></a>安装HTTP服务</h2><p>Server1：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install httpd</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl start httpd.service</span><br><span class="line"></span><br><span class="line">systemctl enable httpd.service</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装本地源制作相关工具"><a href="#安装本地源制作相关工具" class="headerlink" title="安装本地源制作相关工具"></a>安装本地源制作相关工具</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install yum-utils createrepo</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置本地源"><a href="#配置本地源" class="headerlink" title="配置本地源"></a>配置本地源</h2><p>切换目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /etc/yum.repos.d/</span><br></pre></td></tr></table></figure>
+
+<p>编辑<code>ambari.repo</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[ambari]</span><br><span class="line"></span><br><span class="line">name=ambari</span><br><span class="line"></span><br><span class="line">baseurl=http://192.168.72.131/ambari/ambari/centos7/2.7.1.0-169</span><br><span class="line"></span><br><span class="line">enabled=1</span><br><span class="line"></span><br><span class="line">gpgcheck=0</span><br><span class="line"></span><br><span class="line">HDP.repo</span><br><span class="line"></span><br><span class="line">[HDP]</span><br><span class="line"></span><br><span class="line">name=HDP</span><br><span class="line"></span><br><span class="line">baseurl=http://192.168.72.131/ambari/HDP/centos7/3.0.1.0</span><br><span class="line"></span><br><span class="line">path=/</span><br><span class="line"></span><br><span class="line">enabled=1</span><br><span class="line"></span><br><span class="line">gpgcheck=0</span><br></pre></td></tr></table></figure>
+
+<p>编辑<code>HDP-UTILS.repo</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[HDP-UTILS]</span><br><span class="line"></span><br><span class="line">name=HDP-UTILS</span><br><span class="line"></span><br><span class="line">baseurl=http://192.168.72.131/ambari/HDP-UTILS/centos7/1.1.0.22</span><br><span class="line"></span><br><span class="line">path=/</span><br><span class="line"></span><br><span class="line">enabled=1</span><br><span class="line"></span><br><span class="line">gpgcheck=0</span><br></pre></td></tr></table></figure>
+
+<p>在所有节点都要更新源</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum clean all</span><br><span class="line"></span><br><span class="line">yum list update</span><br><span class="line"></span><br><span class="line">yum makecache</span><br><span class="line"></span><br><span class="line">yum repolist</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装Ambari"><a href="#安装Ambari" class="headerlink" title="安装Ambari"></a>安装Ambari</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install ambari-server</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置Ambari"><a href="#配置Ambari" class="headerlink" title="配置Ambari"></a>配置Ambari</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-server setup</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/6c054e178921cc3d0cfb99c73ec245d8.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/1ef4a4dc7ef4595e043159d09211d78a.png" alt=""></p>
+<p>数据库密码填写之前设置的密码:Ambari-123</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/57e1f2169f039399e2bda1745c4ed4d1.png" alt=""></p>
+<h2 id="初始化数据库"><a href="#初始化数据库" class="headerlink" title="初始化数据库"></a>初始化数据库</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql -uambari –pAmbari-123</span><br><span class="line">use ambari;</span><br><span class="line">source /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CREATE.sql</span><br><span class="line">exit;</span><br></pre></td></tr></table></figure>
+
+<h2 id="启动ambari"><a href="#启动ambari" class="headerlink" title="启动ambari"></a>启动ambari</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-server start</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/6e17924e4a8664119a95dcbfa2cdfec0.png" alt=""></p>
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p>浏览器输入：<a href="http://192.168.72.131:8080" target="_blank" rel="noopener">http://192.168.72.131:8080</a></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/5d85538af1e09822dbc715d057c1bddc.png" alt=""></p>
+<p>默认用户名/密码：admin/admin</p>
+<h1 id="创建集群"><a href="#创建集群" class="headerlink" title="创建集群"></a>创建集群</h1><ul>
+<li>命名集群</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/49b1651e3d26778685931fb9bfd990f3.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/25dfdeebf2055c56686018920075daae.png" alt=""></p>
+<ul>
+<li>选择版本</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/33d2b0e41f16870004f9107eebf22982.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/b6f3b96d08a3a96e9cc6597ffa65bc9f.png" alt=""></p>
+<p>填写刚才配置的repo文件中的地址</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http://192.168.72.131/ambari/HDP/centos7/3.0.1.0</span><br><span class="line"></span><br><span class="line">http://192.168.72.131/ambari/HDP-UTILS/centos7/1.1.0.22</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>注册主机</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/1f5e6cee32f0ee9f2a75cbc523692c96.png" alt=""></p>
+<p>通过<code>cat /root/.ssh/id_rsa</code>查看私钥内容。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/54568d977005fa489e52aee8d7d86893.png" alt=""></p>
+<ul>
+<li>安装服务<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/e0d48726e519756a42db6d90408e0d27.png" alt=""></li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/23b56e8cc107766e6f66ea19726cf905.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/ce5c956cdf2099af06fa91c60d9de7c1.png" alt=""></p>
+<ul>
+<li>参数配置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/d7c4e11cc89c2c8bcc7b5de0bd90852f.png" alt=""></li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/768537d359e16032c1ea24635bbddcec.png" alt=""></p>
+<ul>
+<li>检查</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2107e7608ed438037543b93938325e12.png" alt=""></p>
+<ul>
+<li>安装进度</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/997d98ceb44ba4668aca83c904d2792a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/0c70c7ff7b100676a7e1ed493ce223e7.png" alt=""></p>
+<ul>
+<li>安装概要</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/b513b4824fa13bbb9126595cbabd5908.png" alt=""></p>
+<ul>
+<li>查看仪表盘</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/530119886c1e3915e8be3c898c9c1dfb.png" alt=""></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p>CentOS 7.2 安装 MySQL 5.7.13_数据库技术_Linux公社-Linux系统门户网站<br><a href="https://www.linuxidc.com/Linux/2017-03/141300.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2017-03/141300.htm</a> </p>
+</li>
+<li><p>centos7设置SSH免密码登录教程 - 简书<br><a href="https://www.jianshu.com/p/991b39c48b0f" target="_blank" rel="noopener">https://www.jianshu.com/p/991b39c48b0f</a> </p>
+</li>
+<li><p>Ambari2.7.1安装配置 - CREATE_17的博客 - CSDN博客<br><a href="https://blog.csdn.net/CREATE_17/article/details/83692585" target="_blank" rel="noopener">https://blog.csdn.net/CREATE_17/article/details/83692585</a> </p>
+</li>
+<li><p>CentOS 7.2 安装 Ambari 2.2.2 + HDP 2.4.2 搭建Hadoop集群_服务器应用_Linux公社-Linux系统门户网站<br><a href="https://www.linuxidc.com/Linux/2017-03/141302.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2017-03/141302.htm</a> </p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Ambari</category>
+      </categories>
+      <tags>
+        <tag>Ambari</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ambari 功能列表</title>
+    <url>/2020/12/03/ambari-function/</url>
+    <content><![CDATA[<p>本文列举了 Ambari 的主要功能，并梳理成思维导图。</p>
+<a id="more"></a>
+
+<p>Ambari 主要包含仪表盘、服务、主机、警告、集群管理和管理几个大的功能模块。</p>
+<h1 id="仪表盘"><a href="#仪表盘" class="headerlink" title="仪表盘"></a>仪表盘</h1><p>仪表盘主要展示监控数据，有监控、热点图和配置历史三个 table 页。</p>
+<h1 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h1><p>服务模块是最重要也是最常操作的，包括已安装服务列表、添加服务、服务概要、参数配置、快速链接、操作等功能。</p>
+<h1 id="主机"><a href="#主机" class="headerlink" title="主机"></a>主机</h1><p>主机界面显示主机列表，点击主机名可以进入主机概要页，可以查看已安装的组件，主机操作可以对该主机上的全部组件进行批量启停操作。</p>
+<h1 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h1><p>警告界面列出所有的警告信息，可以查看警告级别、定义、所属服务以及状态，可以点击状态将其禁用，这样就不会有这个告警了。</p>
+<h1 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h1><p>集群管理包括软件栈和版本信息、服务账号、安全认证和服务开机自启，其中安全认证是开启kerberos的入口。</p>
+<h1 id="管理-Ambari"><a href="#管理-Ambari" class="headerlink" title="管理 Ambari"></a>管理 Ambari</h1><p>主要包括集群管理、用户管理、视图信息，其中用户管理很重要。</p>
+<h1 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/Ambari-Function.png" alt=""></p>
+<p>可以右键复制图片链接到浏览器中查看原图。</p>
+]]></content>
+      <categories>
+        <category>Ambari</category>
+      </categories>
+      <tags>
+        <tag>Ambari</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>飞腾银河麒麟系统安装步骤</title>
     <url>/2020/12/02/feiteng-kylin-install/</url>
     <content><![CDATA[<p>本文主要介绍了在飞腾机器上安装银行麒麟操作系统的方法步骤，重点写了制作 U 盘启动盘的方法和在安装时的一些重要步骤。</p>
@@ -512,6 +795,7 @@
 <p>然后在项目设置中开启导出功能</p>
 <p><img src="https://gitee.com/Erik_ly/images/raw/master/img/cfaeb559039258a98bf523e424a23c21.png" alt=""></p>
 <p>这样文档右上角就有下载按钮了<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/fd839c856421e36147829f8197a93216.png" alt=""></p>
+<h1 id="数据信息"><a href="#数据信息" class="headerlink" title="数据信息"></a>数据信息</h1><p>文档信息在表<code>md_documents</code>中的 <code>markdown</code>列，上传的图片和附件在<code>mindoc/uploads</code>目录中。</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li><p>Linux 下安装和配置 MinDoc - Powered by MinDoc<br><a href="https://www.iminho.me/wiki/docs/mindoc/mindoc-linux.md" target="_blank" rel="noopener">https://www.iminho.me/wiki/docs/mindoc/mindoc-linux.md</a></p>
 </li>
@@ -1510,6 +1794,7 @@
 </ul>
 <p><img src="https://img-blog.csdnimg.cn/20191105213456996.png" alt=""><br>点击“Create Spreadsheet”即可创建在线表格。</p>
 <p><img src="https://img-blog.csdnimg.cn/20191203210335588.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h1 id="数据信息"><a href="#数据信息" class="headerlink" title="数据信息"></a>数据信息</h1><p>表格数据信息存放在<code>ethercalc/dump</code>目录中。</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>在Linux系统安装Nodejs 最简单步骤 - liuqiceshi - 博客园<br><a href="https://www.cnblogs.com/liuqi/p/6483317.html" target="_blank" rel="noopener">https://www.cnblogs.com/liuqi/p/6483317.html</a> </p>
 ]]></content>
       <categories>
