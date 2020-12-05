@@ -28,10 +28,10 @@
 <meta property="og:site_name" content="Erik-ly">
 <meta property="og:description" content="本文主要介绍 HDFS 性能测试工具的功能、参数说明、读写性能测试使用方法及结果分析。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;20201104194603.png">
-<meta property="og:updated_time" content="2020-11-14T07:59:31.609Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;20201104194603.png">
+<meta property="og:updated_time" content="2020-12-05T03:56:44.294Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;20201104194603.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;20201104194603.png">
 
 <link rel="canonical" href="http://yoursite.com/2020/11/04/TestDFSIO-Introduction/">
 
@@ -198,7 +198,7 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/04/TestDFSIO-Introduction/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/Erik_ly/images/raw/master/img/avatar.png">
+      <meta itemprop="image" content="https://gitee.com/Erik_ly/images/raw/master/img/2020/avatar.png">
       <meta itemprop="name" content="Erik_ly">
       <meta itemprop="description" content="我渴望的必将得到">
     </span>
@@ -225,7 +225,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-14 15:59:31" itemprop="dateModified" datetime="2020-11-14T15:59:31+08:00">2020-11-14</time>
+                <time title="修改时间：2020-12-05 11:56:44" itemprop="dateModified" datetime="2020-12-05T11:56:44+08:00">2020-12-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -297,7 +297,7 @@
 </ul>
 <p>查看数据</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -du -h /benchmarks/TestDFSIO/io_data</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104194603.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104194603.png" alt=""></p>
 <h2 id="读文件测试"><a href="#读文件测试" class="headerlink" title="读文件测试"></a>读文件测试</h2><p>执行读测试时，首先需要有文件，因此可在写文件测试之后执行相应的读文件测试，这里读取10个文件，每个文件100M。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop jar /usr/hdp/3.0.1.0-187/hadoop-mapreduce/hadoop-mapreduce-client-jobclient-tests.jar TestDFSIO -read -nrFiles 10 -size 100MB -resFile /tmp/DFSIO-read.out</span><br></pre></td></tr></table></figure>
 
@@ -403,7 +403,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Erik_ly"
-      src="https://gitee.com/Erik_ly/images/raw/master/img/avatar.png">
+      src="https://gitee.com/Erik_ly/images/raw/master/img/2020/avatar.png">
   <p class="site-author-name" itemprop="name">Erik_ly</p>
   <div class="site-description" itemprop="description">我渴望的必将得到</div>
 </div>

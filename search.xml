@@ -33,29 +33,29 @@
 </ul>
 <p>默认情况下，会采集 WARN 级别及以上的日志，用户也可以分别配置各组件的日志等级。</p>
 <h1 id="架构原理"><a href="#架构原理" class="headerlink" title="架构原理"></a>架构原理</h1><p>Log Search 主要由两类组件组成：Log Feeder 和 Log Search Server。Log Feeder 任务是监控解析节点上每个服务的日志，并将日志发送到索引模块 Log Index。Log Search Server 运行 Log Search UI 程序。Log Search 的整体架构见下图：</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/a5b504671664105edb04c200d611d535.jpeg" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/a5b504671664105edb04c200d611d535.jpeg" alt=""></p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><ul>
 <li>选择服务</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/77f339239a5527169bb193349e3fb487.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/4b33b4c37b369e7616ea291de279f4d8.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/77f339239a5527169bb193349e3fb487.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/4b33b4c37b369e7616ea291de279f4d8.png" alt=""></p>
 <ul>
 <li>参数配置</li>
 </ul>
-<p>配置登录名和密码，webUI 登录需要用到。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2d79775ce6c00a5dece629c78ab2154a.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/7ed21019a3f16ee09ffbcd4481d8a9cd.png" alt=""></p>
-<h1 id="WebUI-界面"><a href="#WebUI-界面" class="headerlink" title="WebUI 界面"></a>WebUI 界面</h1><p><a href="http://IP:61888/#/login" target="_blank" rel="noopener">http://IP:61888/#/login</a><br>输入刚才设置的用户名和密码。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/e3ed409eec1552d67ec51020692d787c.png" alt=""></p>
+<p>配置登录名和密码，webUI 登录需要用到。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2d79775ce6c00a5dece629c78ab2154a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/7ed21019a3f16ee09ffbcd4481d8a9cd.png" alt=""></p>
+<h1 id="WebUI-界面"><a href="#WebUI-界面" class="headerlink" title="WebUI 界面"></a>WebUI 界面</h1><p><a href="http://IP:61888/#/login" target="_blank" rel="noopener">http://IP:61888/#/login</a><br>输入刚才设置的用户名和密码。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/e3ed409eec1552d67ec51020692d787c.png" alt=""></p>
 <ul>
 <li>服务日志</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/0fc21778b48c27e7dfb58ceb88cedbfd.png" alt=""></p>
-<p>可以根据主机、组件、级别等筛选。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/d0bb3d3bd79d288a1046b82a25207e40.png" alt=""></p>
-<p>也可以通过筛选列查看更多列信息。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201205112513.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/0fc21778b48c27e7dfb58ceb88cedbfd.png" alt=""></p>
+<p>可以根据主机、组件、级别等筛选。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/d0bb3d3bd79d288a1046b82a25207e40.png" alt=""></p>
+<p>也可以通过筛选列查看更多列信息。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201205112513.png" alt=""></p>
 <ul>
 <li>审计日志</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/08cd0857c61bbfa7d5568544a32bf216.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/79f8f8040903e778732c244b655aacb0.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/08cd0857c61bbfa7d5568544a32bf216.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/79f8f8040903e778732c244b655aacb0.png" alt=""></p>
 ]]></content>
       <categories>
         <category>Ambari</category>
@@ -152,7 +152,7 @@
 <p>查看版本信息</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/ff6af0496bf021398bcc54d5d705f91c.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/ff6af0496bf021398bcc54d5d705f91c.png" alt=""></p>
 <p>将jdk文件传输到其它主机</p>
 <p>在 Server2 和 Server3 中执行</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p /usr/local/java</span><br><span class="line"></span><br><span class="line">cd /usr/local/java/</span><br></pre></td></tr></table></figure>
@@ -192,25 +192,25 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
 
 <p>一路回车</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/8e0efce609ee14153491dad64c5a8771.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/8e0efce609ee14153491dad64c5a8771.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh/</span><br><span class="line">cat id_rsa.pub &gt;&gt; authorized_keys</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/fa8158f5ecee7683817eb681a3a7aa40.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/fa8158f5ecee7683817eb681a3a7aa40.png" alt=""></p>
 <p>Server2：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh Server2</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/b09bb03187164cd8c42eda7071d18176.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/b09bb03187164cd8c42eda7071d18176.png" alt=""></p>
 <p>Server3：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh Server3</span><br></pre></td></tr></table></figure>
 
 <p>Server1：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">scp ~/.ssh/authorized_keys Server2:~/.ssh/</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/23943475ac388d33698d91ea8e157f56.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/23943475ac388d33698d91ea8e157f56.png" alt=""></p>
 <p>Server2：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/a72b3ddc9c3d6fb52241e0beb728a8e8.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/a72b3ddc9c3d6fb52241e0beb728a8e8.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ~/.ssh/</span><br><span class="line">cat id_rsa.pub &gt;&gt; authorized_keys</span><br><span class="line">scp ~/.ssh/authorized_keys Server3:~/.ssh/</span><br></pre></td></tr></table></figure>
 
 <p>Server3:</p>
@@ -219,7 +219,7 @@
 <p>各个节点检查 known_hosts</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat ~/.ssh/known_hosts</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/38875254e06a54267a85861a73e4a5d3.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/38875254e06a54267a85861a73e4a5d3.png" alt=""></p>
 <p>如果缺少哪个节点，就ssh 哪个节点</p>
 <p>最后在每个节点验证ssh 其它节点可以免密</p>
 <h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="开启NTP服务"><a href="#开启NTP服务" class="headerlink" title="开启NTP服务"></a>开启NTP服务</h2><p>所有节点执行</p>
@@ -249,63 +249,63 @@
 
 <h2 id="配置Ambari"><a href="#配置Ambari" class="headerlink" title="配置Ambari"></a>配置Ambari</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-server setup</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/6c054e178921cc3d0cfb99c73ec245d8.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/1ef4a4dc7ef4595e043159d09211d78a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/6c054e178921cc3d0cfb99c73ec245d8.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/1ef4a4dc7ef4595e043159d09211d78a.png" alt=""></p>
 <p>数据库密码填写之前设置的密码:Ambari-123</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/57e1f2169f039399e2bda1745c4ed4d1.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/57e1f2169f039399e2bda1745c4ed4d1.png" alt=""></p>
 <h2 id="初始化数据库"><a href="#初始化数据库" class="headerlink" title="初始化数据库"></a>初始化数据库</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql -uambari –pAmbari-123</span><br><span class="line">use ambari;</span><br><span class="line">source /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CREATE.sql</span><br><span class="line">exit;</span><br></pre></td></tr></table></figure>
 
 <h2 id="启动ambari"><a href="#启动ambari" class="headerlink" title="启动ambari"></a>启动ambari</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-server start</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/6e17924e4a8664119a95dcbfa2cdfec0.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/6e17924e4a8664119a95dcbfa2cdfec0.png" alt=""></p>
 <h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p>浏览器输入：<a href="http://192.168.72.131:8080" target="_blank" rel="noopener">http://192.168.72.131:8080</a></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/5d85538af1e09822dbc715d057c1bddc.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/5d85538af1e09822dbc715d057c1bddc.png" alt=""></p>
 <p>默认用户名/密码：admin/admin</p>
 <h1 id="创建集群"><a href="#创建集群" class="headerlink" title="创建集群"></a>创建集群</h1><ul>
 <li>命名集群</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/49b1651e3d26778685931fb9bfd990f3.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/25dfdeebf2055c56686018920075daae.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/49b1651e3d26778685931fb9bfd990f3.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/25dfdeebf2055c56686018920075daae.png" alt=""></p>
 <ul>
 <li>选择版本</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/33d2b0e41f16870004f9107eebf22982.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/b6f3b96d08a3a96e9cc6597ffa65bc9f.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/33d2b0e41f16870004f9107eebf22982.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/b6f3b96d08a3a96e9cc6597ffa65bc9f.png" alt=""></p>
 <p>填写刚才配置的repo文件中的地址</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http://192.168.72.131/ambari/HDP/centos7/3.0.1.0</span><br><span class="line"></span><br><span class="line">http://192.168.72.131/ambari/HDP-UTILS/centos7/1.1.0.22</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>注册主机</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/1f5e6cee32f0ee9f2a75cbc523692c96.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/1f5e6cee32f0ee9f2a75cbc523692c96.png" alt=""></p>
 <p>通过<code>cat /root/.ssh/id_rsa</code>查看私钥内容。</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/54568d977005fa489e52aee8d7d86893.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/54568d977005fa489e52aee8d7d86893.png" alt=""></p>
 <ul>
-<li>安装服务<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/e0d48726e519756a42db6d90408e0d27.png" alt=""></li>
+<li>安装服务<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/e0d48726e519756a42db6d90408e0d27.png" alt=""></li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/23b56e8cc107766e6f66ea19726cf905.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/ce5c956cdf2099af06fa91c60d9de7c1.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/23b56e8cc107766e6f66ea19726cf905.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/ce5c956cdf2099af06fa91c60d9de7c1.png" alt=""></p>
 <ul>
-<li>参数配置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/d7c4e11cc89c2c8bcc7b5de0bd90852f.png" alt=""></li>
+<li>参数配置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/d7c4e11cc89c2c8bcc7b5de0bd90852f.png" alt=""></li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/768537d359e16032c1ea24635bbddcec.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/768537d359e16032c1ea24635bbddcec.png" alt=""></p>
 <ul>
 <li>检查</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2107e7608ed438037543b93938325e12.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2107e7608ed438037543b93938325e12.png" alt=""></p>
 <ul>
 <li>安装进度</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/997d98ceb44ba4668aca83c904d2792a.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/0c70c7ff7b100676a7e1ed493ce223e7.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/997d98ceb44ba4668aca83c904d2792a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/0c70c7ff7b100676a7e1ed493ce223e7.png" alt=""></p>
 <ul>
 <li>安装概要</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/b513b4824fa13bbb9126595cbabd5908.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/b513b4824fa13bbb9126595cbabd5908.png" alt=""></p>
 <ul>
 <li>查看仪表盘</li>
 </ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/530119886c1e3915e8be3c898c9c1dfb.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/530119886c1e3915e8be3c898c9c1dfb.png" alt=""></p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li><p>CentOS 7.2 安装 MySQL 5.7.13_数据库技术_Linux公社-Linux系统门户网站<br><a href="https://www.linuxidc.com/Linux/2017-03/141300.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2017-03/141300.htm</a> </p>
 </li>
@@ -337,7 +337,7 @@
 <h1 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h1><p>警告界面列出所有的警告信息，可以查看警告级别、定义、所属服务以及状态，可以点击状态将其禁用，这样就不会有这个告警了。</p>
 <h1 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h1><p>集群管理包括软件栈和版本信息、服务账号、安全认证和服务开机自启，其中安全认证是开启kerberos的入口。</p>
 <h1 id="管理-Ambari"><a href="#管理-Ambari" class="headerlink" title="管理 Ambari"></a>管理 Ambari</h1><p>主要包括集群管理、用户管理、视图信息，其中用户管理很重要。</p>
-<h1 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/Ambari-Function.png" alt=""></p>
+<h1 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/Ambari-Function.png" alt=""></p>
 <p>可以右键复制图片链接到浏览器中查看原图。</p>
 ]]></content>
       <categories>
@@ -357,26 +357,26 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//卸载u盘(可能显示没有挂载，不影响之后操作)</span><br><span class="line">umount /dev/sdb*</span><br><span class="line"></span><br><span class="line">//清空u盘分区</span><br><span class="line">dd if=/dev/zero of=/dev/sdb bs=1M count=10</span><br><span class="line"></span><br><span class="line">//写入磁盘</span><br><span class="line">partprobe /dev/sdb</span><br><span class="line"></span><br><span class="line">//挂载iso</span><br><span class="line">mount -o loop xxx.iso /mnt</span><br><span class="line"></span><br><span class="line">//格式化u盘</span><br><span class="line">mkfs.ext4 /dev/sdb</span><br><span class="line"></span><br><span class="line">//挂载u盘</span><br><span class="line">mkdir -p /mnt2</span><br><span class="line">mount /dev/sdb /mnt2</span><br><span class="line"></span><br><span class="line">//将iso中的内容同步到u盘中。</span><br><span class="line">rsync -a /mnt/ /mnt2/</span><br><span class="line">//注意/mnt/ 最后是有斜杠的</span><br><span class="line"></span><br><span class="line">//卸载设备(必须等待卸载设备完成才能制作成功，大约20分钟)</span><br><span class="line">umount /mnt2</span><br><span class="line">umount /mnt</span><br></pre></td></tr></table></figure>
 
 <h1 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h1><p>系统启动过程中<strong>按 del 键进入 BIOS界面</strong>，修改第一启动项为优盘启动，保存退出</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202191906.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192049.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202191906.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192049.png" alt=""></p>
 <p>以下是安装过程中的重要步骤截图</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192128.png" alt=""><br>选择第一项图形安装界面</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192251.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192349.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192413.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192506.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192530.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192554.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192642.png" alt=""><br>磁盘分区可以选择“向导”或“手动”，选择向导则按提示做即可，如果选择“手动”可以按以下内容分配</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202192953.png" alt=""><br>每个分区都要设置“用于”、“格式化分区”、“挂载点”，设置好一个后按“Esc”返回设置其他的。</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193011.png" alt=""><br>最终效果是这样的。</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193206.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192128.png" alt=""><br>选择第一项图形安装界面</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192251.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192349.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192413.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192506.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192530.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192554.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192642.png" alt=""><br>磁盘分区可以选择“向导”或“手动”，选择向导则按提示做即可，如果选择“手动”可以按以下内容分配</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202192953.png" alt=""><br>每个分区都要设置“用于”、“格式化分区”、“挂载点”，设置好一个后按“Esc”返回设置其他的。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202193011.png" alt=""><br>最终效果是这样的。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202193206.png" alt=""></p>
 <p>安装好后，会提示确保光盘已拔出，这时需要把优盘直接拔掉，然后继续，重启机器。</p>
 <h1 id="设置-IP"><a href="#设置-IP" class="headerlink" title="设置 IP"></a>设置 IP</h1><p>查看网线连接的的哪个网卡</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193305.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193340.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202193305.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202193340.png" alt=""></p>
 <p>选择对应的网卡点击“编辑”</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201202193439.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201202193439.png" alt=""></p>
 <p>点击“保存”即可。</p>
 <p>也可以通过修改配置文件设置 IP 和 DNS</p>
 <p>设置IP</p>
@@ -418,11 +418,11 @@
 <p><a href="http://serverIP/zabbix/" target="_blank" rel="noopener">http://serverIP/zabbix/</a></p>
 <p>用户名/密码：Admin/zabbix</p>
 <p>如果出现如下提示</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/96f536c46163c45460879377d851871f.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/96f536c46163c45460879377d851871f.png" alt=""></p>
 <p>需要设置php的时区</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim /etc/php.ini</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/e836d46e324c554099da149bb6b75b39.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/e836d46e324c554099da149bb6b75b39.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">date.timezone = &quot;Asia/Shanghai&quot;</span><br><span class="line"></span><br><span class="line">systemctl restart httpd.service</span><br></pre></td></tr></table></figure>
 
 <p><strong>修改时区</strong></p>
@@ -430,7 +430,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Export TZ=’Asia/Shanghai’</span><br><span class="line"></span><br><span class="line">date</span><br><span class="line"></span><br><span class="line">Fri Sep 20 09:07:00 CST 2019</span><br><span class="line"></span><br><span class="line">date –s 09:07:00</span><br></pre></td></tr></table></figure>
 
 <p><strong>设置中文</strong></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/41ca56b17eb33703199227c8c33bd2d4.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/41ca56b17eb33703199227c8c33bd2d4.png" alt=""></p>
 <h2 id="安装zabbix-agent"><a href="#安装zabbix-agent" class="headerlink" title="安装zabbix agent"></a>安装zabbix agent</h2><p>使用batch_setup_zabbix_agent可以批量安装zabbix agent，</p>
 <p>修改ipList.txt，修改为需要安装zabbix agent的真实IP，中间以空格分隔。</p>
 <p>修改 zabbix_agent/setup_zabbix_agent.sh 中的 ServerIP</p>
@@ -443,53 +443,53 @@
 <p>rootpwd 为这些主机的root密码</p>
 <p><strong>默认使用root权限，并且配置磁盘io数据，可根据实际情况修改。</strong></p>
 <h1 id="配置监控"><a href="#配置监控" class="headerlink" title="配置监控"></a>配置监控</h1><h2 id="自动发现"><a href="#自动发现" class="headerlink" title="自动发现"></a>自动发现</h2><p>首先配置“发现规则”，依次点击“配置”——“自动发现”——“创建发现规则”</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/eea7e94de6db5d3afcf114af4179ff1a.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/7cbd27b40b7c959c997b092855983ecc.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/eea7e94de6db5d3afcf114af4179ff1a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/7cbd27b40b7c959c997b092855983ecc.png" alt=""></p>
 <p>一定要点“添加”，否则无效</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/3de81e069f42d8622fbbbf571ed534cc.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/8d3dbbd5b6698350d8dbeff59cc41c6a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/3de81e069f42d8622fbbbf571ed534cc.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/8d3dbbd5b6698350d8dbeff59cc41c6a.png" alt=""></p>
 <p>创建动作，依次选择“配置”——“动作”，在“事件源”处选择“自动发现”，然后点击“创建动作”</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/575b9bfc4e1788e2dc889548de3c0608.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/3a43df402e40aa5ff966804aaf44f8e4.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/477184a70606a99254a54832cf6942de.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/38f31dddd9a7637f07feea67e7d7bee9.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2517493bfe40f87402f8c8cf826c824d.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/5ade38658a86c0af86b881666558a116.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/575b9bfc4e1788e2dc889548de3c0608.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/3a43df402e40aa5ff966804aaf44f8e4.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/477184a70606a99254a54832cf6942de.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/38f31dddd9a7637f07feea67e7d7bee9.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2517493bfe40f87402f8c8cf826c824d.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/5ade38658a86c0af86b881666558a116.png" alt=""></p>
 <p>查看自动发现的主机</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/a17041da0d35e36af187d68d9351769d.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/5fd403f9437d0f713e68ee9e0a17a41f.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/a17041da0d35e36af187d68d9351769d.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/5fd403f9437d0f713e68ee9e0a17a41f.png" alt=""></p>
 <p>在主页可以添加自动发现组件</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/4493404fd8eeccf136181f80fa3b0851.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/782c935c807839648d01d76d4bb53596.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/72554966cb565ea853e4fc4f7ccdde4d.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/a8ef29f53da28922b74835974853dd6b.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/8a3274faa5d0387340aaf60132646032.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/4493404fd8eeccf136181f80fa3b0851.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/782c935c807839648d01d76d4bb53596.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/72554966cb565ea853e4fc4f7ccdde4d.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/a8ef29f53da28922b74835974853dd6b.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/8a3274faa5d0387340aaf60132646032.png" alt=""></p>
 <h2 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h2><p>批量安装zabbix agent时，默认已经配置了磁盘IO，只需在zabbix<br>界面配置显示即可，步骤为：</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/c5970c6aa6f535731cfa7ee5db64cff4.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/329ed7e07257d5eee19e75b12b1e2721.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/bf4e011e1da51cf4b0807c09d9c4ee2a.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/7b7812535a15bde5a22c242406ff5b69.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/72dc9247e4d79957968df854ff78d7ea.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/603d3c4996853c45a6693e08bb92a2d1.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/ea772d137ed0ef556374b9c18c282ee5.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2c019ea809a3020b9f4a51c93aa54917.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/c5970c6aa6f535731cfa7ee5db64cff4.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/329ed7e07257d5eee19e75b12b1e2721.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/bf4e011e1da51cf4b0807c09d9c4ee2a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/7b7812535a15bde5a22c242406ff5b69.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/72dc9247e4d79957968df854ff78d7ea.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/603d3c4996853c45a6693e08bb92a2d1.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/ea772d137ed0ef556374b9c18c282ee5.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2c019ea809a3020b9f4a51c93aa54917.png" alt=""></p>
 <p>io.scandisk</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/681fc5d39ce2eb50f62624373ade7128.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/dba10aacb57f20ad1f826a663d0674b7.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/f9f07909e862f21a4b1c799264251f8d.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/97b7125509b44be9d9c7a38173a38095.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/681fc5d39ce2eb50f62624373ade7128.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/dba10aacb57f20ad1f826a663d0674b7.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/f9f07909e862f21a4b1c799264251f8d.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/97b7125509b44be9d9c7a38173a38095.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">io avgqu-sz on &#123;\#DISKNAME&#125; io.avgqu-sz[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io avgrq-sz on &#123;\#DISKNAME&#125; io.avgrq-sz[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io await on &#123;\#DISKNAME&#125; io.await[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io rMBps on &#123;\#DISKNAME&#125; io.rMBps[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io rps on &#123;\#DISKNAME&#125; io.rps[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io r_await on &#123;\#DISKNAME&#125; io.r_await[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io svctm on &#123;\#DISKNAME&#125; io.svctm[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io utils on &#123;\#DISKNAME&#125; io.util[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io wMBps on &#123;\#DISKNAME&#125; io.wMBps[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io wps on &#123;\#DISKNAME&#125; io.wps[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io w_await on &#123;\#DISKNAME&#125; io.w_await[&#123;\#DISKNAME&#125;]</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/afd81f1d640ec8dd4099c26ac4043fe3.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/bf6d0726d05ad1d550027f94c3a60d34.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/908a4fbc813a996745e87f6f62415bcc.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/7b7cfd3de0eb6ab97f6c15b2c7b6149c.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/031e2126e581ad543c6ef557b462dc57.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/aeb5f2117bdaa14627edc16965305b5f.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/e6c49e1aff1e7b91cab4b5cf938879eb.png" alt="C:\\Users\\Erik\\Downloads\\Google Chrome\\0a8ebb2d-571e-4cb0-bf10-f7d0dac7c32b.png"></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/755bdc5c9a84e15bbbd3ac924ae9a007.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/afd81f1d640ec8dd4099c26ac4043fe3.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/bf6d0726d05ad1d550027f94c3a60d34.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/908a4fbc813a996745e87f6f62415bcc.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/7b7cfd3de0eb6ab97f6c15b2c7b6149c.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/031e2126e581ad543c6ef557b462dc57.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/aeb5f2117bdaa14627edc16965305b5f.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/e6c49e1aff1e7b91cab4b5cf938879eb.png" alt="C:\\Users\\Erik\\Downloads\\Google Chrome\\0a8ebb2d-571e-4cb0-bf10-f7d0dac7c32b.png"></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/755bdc5c9a84e15bbbd3ac924ae9a007.png" alt=""></p>
 <p>图形原型</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/8021e3210e985b8e2c90c04309096f38.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/8021e3210e985b8e2c90c04309096f38.png" alt=""></p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li><p>linux zabbix 安装 支持离线安装 支持批量添加主机 - fantasywith的博客 - CSDN博客<br><a href="https://blog.csdn.net/fantasywith/article/details/84193071" target="_blank" rel="noopener">https://blog.csdn.net/fantasywith/article/details/84193071</a> </p>
 </li>
@@ -793,7 +793,7 @@
 </ul>
 <p>Releases · lifei6671/mindoc</p>
 <p><a href="https://github.com/lifei6671/mindoc/releases" target="_blank" rel="noopener">https://github.com/lifei6671/mindoc/releases</a></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/7bbd70f8d751bb2adb5ca7faf3f92c0c.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/7bbd70f8d751bb2adb5ca7faf3f92c0c.png" alt=""></p>
 <ul>
 <li>官方文档</li>
 </ul>
@@ -805,13 +805,13 @@
 
 <h2 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># mysql -u root -ppassword</span><br><span class="line"></span><br><span class="line">&gt; CREATE DATABASE mindoc_db DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/4fc7902ace696cbaff47a3c71b7844bf.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/4fc7902ace696cbaff47a3c71b7844bf.png" alt=""></p>
 <p>然后在配置文件中设置数据库信息</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/cf44f3b5482e85bb8d00ef54933897ff.png" alt=""></p>
-<p>这里为配置数据库信息内容<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/8f26715c888e9d377718a6b28fe24e26.png" alt=""></p>
-<p>根据实际情况填写<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201128173812.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/cf44f3b5482e85bb8d00ef54933897ff.png" alt=""></p>
+<p>这里为配置数据库信息内容<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/8f26715c888e9d377718a6b28fe24e26.png" alt=""></p>
+<p>根据实际情况填写<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201128173812.png" alt=""></p>
 <p>初始化数据库</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/8212a43f3d66a42ac64d214085a5118b.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/8212a43f3d66a42ac64d214085a5118b.png" alt=""></p>
 <h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>修改可执行权限</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chmod +x mindoc_linux_amd64</span><br></pre></td></tr></table></figure>
 
@@ -819,46 +819,46 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./mindoc_linux_amd64</span><br></pre></td></tr></table></figure>
 
 <p>设置后台启动</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/c9935922505bbd928b6636441a48e8ee.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/c9935922505bbd928b6636441a48e8ee.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">./mindoc_linux_amd64 \&gt; /home/app/mindoc/mindoc.log &amp;</span><br></pre></td></tr></table></figure>
 
 <p>以后执行这个后台启动脚本即可。</p>
 <h2 id="web页面"><a href="#web页面" class="headerlink" title="web页面"></a>web页面</h2><p>在浏览器中打开网址：<a href="http://IP:8181" target="_blank" rel="noopener">http://IP:8181</a></p>
 <p>默认用户名：admin 密码：123456</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/e49fda866fdff17afb4cc4e7ed5992d4.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/ac899db1349bb1be480a510f88b9b0bd.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/b2951075fb80f1835ac44ec3ece2ab78.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/e49fda866fdff17afb4cc4e7ed5992d4.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/ac899db1349bb1be480a510f88b9b0bd.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/b2951075fb80f1835ac44ec3ece2ab78.png" alt=""></p>
 <h1 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h1><h2 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h2><p>点击用户名，在下拉框中选择“我的项目”  </p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/f3bc71fe8c9d8f768ad701301ba3a18f.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/f3bc71fe8c9d8f768ad701301ba3a18f.png" alt=""></p>
 <p>跳转后点击右上角的“添加项目”  </p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/eb21b40dd5061bd89ba39210639ce418.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/eb21b40dd5061bd89ba39210639ce418.png" alt=""></p>
 <p>在“添加项目”对话框中设置“项目标题”和“项目标识”，“项目标识”是之后项目网页链接标识  </p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/775b413481868e6738a7061f90cd8a6c.png" alt=""></p>
-<p>可根据文档保密程度选择“公开”或“私有”，“保存”成功后会在“我的项目”中看到刚创建的项目<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/90a67462c390c7b984b880840960368a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/775b413481868e6738a7061f90cd8a6c.png" alt=""></p>
+<p>可根据文档保密程度选择“公开”或“私有”，“保存”成功后会在“我的项目”中看到刚创建的项目<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/90a67462c390c7b984b880840960368a.png" alt=""></p>
 <p>点击项目，在“设置”中开启“自动发布”（如果不开启此项，每次编辑后需要手动点击发布按钮才能更新文档页面）和“自动保存”（开启后每30秒自动保存，可使用快捷键Ctrl + S 保存）两个选项。  </p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/44775600cefcc6bfac21a05a8a4ee36c.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/44775600cefcc6bfac21a05a8a4ee36c.png" alt=""></p>
 <h2 id="添加文档"><a href="#添加文档" class="headerlink" title="添加文档"></a>添加文档</h2><ul>
 <li>添加同级文档</li>
 </ul>
 <p>在编辑页面，可以点击“＋”添加同级别的文档  </p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/caad0323f8a1b6c2c3a90673b4799100.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/caad0323f8a1b6c2c3a90673b4799100.png" alt=""></p>
 <p>添加完成后  </p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/5177793ed08c39047539c6a8069e38e3.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/5177793ed08c39047539c6a8069e38e3.png" alt=""></p>
 <ul>
 <li>添加子文档</li>
 </ul>
 <p>右键文档后，点击“添加文档”  </p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/79851e928babc651dc9dcf10d51471c8.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/79851e928babc651dc9dcf10d51471c8.png" alt=""></p>
 <p>创建完成后  </p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/aaba9d2c3768c8b05fde002e36253692.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/aaba9d2c3768c8b05fde002e36253692.png" alt=""></p>
 <h1 id="导出功能"><a href="#导出功能" class="headerlink" title="导出功能"></a>导出功能</h1><h2 id="安装calibre"><a href="#安装calibre" class="headerlink" title="安装calibre"></a>安装calibre</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo -v &amp;&amp; wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin</span><br><span class="line"></span><br><span class="line">ebook-convert --version</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/adc826527d0f2b6a0bb42986e80cb7c5.png" alt=""></p>
-<h2 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h2><p>修改如下配置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/7bd7104f714f5c6ff7e00c892a976f61.png" alt=""></p>
-<p>根据自己情况设置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/c5ab7cfac2eb39257cb0eaf06aa199c1.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/adc826527d0f2b6a0bb42986e80cb7c5.png" alt=""></p>
+<h2 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h2><p>修改如下配置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/7bd7104f714f5c6ff7e00c892a976f61.png" alt=""></p>
+<p>根据自己情况设置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/c5ab7cfac2eb39257cb0eaf06aa199c1.png" alt=""></p>
 <p>然后在项目设置中开启导出功能</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/cfaeb559039258a98bf523e424a23c21.png" alt=""></p>
-<p>这样文档右上角就有下载按钮了<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/fd839c856421e36147829f8197a93216.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/cfaeb559039258a98bf523e424a23c21.png" alt=""></p>
+<p>这样文档右上角就有下载按钮了<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/fd839c856421e36147829f8197a93216.png" alt=""></p>
 <h1 id="数据信息"><a href="#数据信息" class="headerlink" title="数据信息"></a>数据信息</h1><p>文档信息在表<code>md_documents</code>中的 <code>markdown</code>列，上传的图片和附件在<code>mindoc/uploads</code>目录中。</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li><p>Linux 下安装和配置 MinDoc - Powered by MinDoc<br><a href="https://www.iminho.me/wiki/docs/mindoc/mindoc-linux.md" target="_blank" rel="noopener">https://www.iminho.me/wiki/docs/mindoc/mindoc-linux.md</a></p>
@@ -945,7 +945,7 @@
     <content><![CDATA[<p>本文主要介绍 HDFS 常用的命令行基础操作命令，且直接给出操作示例。</p>
 <a id="more"></a>
 
-<h1 id="Hadoop-fs-与-hdfs-dfs-的区别"><a href="#Hadoop-fs-与-hdfs-dfs-的区别" class="headerlink" title="Hadoop fs 与 hdfs dfs 的区别"></a><code>Hadoop fs</code> 与 <code>hdfs dfs</code> 的区别</h1><p><code>Hadoop fs</code> 使用范围更广，而 <code>hdfs dfs</code> 只适用于HDFS，因此以下操作均使用 <code>hadoop fs</code> 操作<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201128154658.png" alt=""></p>
+<h1 id="Hadoop-fs-与-hdfs-dfs-的区别"><a href="#Hadoop-fs-与-hdfs-dfs-的区别" class="headerlink" title="Hadoop fs 与 hdfs dfs 的区别"></a><code>Hadoop fs</code> 与 <code>hdfs dfs</code> 的区别</h1><p><code>Hadoop fs</code> 使用范围更广，而 <code>hdfs dfs</code> 只适用于HDFS，因此以下操作均使用 <code>hadoop fs</code> 操作<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201128154658.png" alt=""></p>
 <h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><p>切换为hdfs用户</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">su hdfs</span><br></pre></td></tr></table></figure>
 
@@ -1021,35 +1021,35 @@
 
 <h1 id="Deb2deb"><a href="#Deb2deb" class="headerlink" title="Deb2deb"></a>Deb2deb</h1><p>这种属于逆向打包过程。</p>
 <h2 id="创建工作环境"><a href="#创建工作环境" class="headerlink" title="创建工作环境"></a>创建工作环境</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir zkdeb</span><br><span class="line">cd zkdeb/</span><br><span class="line">mkdir zookeeper</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201126201740.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201126201740.png" alt=""></p>
 <h2 id="解包"><a href="#解包" class="headerlink" title="解包"></a>解包</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dpkg -X zookeeper_3.4.6-1_amd64.deb zookeeper/</span><br><span class="line">cd zookeeper/</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201126201810.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201126201810.png" alt=""></p>
 <h2 id="提取DEBIAN信息"><a href="#提取DEBIAN信息" class="headerlink" title="提取DEBIAN信息"></a>提取DEBIAN信息</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir DEBIAN</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/02543c81016507b725aadef93014e47d.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/02543c81016507b725aadef93014e47d.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /home/erik/Downloads/zkdeb</span><br><span class="line"></span><br><span class="line">dpkg -e zookeeper_3.4.6-1_amd64.deb ./zookeeper/DEBIAN/</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/bfe621e1462baaf97c984e8c9f376bfc.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/f512a1a3def7fa3df6623a5cf6be12fa.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/bfe621e1462baaf97c984e8c9f376bfc.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/f512a1a3def7fa3df6623a5cf6be12fa.png" alt=""></p>
 <h2 id="重新打包deb"><a href="#重新打包deb" class="headerlink" title="重新打包deb"></a>重新打包deb</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir build</span><br><span class="line"></span><br><span class="line">cd /home/erik/Downloads/zkdeb</span><br><span class="line"></span><br><span class="line">dpkg-deb -b zookeeper/ build/</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/0906697f47d90b97061928d01339ab9b.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/0906697f47d90b97061928d01339ab9b.png" alt=""></p>
 <h2 id="查看deb文件"><a href="#查看deb文件" class="headerlink" title="查看deb文件"></a>查看deb文件</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd build/</span><br></pre></td></tr></table></figure>
 
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/c2e6b1a8cda4cc60a0632f70202d21b1.png" alt=""></p>
-<h1 id="DEBIAN文件解析"><a href="#DEBIAN文件解析" class="headerlink" title="DEBIAN文件解析"></a>DEBIAN文件解析</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/537accb1519754e7b60b52545103b9d2.png" alt=""></p>
-<h2 id="control"><a href="#control" class="headerlink" title="control"></a>control</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/f7fc545130db2b64f98ffdc14c0dd069.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/c2e6b1a8cda4cc60a0632f70202d21b1.png" alt=""></p>
+<h1 id="DEBIAN文件解析"><a href="#DEBIAN文件解析" class="headerlink" title="DEBIAN文件解析"></a>DEBIAN文件解析</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/537accb1519754e7b60b52545103b9d2.png" alt=""></p>
+<h2 id="control"><a href="#control" class="headerlink" title="control"></a>control</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/f7fc545130db2b64f98ffdc14c0dd069.png" alt=""></p>
 <h2 id="Preinst"><a href="#Preinst" class="headerlink" title="Preinst"></a>Preinst</h2><p>在Deb包文件解包之前，将会运行该脚本。许多“preinst”脚本的任务是停止作用于待升级软件包的服务，直到软件包安装或升级完成。</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/b2d2d56fdf0713795f589f54e8443585.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/b2d2d56fdf0713795f589f54e8443585.png" alt=""></p>
 <h2 id="Postinst"><a href="#Postinst" class="headerlink" title="Postinst"></a>Postinst</h2><p>该脚本的主要任务是完成安装包时的配置工作。许多“postinst”脚本负责执行有关命令为新安装或升级的软件重启服务。</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/e74613be4fef44923cd2555c6e88c9ab.png" alt=""></p>
-<h2 id="prerm"><a href="#prerm" class="headerlink" title="prerm"></a>prerm</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/096ef884dba387c5b8330d01cbe2d7a3.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/e74613be4fef44923cd2555c6e88c9ab.png" alt=""></p>
+<h2 id="prerm"><a href="#prerm" class="headerlink" title="prerm"></a>prerm</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/096ef884dba387c5b8330d01cbe2d7a3.png" alt=""></p>
 <h2 id="Postrm"><a href="#Postrm" class="headerlink" title="Postrm"></a>Postrm</h2><p>该脚本负责修改软件包链接或文件关联，或删除由它创建的文件。</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/6d8b434d38464f2632d7d46fe3ff96d0.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/6d8b434d38464f2632d7d46fe3ff96d0.png" alt=""></p>
 <h2 id="md5sums"><a href="#md5sums" class="headerlink" title="md5sums"></a>md5sums</h2><p>各文件的md5值</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2763daa6e3397aa0a31c851f903d92a1.png" alt=""></p>
-<h2 id="conffile"><a href="#conffile" class="headerlink" title="conffile"></a>conffile</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/6b302ae1c043e51fdc99918efa2bf4b8.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2763daa6e3397aa0a31c851f903d92a1.png" alt=""></p>
+<h2 id="conffile"><a href="#conffile" class="headerlink" title="conffile"></a>conffile</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/6b302ae1c043e51fdc99918efa2bf4b8.png" alt=""></p>
 <h1 id="Rpm2deb"><a href="#Rpm2deb" class="headerlink" title="Rpm2deb"></a>Rpm2deb</h1><p>打包好的rpm包可以直接使用“alien”工具转换为deb包。</p>
 <p>实验环境：Ubuntu 19</p>
 <p>工具：alien</p>
@@ -1057,70 +1057,70 @@
 
 <p>因为zookeeper的来源可以是source2rpm和source2tar2rpm，所以现分别使用这两个rpm包进行测试</p>
 <h2 id="Source2rpm2deb"><a href="#Source2rpm2deb" class="headerlink" title="Source2rpm2deb"></a>Source2rpm2deb</h2><p>准备好之前打包好的rpm包</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/3ee6b8e467e0ea501d25d4e2b69bbd69.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/3ee6b8e467e0ea501d25d4e2b69bbd69.png" alt=""></p>
 <p>执行命令：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alien zookeeper-3.4.6-1.x86_64.rpm</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/be8787b5f4af83a2ee5b082458ca8a8b.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/be8787b5f4af83a2ee5b082458ca8a8b.png" alt=""></p>
 <h2 id="Source2tar2rpm2deb"><a href="#Source2tar2rpm2deb" class="headerlink" title="Source2tar2rpm2deb"></a>Source2tar2rpm2deb</h2><p>与之前方法类似，执行步骤如下图所示</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/5a1912bd8b5388027d5e8c6d9d151e9e.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/5a1912bd8b5388027d5e8c6d9d151e9e.png" alt=""></p>
 <h1 id="Tar2deb"><a href="#Tar2deb" class="headerlink" title="Tar2deb"></a>Tar2deb</h1><p>推荐使用这种方式，先使用源码编译成tar包，再使用tar包打成deb包，由于之前打rpm包时已经介绍过zookeeper打成tar包的流程，并且使用ant打包方法，不具有代表性，这里不再赘述，只介绍从tar包到deb包的步骤。</p>
 <p>实验环境：Ubuntu 19</p>
 <h2 id="创建工作目录"><a href="#创建工作目录" class="headerlink" title="创建工作目录"></a>创建工作目录</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir zookeeper</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/eaa198f04d67e9187295c1639c6866bd.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/eaa198f04d67e9187295c1639c6866bd.png" alt=""></p>
 <p>创建DEBIAN 目录</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd zookeeper/</span><br><span class="line"></span><br><span class="line">mkdir DEBIAN</span><br><span class="line"></span><br><span class="line">cd DEBIAN/</span><br><span class="line"></span><br><span class="line">vim control</span><br></pre></td></tr></table></figure>
 
 <h2 id="准备安装文件"><a href="#准备安装文件" class="headerlink" title="准备安装文件"></a>准备安装文件</h2><p>将<strong>编译好的</strong>zookeeper tar 包解压到DEBIAN的同级目录下,<br>也就是说我们把当前的目录当成根目录, 制作完成后安装时,<br>当前目录下除DEBIAN目录的其他目录都会被默认安装到系统的/目录下，比如之后要将zookeeper安装到/opt/zookeeper/这个目录下，那么就将编译好的zookeeper解压到/opt/zookeeper/目录下</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /home/erik/zookeeper/tar2deb/zookeeper</span><br><span class="line"></span><br><span class="line">mkdir opt</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/73250e9b1f48cac2d40213915b2f06b6.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/73250e9b1f48cac2d40213915b2f06b6.png" alt=""></p>
 <p>cd opt</p>
 <p>将编译好的tar包上传到这个文件夹</p>
 <p>解压</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar –xvf zookeeper-3.4.6.tar.gz</span><br><span class="line"></span><br><span class="line">mv zookeeper-3.4.6 zookeeper</span><br><span class="line"></span><br><span class="line">rm –rf zookeeper-3.4.6.tar.gz</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/bfbece7b8af4381f10eff7580c3ebce6.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/05e344b8cde7d5676106fc92ed7e0751.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/bfbece7b8af4381f10eff7580c3ebce6.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/05e344b8cde7d5676106fc92ed7e0751.png" alt=""></p>
 <h2 id="打包deb"><a href="#打包deb" class="headerlink" title="打包deb"></a>打包deb</h2><p>创建存放deb包目录</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /home/erik/zookeeper/tar2deb</span><br><span class="line"></span><br><span class="line">mkdir build</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/82c063bfa381ae968fc16e4243b6ad11.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/82c063bfa381ae968fc16e4243b6ad11.png" alt=""></p>
 <p>执行</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dpkg-deb -b zookeeper/ build/</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/08edbf394ea0d549c80d264cd9800ee4.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/08edbf394ea0d549c80d264cd9800ee4.png" alt=""></p>
 <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>安装环境为另一台Ubuntu 19 虚拟机，模拟安装环境。</p>
 <h2 id="Deb2deb-1"><a href="#Deb2deb-1" class="headerlink" title="Deb2deb"></a>Deb2deb</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dpkg -i zookeeper_3.4.6_all.deb</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/c8dcaaeb70ba8c3e2d4e0eac60fd0de4.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/c8dcaaeb70ba8c3e2d4e0eac60fd0de4.png" alt=""></p>
 <p>修改打包时的依赖</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/dbb093811dc9ce5cfa4c4b14a45c44ad.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/f1f6a464c30aaa4ec14e026600da7581.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/73cf99ba14c0cc0ff7326859e8e19d5f.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/dbb093811dc9ce5cfa4c4b14a45c44ad.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/f1f6a464c30aaa4ec14e026600da7581.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/73cf99ba14c0cc0ff7326859e8e19d5f.png" alt=""></p>
 <p>寻找安装目录</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2e207b14c69a51508678e5158467e385.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2e207b14c69a51508678e5158467e385.png" alt=""></p>
 <p>配置文件</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/1af2be1da931f3a675d6654a6d51f2d6.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/1af2be1da931f3a675d6654a6d51f2d6.png" alt=""></p>
 <p>启动脚本</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/5e42b2f08eacf00ed8c40e1fecfec1ca.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/5e42b2f08eacf00ed8c40e1fecfec1ca.png" alt=""></p>
 <p>启动</p>
 <p>在安装的主机上，</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/8cc988e70b158827184a910455a09d6e.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2c9ef4a9335604647677f37220d63605.png" alt=""></p>
-<h2 id="Source2tar2deb"><a href="#Source2tar2deb" class="headerlink" title="Source2tar2deb"></a>Source2tar2deb</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/284f15a3d23db1ed675173f8231d4c2a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/8cc988e70b158827184a910455a09d6e.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2c9ef4a9335604647677f37220d63605.png" alt=""></p>
+<h2 id="Source2tar2deb"><a href="#Source2tar2deb" class="headerlink" title="Source2tar2deb"></a>Source2tar2deb</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/284f15a3d23db1ed675173f8231d4c2a.png" alt=""></p>
 <p>找到安装目录</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /opt/zookeeper/</span><br></pre></td></tr></table></figure>
 
 <p>修改配置文件</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd conf/</span><br><span class="line"></span><br><span class="line">cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/4f096d036ad74fc91b3ad3fb4509ee63.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/4f096d036ad74fc91b3ad3fb4509ee63.png" alt=""></p>
 <p>启动</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/6317963ffa9a4eeda718e9a3c169b649.png" alt=""></p>
-<h2 id="Source2tar2rpm2deb-1"><a href="#Source2tar2rpm2deb-1" class="headerlink" title="Source2tar2rpm2deb"></a>Source2tar2rpm2deb</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/dbb8ec55d14f7bca140133cd124c9014.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/a08d643763c16f8e4f43ef5ae86f1a59.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/6317963ffa9a4eeda718e9a3c169b649.png" alt=""></p>
+<h2 id="Source2tar2rpm2deb-1"><a href="#Source2tar2rpm2deb-1" class="headerlink" title="Source2tar2rpm2deb"></a>Source2tar2rpm2deb</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/dbb8ec55d14f7bca140133cd124c9014.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/a08d643763c16f8e4f43ef5ae86f1a59.png" alt=""></p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li><p>Ubuntu下制作deb包的方法详解 - AderStep - CSDN博客<br><a href="https://blog.csdn.net/gatieme/article/details/52829907" target="_blank" rel="noopener">https://blog.csdn.net/gatieme/article/details/52829907</a> </p>
 </li>
@@ -1144,21 +1144,21 @@
     <content><![CDATA[<p>本文主要介绍使用 IDE 分别进行 Ambari server 和 Ambari agent 远程 Debug 调试的方法。</p>
 <a id="more"></a>
 
-<h1 id="Ambari-server-远程-debug"><a href="#Ambari-server-远程-debug" class="headerlink" title="Ambari server 远程 debug"></a>Ambari server 远程 debug</h1><h2 id="配置Remote"><a href="#配置Remote" class="headerlink" title="配置Remote"></a>配置Remote</h2><p>点击“Edit Configurations…”，点击“+”号，选择“Remote”，然后配置“Name”和“Host”，“Port”默认为 5005 即可。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/image001.png" alt=""></p>
+<h1 id="Ambari-server-远程-debug"><a href="#Ambari-server-远程-debug" class="headerlink" title="Ambari server 远程 debug"></a>Ambari server 远程 debug</h1><h2 id="配置Remote"><a href="#配置Remote" class="headerlink" title="配置Remote"></a>配置Remote</h2><p>点击“Edit Configurations…”，点击“+”号，选择“Remote”，然后配置“Name”和“Host”，“Port”默认为 5005 即可。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/image001.png" alt=""></p>
 <h2 id="开启-debug-模式"><a href="#开启-debug-模式" class="headerlink" title="开启 debug 模式"></a>开启 debug 模式</h2><p>先停止 ambari server，然后启动时开启 debug 模式</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-server stop</span><br><span class="line">ambari-server start --debug</span><br></pre></td></tr></table></figure>
 
-<h2 id="打断点"><a href="#打断点" class="headerlink" title="打断点"></a>打断点</h2><p>示例断点，<br>在 <code>org.apache.ambari.server.controller.internal.ClusterStackVersionResourceProvider</code> 类中打如下断点<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/image003.png" alt=""></p>
-<h2 id="Debug-调试"><a href="#Debug-调试" class="headerlink" title="Debug 调试"></a>Debug 调试</h2><p>然后在 Idea 中点击 debug 运行，在 Amabri 界面刷新页面，进入断点即可进行 debug 调试。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/image005.png" alt=""></p>
+<h2 id="打断点"><a href="#打断点" class="headerlink" title="打断点"></a>打断点</h2><p>示例断点，<br>在 <code>org.apache.ambari.server.controller.internal.ClusterStackVersionResourceProvider</code> 类中打如下断点<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/image003.png" alt=""></p>
+<h2 id="Debug-调试"><a href="#Debug-调试" class="headerlink" title="Debug 调试"></a>Debug 调试</h2><p>然后在 Idea 中点击 debug 运行，在 Amabri 界面刷新页面，进入断点即可进行 debug 调试。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/image005.png" alt=""></p>
 <h1 id="Ambari-agent-远程-debug"><a href="#Ambari-agent-远程-debug" class="headerlink" title="Ambari-agent 远程 debug"></a>Ambari-agent 远程 debug</h1><p>首先使用 PyCharm 单独打开 ambari-agent 模块</p>
-<h2 id="添加-Python-Interpreter"><a href="#添加-Python-Interpreter" class="headerlink" title="添加 Python Interpreter"></a>添加 Python Interpreter</h2><p>依次点击“File” —— “Settings…”，在“Project：ambari-agent”中点击右侧齿轮，选择“Add…”<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201126185827.png" alt=""></p>
-<p>在弹出的“Add Pyhton Interpreter”中点击“SSH Interpreter”，然后配置源端 Ambari agent 所在主机的“Host”和“Username”，端口默认为 22。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/image007.png" alt=""></p>
-<p>点击“Next”后填写主机登录密码<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/image009.png" alt=""></p>
-<p>然后配置远程 Python Interpreter、代码同步路径（左边是本地代码路径，右边是服务器代码路径），如果勾选“Automatically upload project files to the server”则会将本地代码同步到远程服务器。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201126191026.png" alt=""></p>
-<p>设置好后的效果<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/image013.png" alt=""></p>
-<h2 id="添加-configuration"><a href="#添加-configuration" class="headerlink" title="添加 configuration"></a>添加 configuration</h2><p>点击“Add Configuration…”<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/image015.png" alt=""></p>
-<p>点击“+”号添加 Python<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201126193638.png" alt=""></p>
-<p>分别设置如下红框中的内容<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201126193952.png" alt=""></p>
+<h2 id="添加-Python-Interpreter"><a href="#添加-Python-Interpreter" class="headerlink" title="添加 Python Interpreter"></a>添加 Python Interpreter</h2><p>依次点击“File” —— “Settings…”，在“Project：ambari-agent”中点击右侧齿轮，选择“Add…”<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201126185827.png" alt=""></p>
+<p>在弹出的“Add Pyhton Interpreter”中点击“SSH Interpreter”，然后配置源端 Ambari agent 所在主机的“Host”和“Username”，端口默认为 22。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/image007.png" alt=""></p>
+<p>点击“Next”后填写主机登录密码<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/image009.png" alt=""></p>
+<p>然后配置远程 Python Interpreter、代码同步路径（左边是本地代码路径，右边是服务器代码路径），如果勾选“Automatically upload project files to the server”则会将本地代码同步到远程服务器。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201126191026.png" alt=""></p>
+<p>设置好后的效果<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/image013.png" alt=""></p>
+<h2 id="添加-configuration"><a href="#添加-configuration" class="headerlink" title="添加 configuration"></a>添加 configuration</h2><p>点击“Add Configuration…”<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/image015.png" alt=""></p>
+<p>点击“+”号添加 Python<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201126193638.png" alt=""></p>
+<p>分别设置如下红框中的内容<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201126193952.png" alt=""></p>
 <ul>
 <li>本地启动脚本路径 Script path：本地 main.py 的路径</li>
 <li>环境变量 Environment variables: PYTHONUNBUFFERED=1;PYTHONPATH=/usr/lib/ambari-agent/lib:${PYTHONPATH:~}</li>
@@ -1167,7 +1167,7 @@
 </ul>
 <h2 id="debug-调试"><a href="#debug-调试" class="headerlink" title="debug 调试"></a>debug 调试</h2><p>在配置远程调试的节点上停止 agent</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-agent stop</span><br></pre></td></tr></table></figure>
-<p>打断点，debug 启动即可进行远程调试。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201126194916.png" alt=""></p>
+<p>打断点，debug 启动即可进行远程调试。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201126194916.png" alt=""></p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
 <li><p>IDEA远程调试Ambari Server - 微信-大数据从业者 - 博客园<br><a href="https://www.cnblogs.com/felixzh/p/11132735.html" target="_blank" rel="noopener">https://www.cnblogs.com/felixzh/p/11132735.html</a> </p>
 </li>
@@ -1204,19 +1204,19 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rpmdev-setuptree</span><br></pre></td></tr></table></figure>
 
 <p>查看工作目录</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201125192721.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201125192721.png" alt=""></p>
 <ul>
 <li>创建 BUILDROOT目录</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir /root/rpmbuild/BUILDROOT</span><br></pre></td></tr></table></figure>
 
 <p>完整目录结构</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201125194201.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201125194201.png" alt=""></p>
 <h1 id="解压-rpm-包"><a href="#解压-rpm-包" class="headerlink" title="解压 rpm 包"></a>解压 rpm 包</h1><ul>
 <li>复制文件</li>
 </ul>
 <p>复制需要修改的 rpm 包至 <code>/root/rpmbuild/BUILDROOT/</code> 目录，</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201125195851.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201125195851.png" alt=""></p>
 <ul>
 <li>解压 rpm 包</li>
 </ul>
@@ -1238,7 +1238,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">rm -rf zookeeper_3_0_1_0_187-3.4.6.3.0.1.0-187.noarch.rpm</span><br></pre></td></tr></table></figure>
 
 <h1 id="修改内容"><a href="#修改内容" class="headerlink" title="修改内容"></a>修改内容</h1><p>查看解压后的文件内容，</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201125202732.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201125202732.png" alt=""></p>
 <p>按自己需要进行修改，</p>
 <ul>
 <li>如果只是需要替换同名文件，则直接进行替换即可；</li>
@@ -1247,9 +1247,9 @@
 </ul>
 <h1 id="重新打-rpm-包"><a href="#重新打-rpm-包" class="headerlink" title="重新打 rpm 包"></a>重新打 rpm 包</h1><p>修改好文件后，重新打包成 rpm 文件，</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /root/rpmbuild/SPECS</span><br><span class="line">rpmbuild -ba --buildroot /root/rpmbuild/BUILDROOT/ zookeeper.spec</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201125203721.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201125203721.png" alt=""></p>
 <p>执行完成后在 <code>/root/rpmbuild/RPMS</code> 目录中查看新的 rpm 包</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201125203843.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201125203843.png" alt=""></p>
 ]]></content>
       <categories>
         <category>大数据</category>
@@ -1267,7 +1267,7 @@
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>HiBench是一个大数据基准套件，可帮助评估速度、吞吐量和系统资源利用率方面的不同大数据框架。 它包含一组Hadoop，Spark和streaming测试模式，包括Sort，WordCount，TeraSort，Repartition，Sleep，SQL，PageRank，Nutch indexing，Bayes，Kmeans，NWeight和增强的DFSIO等。它还包含一些用于Spark流的流工作负载 ，Flink，Storm和Gearpump。</p>
 <h1 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h1><p>Intel-bigdata/HiBench: HiBench is a big data benchmark suite.<br><a href="https://github.com/Intel-bigdata/HiBench" target="_blank" rel="noopener">https://github.com/Intel-bigdata/HiBench</a> </p>
 <h1 id="编译文件"><a href="#编译文件" class="headerlink" title="编译文件"></a>编译文件</h1><p>这里提供编译好的文件，下载地址：<br><a href="https://pan.baidu.com/s/11X_SxFyQLxrT45wm6XMoXg" target="_blank" rel="noopener">https://pan.baidu.com/s/11X_SxFyQLxrT45wm6XMoXg</a><br>提取码：zz75 </p>
-<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104194801.png" alt=""></p>
+<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104194801.png" alt=""></p>
 <ul>
 <li>autogen：主要用于生成测试数据的源码目录</li>
 <li>bin：测试脚本放置目录</li>
@@ -1280,14 +1280,14 @@
 <li>sparkbench：spark框架的源码目录</li>
 <li>stormbench：storm框架的源码目录</li>
 </ul>
-<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><h2 id="hibench-conf"><a href="#hibench-conf" class="headerlink" title="hibench.conf"></a>hibench.conf</h2><p>主要配置HiBench的运行参数及HiBench各个模块的home环境配置。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104194935.png" alt=""><br>其中需要注意的参数为：</p>
+<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><h2 id="hibench-conf"><a href="#hibench-conf" class="headerlink" title="hibench.conf"></a>hibench.conf</h2><p>主要配置HiBench的运行参数及HiBench各个模块的home环境配置。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104194935.png" alt=""><br>其中需要注意的参数为：</p>
 <ul>
 <li>hibench.scale.profile：主要配置HiBench测试的数据规模，有tiny, small, large, huge, gigantic 和bigdata六个级别；</li>
 <li>hibench.default.map.parallelism：测试MapReduce时是Mapper数量，测试Spark时是分区数；</li>
 <li>hibench.default.shuffle.parallelism：测试MapReduce时是Reduce数量测试Spark时是shuffle分区数。</li>
 </ul>
-<h3 id="数据规模"><a href="#数据规模" class="headerlink" title="数据规模"></a>数据规模</h3><p>数据规模对应的数据量在HiBench-master/conf/workloads/micro目录中设置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104195049.png" alt=""></p>
-<p><strong>dfsioe.conf</strong><br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104195124.png" alt=""></p>
+<h3 id="数据规模"><a href="#数据规模" class="headerlink" title="数据规模"></a>数据规模</h3><p>数据规模对应的数据量在HiBench-master/conf/workloads/micro目录中设置<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104195049.png" alt=""></p>
+<p><strong>dfsioe.conf</strong><br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104195124.png" alt=""></p>
 <table>
 <thead>
 <tr>
@@ -1343,51 +1343,51 @@
 </tbody></table>
 <p>DFSIOE测试用例通过定义读或写的文件数和文件的大小来指定测试数据量的规模，如果需要自定义测试规模则修改文件数和文件的大小即可，文件大小以MB为单位。</p>
 <p><strong>terasort.conf</strong></p>
-<p>数据量配置<strong>以条数为单位，每条数据约100byte</strong><br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104195721.png" alt=""><br>比如，定义100G数据，则应设置为100<em>1024</em>1024*1024/100=1073741824<br>设置数据，既可修改原来的数据，也可以自定义数据规模</p>
-<p><strong>wordcount.conf</strong><br>数据量配置以byte为单位<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104195756.png" alt=""><br>比如，要设置100G数据量，为100<em>1024</em>1024*1024=107374182400</p>
+<p>数据量配置<strong>以条数为单位，每条数据约100byte</strong><br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104195721.png" alt=""><br>比如，定义100G数据，则应设置为100<em>1024</em>1024*1024/100=1073741824<br>设置数据，既可修改原来的数据，也可以自定义数据规模</p>
+<p><strong>wordcount.conf</strong><br>数据量配置以byte为单位<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104195756.png" alt=""><br>比如，要设置100G数据量，为100<em>1024</em>1024*1024=107374182400</p>
 <h4 id="hadoop-conf-template"><a href="#hadoop-conf-template" class="headerlink" title="hadoop.conf.template"></a>hadoop.conf.template</h4><p>hadoop.conf.template为测试Hadoop时的配置模板，测试Hadoop时需要重命名为hadoop.conf</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cp hadoop.conf.template hadoop.conf</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104195852.png" alt=""><br>主要修改hibench.hadoop.home、hibench.hdfs.master和hibench.hadoop.release三个参数，过HDFS启用HA模式，则hibench.hdfs.master设置为HA对应的访问方式。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104195852.png" alt=""><br>主要修改hibench.hadoop.home、hibench.hdfs.master和hibench.hadoop.release三个参数，过HDFS启用HA模式，则hibench.hdfs.master设置为HA对应的访问方式。</p>
 <h4 id="spark-conf-template"><a href="#spark-conf-template" class="headerlink" title="spark.conf.template"></a>spark.conf.template</h4><p>spark.conf.template为Spark测试时的配置文件，测试Spark时需要重命名为spark.conf</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cp spark.conf.template spark.conf</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200012.png" alt=""><br>根据实际情况设置hibench.spark.home，hibench.spark.master为根据spark是standalone模式还是Yarn模式进行设置。当hibench.spark.master为yarn-client时，通过Yarn的ResourceManager的UI界面查看资源信息，然后设置hibench.yarn.executor.num、hibench.yarn.executor.cores、spark.executor.memory、spark.driver.memory进行性能调优。</p>
-<h1 id="Spark-性能测试"><a href="#Spark-性能测试" class="headerlink" title="Spark 性能测试"></a>Spark 性能测试</h1><h2 id="Teasort"><a href="#Teasort" class="headerlink" title="Teasort"></a>Teasort</h2><p>这里以最小的数据量 tiny 为例介绍 Spark  的 Teasort 性能测试步骤。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200107.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200012.png" alt=""><br>根据实际情况设置hibench.spark.home，hibench.spark.master为根据spark是standalone模式还是Yarn模式进行设置。当hibench.spark.master为yarn-client时，通过Yarn的ResourceManager的UI界面查看资源信息，然后设置hibench.yarn.executor.num、hibench.yarn.executor.cores、spark.executor.memory、spark.driver.memory进行性能调优。</p>
+<h1 id="Spark-性能测试"><a href="#Spark-性能测试" class="headerlink" title="Spark 性能测试"></a>Spark 性能测试</h1><h2 id="Teasort"><a href="#Teasort" class="headerlink" title="Teasort"></a>Teasort</h2><p>这里以最小的数据量 tiny 为例介绍 Spark  的 Teasort 性能测试步骤。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200107.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /home/erik/hibench/</span><br><span class="line">unzip HiBench-master.zip</span><br><span class="line">chmod -R 777 HiBench-master</span><br></pre></td></tr></table></figure>
 <p><strong>修改配置文件</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd HiBench-master/conf/</span><br><span class="line">cp hadoop.conf.template hadoop.conf</span><br><span class="line"></span><br><span class="line">vim hadoop.conf</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200201.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200201.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cp spark.conf.template spark.conf</span><br><span class="line">vim spark.conf</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200245.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200245.png" alt=""></p>
 <p><strong>修改数据量</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim hibench.conf</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200314.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200314.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd workloads/micro/</span><br><span class="line">vim terasort.conf</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201114161924.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201114161924.png" alt=""></p>
 <p><strong>生成数据</strong></p>
 <p>执行</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 我的 HiBench 存放目录为：/home/erik/hibench，根据自己情况修改切换路径</span><br><span class="line">cd /home/erik/hibench/HiBench-master/bin/workloads/micro/terasort/prepare</span><br><span class="line">sh prepare.sh</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200420.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200420.png" alt=""></p>
 <p><strong>查询数据</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hadoop fs -ls /HiBench/Terasort/Input</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200451.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200451.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hadoop fs -du -h /HiBench/Terasort/Input</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200516.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200516.png" alt=""></p>
 <p><strong>测试性能</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 我的 HiBench 存放目录为：/home/erik/hibench，根据自己情况修改切换路径</span><br><span class="line">su spark</span><br><span class="line">cd /home/erik/hibench/HiBench-master/bin/workloads/micro/terasort/spark</span><br><span class="line">sh run.sh</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200547.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200646.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200547.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200646.png" alt=""></p>
 <p><strong>查看测试报告</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /home/erik/hibench/HiBench-master/report</span><br><span class="line">cat hibench.report</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200721.png" alt=""><br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200733.png" alt=""><br>持续时间（s）    吞吐量（b/s）    吞吐量/节点</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200721.png" alt=""><br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200733.png" alt=""><br>持续时间（s）    吞吐量（b/s）    吞吐量/节点</p>
 <h2 id="WordCount"><a href="#WordCount" class="headerlink" title="WordCount"></a>WordCount</h2><p>Spark 的 WordCount 性能测试步骤与 Terasort 步骤类似，都需要修改配置、修改数据量、生成数据、执行测试。</p>
 <h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>与 Terasort 测试时一样。</p>
 <h3 id="修改数据量"><a href="#修改数据量" class="headerlink" title="修改数据量"></a>修改数据量</h3><p>如果需要修改数据量，可以到<code>workloads/micro/wordcount.conf</code> 中修改成自己想要的数据量。</p>
 <h3 id="生成数据"><a href="#生成数据" class="headerlink" title="生成数据"></a>生成数据</h3><p>生成 WordCount 的测试数据，需要执在 <code>bin/workloads/micro/wordcount/prepare</code> 目录中执行 <code>sh prepare.sh</code>。</p>
 <h3 id="执行测试"><a href="#执行测试" class="headerlink" title="执行测试"></a>执行测试</h3><p>在 <code>bin/workloads/micro/terasort/spark</code> 目录中执行 <code>sh run.sh</code>。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /home/erik/hibench/HiBench-master/bin/workloads/micro/wordcount/spark</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200832.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104200846.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200832.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104200846.png" alt=""></p>
 <p>查看报告</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /home/erik/hibench/HiBench-master/report</span><br><span class="line">cat hibench.report</span><br></pre></td></tr></table></figure>
 
@@ -1452,7 +1452,7 @@
 </ul>
 <p>查看数据</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hadoop fs -du -h /benchmarks/TestDFSIO/io_data</span><br></pre></td></tr></table></figure>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201104194603.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201104194603.png" alt=""></p>
 <h2 id="读文件测试"><a href="#读文件测试" class="headerlink" title="读文件测试"></a>读文件测试</h2><p>执行读测试时，首先需要有文件，因此可在写文件测试之后执行相应的读文件测试，这里读取10个文件，每个文件100M。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hadoop jar /usr/hdp/3.0.1.0-187/hadoop-mapreduce/hadoop-mapreduce-client-jobclient-tests.jar TestDFSIO -read -nrFiles 10 -size 100MB -resFile /tmp/DFSIO-read.out</span><br></pre></td></tr></table></figure>
 
