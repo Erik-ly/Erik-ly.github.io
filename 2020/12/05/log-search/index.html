@@ -20,23 +20,30 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="本文详细介绍了在线协作电子表格 EtherCalc 在 CentOS 中的安装配置方法。">
-<meta name="keywords" content="EtherCalc">
+  <meta name="description" content="本文主要介绍了 Log Search 的特点和安装使用方法。">
+<meta name="keywords" content="Ambari">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在线协同电子表格 EtherCalc 安装部署详细步骤">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;04&#x2F;EtherCalc-introduction&#x2F;index.html">
+<meta property="og:title" content="Ambari Log Search 介绍">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;12&#x2F;05&#x2F;log-search&#x2F;index.html">
 <meta property="og:site_name" content="Erik-ly">
-<meta property="og:description" content="本文详细介绍了在线协作电子表格 EtherCalc 在 CentOS 中的安装配置方法。">
+<meta property="og:description" content="本文主要介绍了 Log Search 的特点和安装使用方法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191105212020245.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191105212919381.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191105213456996.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191203210335588.png?x-oss-process=image&#x2F;watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2020-12-03T11:18:08.802Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;a5b504671664105edb04c200d611d535.jpeg">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;77f339239a5527169bb193349e3fb487.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;4b33b4c37b369e7616ea291de279f4d8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2d79775ce6c00a5dece629c78ab2154a.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;7ed21019a3f16ee09ffbcd4481d8a9cd.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;e3ed409eec1552d67ec51020692d787c.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;0fc21778b48c27e7dfb58ceb88cedbfd.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;d0bb3d3bd79d288a1046b82a25207e40.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;20201205112513.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;08cd0857c61bbfa7d5568544a32bf216.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;79f8f8040903e778732c244b655aacb0.png">
+<meta property="og:updated_time" content="2020-12-05T03:35:46.991Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191105212020245.png">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;a5b504671664105edb04c200d611d535.jpeg">
 
-<link rel="canonical" href="http://yoursite.com/2019/11/04/EtherCalc-introduction/">
+<link rel="canonical" href="http://yoursite.com/2020/12/05/log-search/">
 
 
 <script id="page-configurations">
@@ -49,7 +56,7 @@
   };
 </script>
 
-  <title>在线协同电子表格 EtherCalc 安装部署详细步骤 | Erik-ly</title>
+  <title>Ambari Log Search 介绍 | Erik-ly</title>
   
 
 
@@ -198,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/04/EtherCalc-introduction/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/05/log-search/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://gitee.com/Erik_ly/images/raw/master/img/avatar.png">
@@ -211,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          在线协同电子表格 EtherCalc 安装部署详细步骤
+          Ambari Log Search 介绍
         </h1>
 
         <div class="post-meta">
@@ -220,23 +227,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2019-11-04 21:28:11" itemprop="dateCreated datePublished" datetime="2019-11-04T21:28:11+08:00">2019-11-04</time>
+              <time title="创建时间：2020-12-05 11:31:07 / 修改时间：11:35:46" itemprop="dateCreated datePublished" datetime="2020-12-05T11:31:07+08:00">2020-12-05</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-03 19:18:08" itemprop="dateModified" datetime="2020-12-03T19:18:08+08:00">2020-12-03</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
+                  <a href="/categories/Ambari/" itemprop="url" rel="index"><span itemprop="name">Ambari</span></a>
                 </span>
             </span>
 
@@ -258,63 +259,59 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文详细介绍了在线协作电子表格 EtherCalc 在 CentOS 中的安装配置方法。</p>
+        <p>本文主要介绍了 Log Search 的特点和安装使用方法。</p>
 <a id="more"></a>
 
-<h1 id="EtherCalc-介绍"><a href="#EtherCalc-介绍" class="headerlink" title="EtherCalc 介绍"></a>EtherCalc 介绍</h1><p>EtherCalc 可以满足多人在线协同编辑表格的需求，安装简单，使用方便。<br>本文主要是介绍在 CentOS 7 中安装 EtherCalc 的详细步骤</p>
-<h2 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h2><p>EtherCalc: 多人即时协作电子表格<br><a href="http://cn.ethercalc.net/" target="_blank" rel="noopener">http://cn.ethercalc.net/</a> </p>
-<!-- more -->
-
-<h2 id="GitHub"><a href="#GitHub" class="headerlink" title="GitHub"></a>GitHub</h2><p>audreyt/ethercalc: Node.js port of Multi-user SocialCalc<br><a href="https://github.com/audreyt/ethercalc" target="_blank" rel="noopener">https://github.com/audreyt/ethercalc</a> </p>
-<h1 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="安装 node.js"></a>安装 node.js</h1><p>EtherCalc 使用 <code>npm</code>直接安装，所以需要先安装 node.js</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Log Search 是 Ambari 平台的日志聚合、分析与可视化工具。</p>
+<h1 id="GitHub地址"><a href="#GitHub地址" class="headerlink" title="GitHub地址"></a>GitHub地址</h1><p>apache/ambari-logsearch: Apache Ambari subproject - Logsearch<br><a href="https://github.com/apache/ambari-logsearch" target="_blank" rel="noopener">https://github.com/apache/ambari-logsearch</a> </p>
+<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><ul>
+<li>提供可视化日志展示</li>
+</ul>
+<p>支持以数据表格和文件方式展示日志信息。</p>
 <ul>
-<li>下载<br>node.js 下载地址：<br>Node.js 中文网：<a href="http://nodejs.cn/download/" target="_blank" rel="noopener">http://nodejs.cn/download/</a></li>
+<li>支持按条件查询日志</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/20191105212020245.png" alt=""></p>
+<p>可根据时间、节点、信息关键词等查询需要的日志。</p>
 <ul>
-<li>上传文件<br>创建 node.js 的存放路径</li>
+<li>提供审计用户及审计资源统计</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/app/</span><br><span class="line">mkdir nodejs</span><br></pre></td></tr></table></figure>
-<p>然后上传刚下载的文件到 <code>/home/app/nodejs</code>目录中</p>
+<p>提供审计日志单独统计，给出资源及用户排行榜。</p>
 <ul>
-<li>解压</li>
+<li>提供日志级别统计</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf node-v10.16.0-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
-
+<p>Log Search会在界面上给出各服务各组件每种日志级别的统计数，对日志情况一目了然。</p>
 <ul>
-<li>创建软链接</li>
+<li>支持高可靠</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s /home/app/nodejs/node-v10.16.0-linux-x64/bin/npm /usr/<span class="built_in">local</span>/bin/</span><br><span class="line">ln -s /home/app/nodejs/node-v10.16.0-linux-x64/bin/node /usr/<span class="built_in">local</span>/bin/</span><br></pre></td></tr></table></figure>
-
+<p>Log Search 利用 Solr 建立索引，由于 Solr 的副本策略，确保了日志索引的可靠性。</p>
 <ul>
-<li>查看版本信息<br><img src="https://img-blog.csdnimg.cn/20191105212919381.png" alt=""></li>
+<li>支持分别配置各组件的日志等级</li>
 </ul>
-<h1 id="安装-EtherCalc"><a href="#安装-EtherCalc" class="headerlink" title="安装 EtherCalc"></a>安装 EtherCalc</h1><ul>
-<li>安装</li>
+<p>默认情况下，会采集 WARN 级别及以上的日志，用户也可以分别配置各组件的日志等级。</p>
+<h1 id="架构原理"><a href="#架构原理" class="headerlink" title="架构原理"></a>架构原理</h1><p>Log Search 主要由两类组件组成：Log Feeder 和 Log Search Server。Log Feeder 任务是监控解析节点上每个服务的日志，并将日志发送到索引模块 Log Index。Log Search Server 运行 Log Search UI 程序。Log Search 的整体架构见下图：</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/a5b504671664105edb04c200d611d535.jpeg" alt=""></p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><ul>
+<li>选择服务</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g ethercalc</span><br></pre></td></tr></table></figure>
-
-<p>创建软连接</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /home/app/nodejs/node-v10.16.0-linux-x64/bin/ethercalc /usr/<span class="built_in">local</span>/bin/</span><br></pre></td></tr></table></figure>
-
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/77f339239a5527169bb193349e3fb487.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/4b33b4c37b369e7616ea291de279f4d8.png" alt=""></p>
 <ul>
-<li>启动<br>创建启动脚本</li>
+<li>参数配置</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/app/</span><br><span class="line">mkdir ethercalc</span><br><span class="line">vim start_ethercalc.sh</span><br></pre></td></tr></table></figure>
-
-<p>在 shell 脚本中加入</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ethercalc &gt; /home/app/ethercalc/ethercalc.log &amp;</span><br></pre></td></tr></table></figure>
-
-<p>设置权限并启动</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 start_ethercalc.sh</span><br><span class="line">./start_ethercalc.sh</span><br></pre></td></tr></table></figure>
-
+<p>配置登录名和密码，webUI 登录需要用到。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2d79775ce6c00a5dece629c78ab2154a.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/7ed21019a3f16ee09ffbcd4481d8a9cd.png" alt=""></p>
+<h1 id="WebUI-界面"><a href="#WebUI-界面" class="headerlink" title="WebUI 界面"></a>WebUI 界面</h1><p><a href="http://IP:61888/#/login" target="_blank" rel="noopener">http://IP:61888/#/login</a><br>输入刚才设置的用户名和密码。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/e3ed409eec1552d67ec51020692d787c.png" alt=""></p>
 <ul>
-<li>Web 页面<br>启动后可以在 web 页面中查看，网址为：<a href="http://yourIP:8000/" target="_blank" rel="noopener">http://yourIP:8000/</a></li>
+<li>服务日志</li>
 </ul>
-<p><img src="https://img-blog.csdnimg.cn/20191105213456996.png" alt=""><br>点击“Create Spreadsheet”即可创建在线表格。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191203210335588.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
-<h1 id="数据信息"><a href="#数据信息" class="headerlink" title="数据信息"></a>数据信息</h1><p>表格数据信息存放在<code>ethercalc/dump</code>目录中。</p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>在Linux系统安装Nodejs 最简单步骤 - liuqiceshi - 博客园<br><a href="https://www.cnblogs.com/liuqi/p/6483317.html" target="_blank" rel="noopener">https://www.cnblogs.com/liuqi/p/6483317.html</a> </p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/0fc21778b48c27e7dfb58ceb88cedbfd.png" alt=""></p>
+<p>可以根据主机、组件、级别等筛选。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/d0bb3d3bd79d288a1046b82a25207e40.png" alt=""></p>
+<p>也可以通过筛选列查看更多列信息。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/20201205112513.png" alt=""></p>
+<ul>
+<li>审计日志</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/08cd0857c61bbfa7d5568544a32bf216.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/79f8f8040903e778732c244b655aacb0.png" alt=""></p>
 
     </div>
 
@@ -324,7 +321,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/EtherCalc/" rel="tag"># EtherCalc</a>
+              <a href="/tags/Ambari/" rel="tag"># Ambari</a>
           </div>
 
         
@@ -333,13 +330,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2019/11/03/GitHub-and-Hexo-create-blogs/" rel="prev" title="使用 GitHub 和 Hexo 搭建个人博客">
-      <i class="fa fa-chevron-left"></i> 使用 GitHub 和 Hexo 搭建个人博客
+    <a href="/2020/12/03/ambari-install/" rel="prev" title="Ambari 安装详细步骤">
+      <i class="fa fa-chevron-left"></i> Ambari 安装详细步骤
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2019/11/05/GitBucket-introduction/" rel="next" title="GitBucket 安装部署">
-      GitBucket 安装部署 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -398,7 +392,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#EtherCalc-介绍"><span class="nav-number">1.</span> <span class="nav-text">EtherCalc 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#官网"><span class="nav-number">1.1.</span> <span class="nav-text">官网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub"><span class="nav-number">1.2.</span> <span class="nav-text">GitHub</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-node-js"><span class="nav-number">2.</span> <span class="nav-text">安装 node.js</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-EtherCalc"><span class="nav-number">3.</span> <span class="nav-text">安装 EtherCalc</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据信息"><span class="nav-number">4.</span> <span class="nav-text">数据信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GitHub地址"><span class="nav-number">2.</span> <span class="nav-text">GitHub地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特点"><span class="nav-number">3.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#架构原理"><span class="nav-number">4.</span> <span class="nav-text">架构原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">5.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebUI-界面"><span class="nav-number">6.</span> <span class="nav-text">WebUI 界面</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
