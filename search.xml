@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>解决 process information unavailable 问题</title>
+      <link href="2020/12/13/solve-process-information-unavailable/"/>
+      <url>2020/12/13/solve-process-information-unavailable/</url>
+      
+        <content type="html"><![CDATA[<p>本文主要介绍处理进程为 <code>process information unavailable</code> 的方法。</p><a id="more"></a><p>当主机断点或非正常关机后重启电脑，使用 <code>jps</code> 查看进程时，会出现一些进程为 <code>process information unavailable</code> 的现象，有的过一段时间就会好。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# jps</span><br><span class="line">6432 -- process information unavailable</span><br><span class="line">25025 -- process information unavailable</span><br><span class="line">31075 -- process information unavailable</span><br><span class="line">25636 -- process information unavailable</span><br><span class="line">8868 -- process information unavailable</span><br><span class="line">21957 -- process information unavailable</span><br><span class="line">8102 Jps</span><br><span class="line">19176 -- process information unavailable</span><br><span class="line">29033 -- process information unavailable</span><br><span class="line">15115 -- process information unavailable</span><br><span class="line">9259 -- process information unavailable</span><br><span class="line">17772 -- process information unavailable</span><br><span class="line">10796 -- process information unavailable</span><br><span class="line">23343 -- process information unavailable</span><br><span class="line">5401 -- process information unavailable</span><br><span class="line">1882 AmbariServer</span><br></pre></td></tr></table></figure><p>可以到 <code>/tmp/</code> 目录中查看有 <code>hsperfdata_*</code> 缓存。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201211092407.png" alt=""></p><p>将这些缓存删除即可。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /tmp/hsperfdata_*</span><br></pre></td></tr></table></figure><p>重新查看进程。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master ~]# jps</span><br><span class="line">10749 Jps</span><br></pre></td></tr></table></figure><p>如果存在正常进程较多，异常进程较少，可以找到对应的进程删除。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Ambari </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Ambari </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Ambari 二次开发快速部署测试方法</title>
       <link href="2020/12/13/ambari-dev-by-replace-class/"/>
       <url>2020/12/13/ambari-dev-by-replace-class/</url>
