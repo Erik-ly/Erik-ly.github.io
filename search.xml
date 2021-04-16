@@ -1,6 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Ambari 滚动升级方法</title>
+    <url>/2021/04/16/Ambari-rolling-upgrade/</url>
+    <content><![CDATA[<p>本文主要演示通过 Ambari 滚动升级的方法，将 <code>HDP 3.0.1.0</code> 版本升级到自定义的 <code>HDP 3.0.2.0</code> 版本，将 ZooKeeper 3.4.6 版本升级到 3.4.14 版本。</p>
+<a id="more"></a>
+
+<h1 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h1><h2 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h2><ul>
+<li>Centos 7.4</li>
+<li>Ambari 2.7.1</li>
+<li>HDP 3.0.1.0</li>
+<li>已正常安装 Ambari 及集群，并且只安装 ZooKeeper 一个服务。</li>
+</ul>
+<h2 id="准备升级的yum源"><a href="#准备升级的yum源" class="headerlink" title="准备升级的yum源"></a>准备升级的yum源</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir -p /var/www/html/Insight_upgrade/insight</span><br><span class="line">cd /var/www/html/Insight_upgrade/insight</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416103734.png" alt=""></p>
+<ul>
+<li>注意 rpm 包的命名方式，<code>zookeeper_3_0_2_0_187</code> 与 <code>3.4.14.3.0.2.0-187</code> 以 “-” 相连，且 rpm 打包时的 “name” 为 <code>zookeeper_3_0_2_0_187</code>,”version” 为 <code>3.4.14.3.0.2.0-187</code>。升级包可以在原有的 rpm 包基础上通过更新文件的方式重新打包而成，详细资料可以参考 ：<br><a href="http://www.erik-ly.com/2020/11/25/rpm2rpm/" target="_blank" rel="noopener">rpm2rpm 打包步骤</a></li>
+</ul>
+<p>可以在页面查看 <code>http://10.180.xxx.xxx/Insight_upgrade/insight/</code> 进行查看<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416103943.png" alt=""></p>
+<h2 id="准备版本xml文件"><a href="#准备版本xml文件" class="headerlink" title="准备版本xml文件"></a>准备版本xml文件</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /var/lib/ambari-server/resources/stacks/HDP/3.0/repos</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416104041.png" alt=""></p>
+<p>在 <code>hdp_urlinfo.json</code> 中添加 <code>3.0.2.0</code> 版本，添加好的文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;HDP-3.0&quot;:&#123;</span><br><span class="line">        &quot;latest&quot;:&#123;</span><br><span class="line">            &quot;centos7&quot;:&quot;http://public-repo-1.inspur.com/HDP/centos7/3.x/updates/3.0.1.0&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;latest-vdf&quot;:&#123;</span><br><span class="line">            &quot;centos7&quot;:&quot;./hdxml/HDP-3.0.1.0-187.xml&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;maintenance&quot;:&#123;</span><br><span class="line">		    &quot;3.0.2.0&quot;:&#123;</span><br><span class="line">                &quot;centos7&quot;:&quot;./hdxml/HDP-3.0.2.0-187-MAINT.xml&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;3.0.1.0&quot;:&#123;</span><br><span class="line">                &quot;centos7&quot;:&quot;./hdxml/HDP-3.0.1.0-187-MAINT.xml&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;manifests&quot;:&#123;</span><br><span class="line">		    &quot;3.0.2.0&quot;:&#123;</span><br><span class="line">                &quot;centos7&quot;:&quot;./hdxml/HDP-3.0.2.0-187.xml&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;3.0.1.0&quot;:&#123;</span><br><span class="line">                &quot;centos7&quot;:&quot;./hdxml/HDP-3.0.1.0-187.xml&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分别复制 <code>HDP-3.0.1.0-187.xml</code> 和 <code>HDP-3.0.1.0-187-MAINT.xml</code> 为  <code>HDP-3.0.2.0-187.xml</code> 和  <code>HDP-3.0.2.0-187-MAINT.xml</code> 。</p>
+<p>在 <code>HDP-3.0.2.0-187.xml</code> 中主要添加 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;manifest&gt;</span><br><span class="line">  &lt;service id=&quot;ZOOKEEPER-346&quot; name=&quot;ZOOKEEPER&quot; version=&quot;3.4.14&quot;/&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
+<p>完整的文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;repository-version xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;version_definition.xsd&quot;&gt;</span><br><span class="line">  &lt;release&gt;</span><br><span class="line">    &lt;type&gt;STANDARD&lt;/type&gt;</span><br><span class="line">    &lt;stack-id&gt;HDP-3.0&lt;/stack-id&gt;</span><br><span class="line">    &lt;version&gt;3.0.2.0&lt;/version&gt;</span><br><span class="line">    &lt;build&gt;187&lt;/build&gt;</span><br><span class="line">    &lt;compatible-with&gt;3\.\d+\.\d+\.\d+&lt;/compatible-with&gt;</span><br><span class="line">    &lt;release-notes&gt;http://example.com&lt;/release-notes&gt;</span><br><span class="line">    &lt;display&gt;HDP-3.0.2.0&lt;/display&gt;</span><br><span class="line">  &lt;/release&gt;</span><br><span class="line">  &lt;manifest&gt;</span><br><span class="line">    &lt;service id=&quot;ZOOKEEPER-346&quot; name=&quot;ZOOKEEPER&quot; version=&quot;3.4.14&quot;/&gt;</span><br><span class="line">  &lt;/manifest&gt;</span><br><span class="line">  &lt;available-services/&gt;</span><br><span class="line">  &lt;repository-info&gt;</span><br><span class="line">    &lt;os family=&quot;redhat7&quot;&gt;</span><br><span class="line">      &lt;package-version&gt;3_0_1_0_*&lt;/package-version&gt;</span><br><span class="line">      &lt;repo&gt;</span><br><span class="line">        &lt;baseurl&gt;http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.0.1.0&lt;/baseurl&gt;</span><br><span class="line">        &lt;repoid&gt;HDP-3.0&lt;/repoid&gt;</span><br><span class="line">        &lt;reponame&gt;HDP&lt;/reponame&gt;</span><br><span class="line">        &lt;unique&gt;true&lt;/unique&gt;</span><br><span class="line">      &lt;/repo&gt;</span><br><span class="line">      &lt;repo&gt;</span><br><span class="line">        &lt;baseurl&gt;http://public-repo-1.hortonworks.com/HDP-GPL/centos7/3.x/updates/3.0.1.0&lt;/baseurl&gt;</span><br><span class="line">        &lt;repoid&gt;HDP-3.0-GPL&lt;/repoid&gt;</span><br><span class="line">        &lt;reponame&gt;HDP-GPL&lt;/reponame&gt;</span><br><span class="line">        &lt;unique&gt;true&lt;/unique&gt;</span><br><span class="line">        &lt;tags&gt;</span><br><span class="line">          &lt;tag&gt;GPL&lt;/tag&gt;</span><br><span class="line">        &lt;/tags&gt;</span><br><span class="line">      &lt;/repo&gt;</span><br><span class="line">      &lt;repo&gt;</span><br><span class="line">        &lt;baseurl&gt;http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7&lt;/baseurl&gt;</span><br><span class="line">        &lt;repoid&gt;HDP-UTILS-1.1.0.22&lt;/repoid&gt;</span><br><span class="line">        &lt;reponame&gt;HDP-UTILS&lt;/reponame&gt;</span><br><span class="line">        &lt;unique&gt;false&lt;/unique&gt;</span><br><span class="line">      &lt;/repo&gt;</span><br><span class="line">    &lt;/os&gt;</span><br><span class="line">  &lt;/repository-info&gt;</span><br><span class="line">&lt;/repository-version&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>HDP-3.0.2.0-187-MAINT.xml</code> 中主要添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;manifest&gt;</span><br><span class="line">  &lt;service id=&quot;ZOOKEEPER-346&quot; name=&quot;ZOOKEEPER&quot; release-version=&quot;3.0.2.0&quot; version=&quot;3.4.14&quot;/&gt;</span><br><span class="line">&lt;/manifest&gt;</span><br></pre></td></tr></table></figure>
+
+<p>完整的文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;repository-version xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:noNamespaceSchemaLocation=&quot;version_definition.xsd&quot;&gt;</span><br><span class="line">  &lt;release&gt;</span><br><span class="line">    &lt;type&gt;MAINT&lt;/type&gt;</span><br><span class="line">    &lt;stack-id&gt;HDP-3.0&lt;/stack-id&gt;</span><br><span class="line">    &lt;version&gt;3.0.2.0&lt;/version&gt;</span><br><span class="line">    &lt;build&gt;187&lt;/build&gt;</span><br><span class="line">    &lt;compatible-with&gt;3\.0\.[0-0]\.\d+&lt;/compatible-with&gt;</span><br><span class="line">    &lt;release-notes&gt;http://example.com&lt;/release-notes&gt;</span><br><span class="line">    &lt;display&gt;HDP-3.0.2.0&lt;/display&gt;</span><br><span class="line">  &lt;/release&gt;</span><br><span class="line">  &lt;manifest&gt;</span><br><span class="line">    &lt;service id=&quot;ZOOKEEPER-346&quot; name=&quot;ZOOKEEPER&quot; release-version=&quot;3.0.2.0&quot; version=&quot;3.4.14&quot;/&gt;</span><br><span class="line">  &lt;/manifest&gt;</span><br><span class="line">  &lt;available-services/&gt;</span><br><span class="line">  &lt;repository-info&gt;</span><br><span class="line">    &lt;os family=&quot;redhat7&quot;&gt;</span><br><span class="line">      &lt;package-version&gt;3_0_1_0_*&lt;/package-version&gt;</span><br><span class="line">      &lt;repo&gt;</span><br><span class="line">        &lt;baseurl&gt;http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.0.1.0&lt;/baseurl&gt;</span><br><span class="line">        &lt;repoid&gt;HDP-3.0&lt;/repoid&gt;</span><br><span class="line">        &lt;reponame&gt;HDP&lt;/reponame&gt;</span><br><span class="line">        &lt;unique&gt;true&lt;/unique&gt;</span><br><span class="line">      &lt;/repo&gt;</span><br><span class="line">      &lt;repo&gt;</span><br><span class="line">        &lt;baseurl&gt;http://public-repo-1.hortonworks.com/HDP-GPL/centos7/3.x/updates/3.0.1.0&lt;/baseurl&gt;</span><br><span class="line">        &lt;repoid&gt;HDP-3.0-GPL&lt;/repoid&gt;</span><br><span class="line">        &lt;reponame&gt;HDP-GPL&lt;/reponame&gt;</span><br><span class="line">        &lt;unique&gt;true&lt;/unique&gt;</span><br><span class="line">        &lt;tags&gt;</span><br><span class="line">          &lt;tag&gt;GPL&lt;/tag&gt;</span><br><span class="line">        &lt;/tags&gt;</span><br><span class="line">      &lt;/repo&gt;</span><br><span class="line">      &lt;repo&gt;</span><br><span class="line">        &lt;baseurl&gt;http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7&lt;/baseurl&gt;</span><br><span class="line">        &lt;repoid&gt;HDP-UTILS-1.1.0.22&lt;/repoid&gt;</span><br><span class="line">        &lt;reponame&gt;HDP-UTILS&lt;/reponame&gt;</span><br><span class="line">        &lt;unique&gt;false&lt;/unique&gt;</span><br><span class="line">      &lt;/repo&gt;</span><br><span class="line">    &lt;/os&gt;</span><br><span class="line">  &lt;/repository-info&gt;</span><br><span class="line">&lt;/repository-version&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="重启ambari-server"><a href="#重启ambari-server" class="headerlink" title="重启ambari server"></a>重启ambari server</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-server restart</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="注册版本"><a href="#注册版本" class="headerlink" title="注册版本"></a>注册版本</h1><h2 id="注册版本-1"><a href="#注册版本-1" class="headerlink" title="注册版本"></a>注册版本</h2><p>使用 <code>admin</code> 用户登录，依次点击右上角 <code>admin</code> 旁的倒立小三角 —— 管理 Ambari —— 版本，点击右上角的”注册版本”，<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416112006.png" alt=""></p>
+<p>然后可以看到 <code>HDP-3.0.2.0</code> 版本，且 ZooKeeper 版本已经为 3.4.14。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416112057.png" alt=""></p>
+<p>将软件源设置为本地软件源<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416112436.png" alt=""></p>
+<ul>
+<li><code>HDP-3.0</code>的源即为刚设置的升级源，<code>HDP-UTILS-1.1.0.22</code> 设置成与原来正常安装 Ambari 中的一样。 </li>
+<li>要勾选“跳过资源库基本URL验证”选项。</li>
+</ul>
+<p>保存后就会出现下面一行版本信息。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416112732.png" alt=""></p>
+<h2 id="添加-gpl-repo-源"><a href="#添加-gpl-repo-源" class="headerlink" title="添加 gpl repo 源"></a>添加 gpl repo 源</h2><p>升级过程中需要有 gpl 源，在文件夹 <code>/etc/yum.repos.d/</code> 中添加 <code>hdp_gpl.repo</code>, <code>hdp_gpl.repo</code> 内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[HDP-3.0-GPL-repo-51]</span><br><span class="line">name=HDP-3.0-GPL-repo-51</span><br><span class="line">baseurl=http://10.180.xxx.xxx/InsightHD/hdp_gpl/</span><br><span class="line"></span><br><span class="line">path=/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>baseurl=http://10.180.xxx.xxx/InsightHD/hdp_gpl/</code> 是之前正常安装 Ambari 时的 <code>hdp_gpl</code> 源地址，需要将 “name” 换成 <code>name=HDP-3.0-GPL-repo-51</code>,这里的名称是根据当前版本的 ID 来的，第二个源的 ID 是 51，可根据实际情况修改，如果这里设置不对，之前安装服务过程中会报错，根据提示做相应修改即可。</p>
+<p>将 <code>hdp_gpl.repo</code> 文件拷贝至<strong>所有节点</strong>的 <code>/etc/yum.repos.d/</code> 目录中，然后<strong>所有节点</strong>执行如下命令更新 yum 源：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+
+<h1 id="升级"><a href="#升级" class="headerlink" title="升级"></a>升级</h1><h2 id="安装软件包"><a href="#安装软件包" class="headerlink" title="安装软件包"></a>安装软件包</h2><p>如下图所示，将 <code>HDP-3.0.2.0</code> 版本安装在当前集群，<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416113902.png" alt=""></p>
+<p>然后点击 “安装软件包”，<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416114027.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416114122.png" alt=""><br>弹出确认提示，确定即可。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416114200.png" alt=""><br>等待安装完成即可。</p>
+<p>这时可以通过后台查看安装内容<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416114315.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416114432.png" alt=""></p>
+<p>可以看到 <code>3.0.2.0-187</code> 版本已经安装了，但是 <code>current</code> 版本还是之前的版本。</p>
+<h2 id="关闭服务自动启动"><a href="#关闭服务自动启动" class="headerlink" title="关闭服务自动启动"></a>关闭服务自动启动</h2><p>升级前需要关闭服务自动启动，否则升级校验不过</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416114641.png" alt=""></p>
+<h2 id="升级-1"><a href="#升级-1" class="headerlink" title="升级"></a>升级</h2><p>现在开始升级过程</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416114801.png" alt=""></p>
+<p>点击 “升级” 按钮，这是会进行升级前的检查工作。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416114925.png" alt=""></p>
+<p>显示 “Rolling” 和 “Express” 检查都通过，这里选择 “Rolling” 滚动升级。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416115120.png" alt=""></p>
+<p>此时已经升级完成，需要测试下是否正常。</p>
+<p>可以点击查看下 ZooKeeper 的操作过程，</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416133817.png" alt=""></p>
+<p>这里可以看到，ZooKeeper 是分批滚动重启的。</p>
+<p>进入后台查看下 ZooKeeper 的版本<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416134139.png" alt=""><br>这里可以看到，”current” 中的 zookeeper 版本已经指向 <code>3.0.2.0-187</code>版本了。</p>
+<p>进入 <code>bin</code> 文件夹，执行 <code>./zkCli.sh</code>，<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416134421.png" alt=""><br>可以看到，当前版本已经是 <code>3.4.14</code> 版本了，可以查看下之前的数据还在。</p>
+<p>点击”我执行了上面的手动操作步骤”，如下图所示<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416115145.png" alt=""></p>
+<p>然后进度条会到 100%<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416115200.png" alt=""><br>点击 “取消” 按钮，完成，这里应该是“完成”，应该是开源 bug。</p>
+<h2 id="查看版本"><a href="#查看版本" class="headerlink" title="查看版本"></a>查看版本</h2><p>回来在查看版本<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416134847.png" alt=""><br>当前使用的 ZooKeeper 已经是 3.4.14 了。</p>
+<p>可以查看下“更新历史”<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416135044.png" alt=""><br>这里的“类型”有翻译错误，实际上是 “Rolling”。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416135116.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416135246.png" alt=""><br>查看 ZooKeeper 状态，一切正常，升级完毕。</p>
+]]></content>
+      <categories>
+        <category>Ambari</category>
+      </categories>
+      <tags>
+        <tag>Ambari</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Writage: Word 转 markdown 工具</title>
     <url>/2021/04/16/Writage-Word-to-markdown-tool/</url>
     <content><![CDATA[<p>本文主要介绍一款简单好用的 word 转 markdown 工具：Writage。</p>
