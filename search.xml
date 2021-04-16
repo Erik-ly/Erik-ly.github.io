@@ -6,7 +6,6 @@
     <content><![CDATA[<p>本文主要介绍 Ambari 服务配置参数的校验和配置推荐方法，主要根据 value-attributes 和 service_advisor 实现，分析其原理逻辑，并举例说明自定义方法。</p>
 <a id="more"></a>
 
-<p>[TOC]</p>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><code>Ambari</code> 的配置校验有两种：一种是在 <code>xml</code> 配置文件中，通过值的属性（value-attributes）做约束，在前端做校验；另一种是通过每个服务的 <code>service_advisor.py</code> 中的 <code>getServiceConfigurationsValidationItems</code> 方法做自定义校验。</p>
 <p><code>Ambari</code> 的推荐配置是通过每个服务的  <code>service_advisor.py</code> 中的 <code>getServiceConfigurationRecommendations</code> 方法实现，有些推荐配置会直接将原有的值修改为推荐配置，有些推荐配置则会弹出警告或错误提示框。</p>
 <h1 id="value-attributes"><a href="#value-attributes" class="headerlink" title="value-attributes"></a>value-attributes</h1><p>stacks 中，每个服务的 <code>conffiguration</code> 文件夹内都会有 xml 格式的配置文件，在这些配置文件中，规定了 <code>name</code> （名称，Ambari 中做标识）、<code>display-name</code>（显示名，界面显示的配置 key 值）、<code>value</code>（默认值）、<code>description</code>（描述，鼠标悬停时显示的提示内容）等基本属性。</p>
