@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Writage: Word 转 markdown 工具</title>
+    <url>/2021/04/16/Writage-Word-to-markdown-tool/</url>
+    <content><![CDATA[<p>本文主要介绍一款简单好用的 word 转 markdown 工具：Writage。</p>
+<a id="more"></a>
+
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Writage 是一款非常简单好用的 word 与 markdown 之间转换工具。</p>
+<p><strong>注：Writage 只可免费使用 14 天，本文只做介绍，无利益关系。</strong></p>
+<h2 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h2><p>Writage - Markdown plugin for Microsoft Word</p>
+<p><a href="https://www.writage.com/" target="_blank" rel="noopener">https://www.writage.com/</a></p>
+<h2 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h2><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201201183620.png" alt=""></p>
+<p>下载后是 msi 格式文件，直接双击安装即可。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>Writage 使用非常简单，将 word 文档另存为时选择 markdown 格式即可，并且会自动打开 markdown 格式的文档，然后就可以像 word 一样编辑 markdown 文件了。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201201183819.png" alt=""></p>
+<p>保存后会将 word 中的图片全部放在 media 文件夹中。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201201184032.png" alt=""></p>
+]]></content>
+      <categories>
+        <category>软件工具</category>
+      </categories>
+      <tags>
+        <tag>Writage</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ambari 管理 Docker 方法</title>
     <url>/2021/04/16/Ambari-manage-docker/</url>
-    <content><![CDATA[<p>本文详细的介绍在不该变 Ambari 现有整体框架逻辑的情况下，管理 Docker 镜像的方法，可以想普通服务一样进行安装、启停、状态监控等功能。。</p>
+    <content><![CDATA[<p>本文主要介绍在不改变 Ambari 现有整体框架逻辑的情况下，管理 Docker 镜像的方法，可以像普通服务一样进行安装、启停、状态监控等功能。</p>
 <a id="more"></a>
 
 <h1 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h1><ul>
