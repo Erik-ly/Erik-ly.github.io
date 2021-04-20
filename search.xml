@@ -1,6 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Ambari 集成自定义服务方法</title>
+    <url>/2021/04/20/Ambari-custom-service/</url>
+    <content><![CDATA[<p>本文主要介绍 Ambari 集成自定义服务的详细过程，包括制作 RPM 包、metainfo 文件、配置文件、安装、启动、停止等脚本，以及快速链接。</p>
+<a id="more"></a>
+
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>本文主要介绍 Ambari 集成自定义服务的方法，这里以自研组件 Ftp-Transport 为例做介绍。</p>
+<h1 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h1><ul>
+<li>操作系统：Centos 7.6</li>
+<li>Ambari版本：Ambari 2.7.1</li>
+<li>HDP版本：HDP 3.0.1</li>
+<li>已安装 Ambari 环境，具体可参考：<a href="http://www.erik-ly.com/2020/12/03/ambari-install/" target="_blank" rel="noopener">Ambari 安装详细步骤</a></li>
+</ul>
+<h1 id="制作-RPM-包"><a href="#制作-RPM-包" class="headerlink" title="制作 RPM 包"></a>制作 RPM 包</h1><p>因为 Ambari 安装 包的时候都是以 RPM 包的形式安装，所以尽量将自研服务制作成 RPM 包，具体制作方法可以参考<a href="http://www.erik-ly.com/2019/12/29/ZooKeeper-rpm/" target="_blank" rel="noopener">ZooKeeper从源码到RPM包制作过程详解</a>， 里面有详细的打包步骤，这里不再赘述，直接看最终 rpm 包。</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416142207.png" alt=""></p>
+<h1 id="制作本地源"><a href="#制作本地源" class="headerlink" title="制作本地源"></a>制作本地源</h1><ul>
+<li>复制 rpm 包</li>
+</ul>
+<p>在原有源的基础上增加 <code>ftp-transport</code> 源</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /var/www/html/ambari/HDP/centos7/3.0.1.0</span><br><span class="line">mkdir ftp-transport</span><br></pre></td></tr></table></figure>
+<p>复制rpm包到ftp-transport文件夹<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416142716.png" alt=""></p>
+<ul>
+<li>更新 repodata</li>
+</ul>
+<p>在原有 repodata 文件夹的同级目录中执行如下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd /var/www/html/ambari/HDP/centos7/3.0.1.0</span><br><span class="line">rm -rf repodata/</span><br><span class="line">createrepo ./</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更新 yum 源</li>
+</ul>
+<p>在所有节点执行如下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看软件源</li>
+</ul>
+<p>在任意节点通过执行 <code>yum search service_name</code> 来查看软件源是否制作好，如</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum search ftp-transport</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416143338.png" alt=""></p>
+<p>出现类似这样的信息即为制作本地源完成。</p>
+<h1 id="创建-stacks-文件"><a href="#创建-stacks-文件" class="headerlink" title="创建 stacks 文件"></a>创建 stacks 文件</h1><h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p>这里只介绍 Ambari 集成自定义服务所需的最少文件为例，最终的文件目录结构如下：<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416143718.png" alt=""></p>
+<p>这些文件在源码中的位置为：<code>ambari-server\src\main\resources\stacks\HDP\3.0\services\FTP_TRANSPORT</code>，现在介绍主要的文件内容。</p>
+<h2 id="metainfo-文件"><a href="#metainfo-文件" class="headerlink" title="metainfo 文件"></a>metainfo 文件</h2><p><code>metainfo.xm</code> 文件是非常重要的一个文件，具体介绍可以参考:<a href="http://www.erik-ly.com/2020/11/29/ambari-metainfo/" target="_blank" rel="noopener">Ambari 中 metainfo.xml 文件解析</a></p>
+<p>这里的 <code>metainfo.xm</code> 文件全部内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line"></span><br><span class="line">&lt;metainfo&gt;</span><br><span class="line">  &lt;schemaVersion&gt;2.0&lt;/schemaVersion&gt;</span><br><span class="line">  &lt;services&gt;</span><br><span class="line">    &lt;service&gt;</span><br><span class="line">      &lt;name&gt;FTP_TRANSPORT&lt;/name&gt;</span><br><span class="line">      &lt;displayName&gt;Ftp-Transport&lt;/displayName&gt;</span><br><span class="line">      &lt;comment&gt;Ftp-Transport是一种基于FTP协议的文件数据传输增强工具。&lt;/comment&gt;</span><br><span class="line">      &lt;version&gt;1.0.0&lt;/version&gt;</span><br><span class="line">      &lt;components&gt;</span><br><span class="line">        &lt;component&gt;</span><br><span class="line">          &lt;name&gt;FTP_TRANSPORT&lt;/name&gt;</span><br><span class="line">          &lt;displayName&gt;Ftp-Transport&lt;/displayName&gt;</span><br><span class="line">          &lt;category&gt;MASTER&lt;/category&gt;</span><br><span class="line">          &lt;cardinality&gt;1&lt;/cardinality&gt;</span><br><span class="line">          &lt;versionAdvertised&gt;true&lt;/versionAdvertised&gt;</span><br><span class="line">          &lt;commandScript&gt;</span><br><span class="line">            &lt;script&gt;scripts/ftp_transport.py&lt;/script&gt;</span><br><span class="line">            &lt;scriptType&gt;PYTHON&lt;/scriptType&gt;</span><br><span class="line">            &lt;timeout&gt;1200&lt;/timeout&gt;</span><br><span class="line">          &lt;/commandScript&gt;</span><br><span class="line">          &lt;logs&gt;</span><br><span class="line">            &lt;log&gt;</span><br><span class="line">              &lt;logId&gt;ftp_transport&lt;/logId&gt;</span><br><span class="line">              &lt;primary&gt;true&lt;/primary&gt;</span><br><span class="line">            &lt;/log&gt;</span><br><span class="line">          &lt;/logs&gt;</span><br><span class="line">        &lt;/component&gt;</span><br><span class="line">      &lt;/components&gt;</span><br><span class="line"></span><br><span class="line">      &lt;osSpecifics&gt;</span><br><span class="line">        &lt;osSpecific&gt;</span><br><span class="line">          &lt;osFamily&gt;any&lt;/osFamily&gt;</span><br><span class="line">          &lt;packages&gt;</span><br><span class="line">            &lt;package&gt;</span><br><span class="line">              &lt;name&gt;ftp-transport&lt;/name&gt;</span><br><span class="line">            &lt;/package&gt;</span><br><span class="line">          &lt;/packages&gt;</span><br><span class="line">        &lt;/osSpecific&gt;</span><br><span class="line">      &lt;/osSpecifics&gt;</span><br><span class="line"></span><br><span class="line">      &lt;requiredServices&gt;</span><br><span class="line">        &lt;service&gt;REDIS&lt;/service&gt;</span><br><span class="line">      &lt;/requiredServices&gt;</span><br><span class="line"></span><br><span class="line">      &lt;configuration-dependencies&gt;</span><br><span class="line">        &lt;config-type&gt;ftp-transport-env&lt;/config-type&gt;</span><br><span class="line">      &lt;/configuration-dependencies&gt;</span><br><span class="line"></span><br><span class="line">      &lt;quickLinksConfigurations&gt;</span><br><span class="line">        &lt;quickLinksConfiguration&gt;</span><br><span class="line">          &lt;fileName&gt;quicklinks.json&lt;/fileName&gt;</span><br><span class="line">          &lt;default&gt;true&lt;/default&gt;</span><br><span class="line">        &lt;/quickLinksConfiguration&gt;</span><br><span class="line">      &lt;/quickLinksConfigurations&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/service&gt;</span><br><span class="line">  &lt;/services&gt;</span><br><span class="line">&lt;/metainfo&gt;</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>Ftp-Transport</code> 依赖 <code>Redis</code>，所以这里增加了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;requiredServices&gt;</span><br><span class="line">  &lt;service&gt;REDIS&lt;/service&gt;</span><br><span class="line">&lt;/requiredServices&gt;</span><br></pre></td></tr></table></figure>
+
+<p>因为有配置文件 <code>ftp-transport-env</code>，所以</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;configuration-dependencies&gt;</span><br><span class="line">  &lt;config-type&gt;ftp-transport-env&lt;/config-type&gt;</span><br><span class="line">&lt;/configuration-dependencies&gt;</span><br></pre></td></tr></table></figure>
+
+<p>因为有快速链接，所以</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;quickLinksConfigurations&gt;</span><br><span class="line">  &lt;quickLinksConfiguration&gt;</span><br><span class="line">    &lt;fileName&gt;quicklinks.json&lt;/fileName&gt;</span><br><span class="line">    &lt;default&gt;true&lt;/default&gt;</span><br><span class="line">  &lt;/quickLinksConfiguration&gt;</span><br><span class="line">&lt;/quickLinksConfigurations&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>配置文件都在 <code>configuration</code> 文件夹内，在页面的配置参数中展示，值的属性可以作一些简单的约束校验，详情可以参考：<a href="http://www.erik-ly.com/2021/04/16/Ambari-service-configurations-validation-and-recommend/" target="_blank" rel="noopener">Ambari 服务配置校验和配置推荐介绍</a> 文章的 “value-attributes” 部分介绍。</p>
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><p>脚本都在 <code>scripts</code> 文件夹内，这里有 <code>params.py</code> 和 <code>ftp_transport.py</code> 两个 Python 脚本，<code>params.py</code> 主要是获取参数配置， <code>ftp_transport.py</code> 主要执行服务的安装、启停、状态监控等。</p>
+<h3 id="params-py"><a href="#params-py" class="headerlink" title="params.py"></a><code>params.py</code></h3><p><code>params.py</code> 里只列举部分内容，如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">config = Script.get_config()</span><br><span class="line"># Logger.info(&quot;config:&#123;0&#125;&quot;.format(config))</span><br><span class="line">Logger.info(&apos;Starting config params ...&apos;)</span><br></pre></td></tr></table></figure>
+<p>Confing 中包含几乎所有的配置参数信息，如果想获取哪个参数，可以打印日志看下，比如获取 ftp-transport 的 master 安装节点 hostname，</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># master节点hostname或IP</span><br><span class="line">ftp_transport_master_hostname = config[&apos;clusterHostInfo&apos;][&apos;ftp_transport_hosts&apos;][0]</span><br></pre></td></tr></table></figure>
+
+<p>日志打印方法为</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from resource_management.core.logger import Logger</span><br><span class="line"># 初始化</span><br><span class="line">Logger.initialize_logger()</span><br><span class="line">ftp_transport_env = config[&apos;configurations&apos;][&apos;ftp-transport-env&apos;]</span><br><span class="line">Logger.info(&quot;ftp_transport_env:&#123;0&#125;&quot;.format(ftp_transport_env))</span><br></pre></td></tr></table></figure>
+
+<h3 id="ftp-transport-py"><a href="#ftp-transport-py" class="headerlink" title="ftp_transport.py"></a><code>ftp_transport.py</code></h3><p>这里主要介绍加载配置、安装、启动、停止、状态监控等功能。</p>
+<ul>
+<li>加载配置</li>
+</ul>
+<p>这一步是必须的，否则无法获取当前的配置信息，之后操作会报错。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Ftp_transport_master(Script):</span><br><span class="line">    def configure(self, env):</span><br><span class="line">        import params</span><br><span class="line">        Logger.info(&apos;Configure Starting Config Params ...&apos;)</span><br><span class="line">        env.set_params(params)</span><br><span class="line">        Logger.info(&apos;Configure Config Params.&apos;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装</li>
+</ul>
+<p>如无特殊需求，可以直接调用 Ambari 分装好的安装组件方法 <code>self.install_packages(env)</code>，如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">def install(self, env):</span><br><span class="line">    import params</span><br><span class="line">    env.set_params(params)</span><br><span class="line">    Logger.info(&apos;Starting Install Ftp-Transport ...&apos;)</span><br><span class="line">    self.install_packages(env)</span><br><span class="line">    Logger.info(&apos;Installed Ftp-Transport!&apos;)</span><br></pre></td></tr></table></figure>
+
+<p>安装时会自动执行如下命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2019-08-09 16:42:51,817 - Installing package ftp-transport (&apos;/usr/bin/yum -y install ftp-transport&apos;)</span><br></pre></td></tr></table></figure>
+
+<p>这个 <code>ftp-transport</code> 就是在 <code>metainfo.xml</code>中设置的 <code>packages</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;osSpecifics&gt;</span><br><span class="line">  &lt;osSpecific&gt;</span><br><span class="line">    &lt;osFamily&gt;any&lt;/osFamily&gt;</span><br><span class="line">    &lt;packages&gt;</span><br><span class="line">      &lt;package&gt;</span><br><span class="line">        &lt;name&gt;ftp-transport&lt;/name&gt;</span><br><span class="line">      &lt;/package&gt;</span><br><span class="line">    &lt;/packages&gt;</span><br><span class="line">  &lt;/osSpecific&gt;</span><br><span class="line">&lt;/osSpecifics&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动</li>
+</ul>
+<p>启动服务命令，这里的启动有点复杂，主要是需要获取各种参数，实际是使用 <code>java -jar</code> 命令启动的，启动后需要写入 pid 文件，否则无法监控到当前服务状态。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">def start(self, env):</span><br><span class="line">        import params</span><br><span class="line">        # import redis_params</span><br><span class="line">        env.set_params(params)</span><br><span class="line"></span><br><span class="line">        Logger.info(&apos;Starting Ftp-Transport ...&apos;)</span><br><span class="line"></span><br><span class="line">        # 构建参数值</span><br><span class="line">        master_jar_path = os.path.join(params.ftp_transport_base_dir, params.ftp_transport_master_jar)</span><br><span class="line">        database_url = params.ftp_transport_database_url</span><br><span class="line">        database_user = params.ftp_transport_database_user</span><br><span class="line">        database_pwd = params.ftp_transport_database_password</span><br><span class="line"></span><br><span class="line">        # 获取Ftp-Transport master节点的IP</span><br><span class="line">        master_ip = socket.gethostbyname(params.ftp_transport_master_hostname)</span><br><span class="line"></span><br><span class="line">        worker_jar_name = params.ftp_transport_worker_jar_name</span><br><span class="line">        worker_start_shell_name = params.ftp_transport_worker_start_shell_name</span><br><span class="line">        worker_source_path = os.path.join(params.ftp_transport_base_dir, params.ftp_transport_worker_source_dir)</span><br><span class="line">        worker_goal_path = os.path.join(params.ftp_transport_base_dir, params.ftp_transport_worker_goal_dir)</span><br><span class="line"></span><br><span class="line">        # 获取JAVA_HOME</span><br><span class="line">        java_home = params.java64_home</span><br><span class="line">        java_path = os.path.join(java_home, &quot;bin/java&quot;)</span><br><span class="line"></span><br><span class="line">        ftp_transport_log_path = os.path.join(params.ftp_transport_log_dir, params.ftp_transport_log_file)</span><br><span class="line"></span><br><span class="line">        # 获取redis集群信息</span><br><span class="line">        print(&apos;zookeeper_host_port:&apos;+params.zookeeper_host_port)</span><br><span class="line">        print(&apos;redis_instance_znode_dir:&apos;+params.redis_instance_znode_dir)</span><br><span class="line">        redis_node = get_redis_instance_znode_list(params.zookeeper_host_port, params.redis_instance_znode_dir)</span><br><span class="line">        redis_instance_ip_port = &quot;&quot;</span><br><span class="line">        for i in range(len(redis_node)):</span><br><span class="line">            redis_instance_znode_path = os.path.join(params.redis_instance_znode_dir, redis_node[i])</span><br><span class="line">            redis_instance_dictObject = get_redis_znode_data(params.zookeeper_host_port, redis_instance_znode_path)</span><br><span class="line">            for j in range(len(redis_instance_dictObject)):</span><br><span class="line">                redis_dir_name = redis_instance_dictObject.keys()[j]</span><br><span class="line">                redis_ip = redis_instance_dictObject[redis_dir_name][&apos;ip&apos;]</span><br><span class="line">                redis_port = redis_instance_dictObject[redis_dir_name][&apos;port&apos;]</span><br><span class="line">                redis_instance_ip_port = redis_instance_ip_port + str(redis_ip) + &quot;:&quot; + str(redis_port) + &quot; &quot;</span><br><span class="line"></span><br><span class="line">        print(&apos;redis_instance_ip_port:&apos;+redis_instance_ip_port)</span><br><span class="line"></span><br><span class="line">        # 构建启动master命令</span><br><span class="line">        start_master_cmd = &quot;&#123;0&#125; -jar &#123;1&#125; --spring.datasource.url=&#123;2&#125; --spring.datasource.username=&#123;3&#125; &quot; \</span><br><span class="line">                           &quot;--spring.datasource.password=&#123;4&#125; --worker.masterIP=&#123;5&#125; --worker.jarGoalName=&#123;6&#125; &quot; \</span><br><span class="line">                           &quot;--worker.startShellName=&#123;7&#125; --worker.jarSourceFolder=&#123;8&#125; --worker.jarGoalFolder=&#123;9&#125; &quot; \</span><br><span class="line">                           &quot;--worker.java_home=&#123;10&#125; --logging.file=&#123;11&#125; --spring.redis.cluster.nodes=&#123;12&#125;&quot;.format(</span><br><span class="line">            java_path, master_jar_path, database_url, database_user, database_pwd, master_ip, worker_jar_name,</span><br><span class="line">            worker_start_shell_name, worker_source_path, worker_goal_path, java_home, ftp_transport_log_path,</span><br><span class="line">            redis_instance_ip_port</span><br><span class="line">        )</span><br><span class="line">        Logger.info(&quot;start_master_cmd:&#123;0&#125;&quot;.format(start_master_cmd))</span><br><span class="line"></span><br><span class="line">        # 判断文件夹是否存在</span><br><span class="line">        # log日志文件</span><br><span class="line">        if not os.path.exists(params.ftp_transport_log_dir):</span><br><span class="line">            os.makedirs(params.ftp_transport_log_dir)</span><br><span class="line"></span><br><span class="line">        # pid文件</span><br><span class="line">        if not os.path.exists(params.ftp_transport_pid_dir):</span><br><span class="line">            os.makedirs(params.ftp_transport_pid_dir)</span><br><span class="line"></span><br><span class="line">        ftp_transport_nohup_path = os.path.join(params.ftp_transport_log_dir, params.ftp_transport_nohup_file)</span><br><span class="line">        ftp_transport_pid_path = os.path.join(params.ftp_transport_pid_dir, params.ftp_transport_pid_file)</span><br><span class="line">        nohup_cmd = &apos;nohup &#123;0&#125; &gt; &#123;1&#125; 2&gt;&amp;1 &amp; echo $! &gt; &#123;2&#125;&apos;.format(start_master_cmd, ftp_transport_nohup_path, ftp_transport_pid_path)</span><br><span class="line">        # Execute(nohup_cmd, user=params.root_user)</span><br><span class="line">        try:</span><br><span class="line">            Execute(nohup_cmd, user=params.root_user)</span><br><span class="line">        except:</span><br><span class="line">            show_logs(ftp_transport_nohup_path, user=params.root_user)</span><br><span class="line">            raise</span><br><span class="line"></span><br><span class="line">        Logger.info(&apos;Started Ftp-Transport !&apos;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>停止</li>
+</ul>
+<p>停止服务，主要使用 <code>kill -9 pid</code> 命令，然后删除 pid 文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">def stop(self, env):</span><br><span class="line">    import params</span><br><span class="line">    env.set_params(params)</span><br><span class="line">    Logger.info(&apos;Stopping Ftp-Transport&apos;)</span><br><span class="line"></span><br><span class="line">    # 检测pid内容状态</span><br><span class="line">    ftp_transport_pid_path = os.path.join(params.ftp_transport_pid_dir, params.ftp_transport_pid_file)</span><br><span class="line">    # 当 pid 文件存在时，kill 进程</span><br><span class="line">    if os.path.exists(ftp_transport_pid_path):</span><br><span class="line">        kill_cmd = &apos;kill -9 `cat &#123;0&#125;`&apos;.format(ftp_transport_pid_path)</span><br><span class="line">        Execute(kill_cmd, user=params.root_user)</span><br><span class="line">        File(ftp_transport_pid_path, action=&quot;delete&quot;)</span><br><span class="line"></span><br><span class="line">    Logger.info(&apos;Stopped Ftp-Transport&apos;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>状态监控</li>
+</ul>
+<p>使用 Ambari 自带的检测程序状态方法 <code>check_process_status(os.path.join(params.ftp_transport_pid_dir, params.ftp_transport_pid_file))</code> 即可，它会先检查是否有 pid 文件，如果没有，就判定为服务停止；如果有 pid 文件，它会去尝试 kill 掉，但不会真的去 kill 掉，以此检测这个 pid 是否真的存在。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">def status(self, env):</span><br><span class="line">    import params</span><br><span class="line">    env.set_params(params)</span><br><span class="line">    Logger.info(&apos;Checking ftp-transport Status ...&apos;)</span><br><span class="line">    check_process_status(os.path.join(params.ftp_transport_pid_dir, params.ftp_transport_pid_file))</span><br><span class="line">    Logger.info(&apos;Checked ftp-transport Status&apos;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="快速链接"><a href="#快速链接" class="headerlink" title="快速链接"></a>快速链接</h2><p>在 <code>quicklinks</code> 文件夹里存放快速链接文件 <code>quicklinks.json</code>，文件内容为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;default&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;Ftp-Transport-webUI default quick links configuration&quot;,</span><br><span class="line">  &quot;configuration&quot;: &#123;</span><br><span class="line">    &quot;protocol&quot;:</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;type&quot;:&quot;http&quot;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    &quot;links&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;name&quot;: &quot;Ftp-Transport-webUI&quot;,</span><br><span class="line">        &quot;label&quot;: &quot;Ftp-Transport webUI&quot;,</span><br><span class="line">        &quot;requires_user_name&quot;: &quot;false&quot;,</span><br><span class="line">        &quot;component_name&quot;: &quot;FTP_TRANSPORT&quot;,</span><br><span class="line">        &quot;url&quot;:&quot;%@://%@:%@/ftpTransport&quot;,</span><br><span class="line">        &quot;port&quot;:&#123;</span><br><span class="line">          &quot;http_default_port&quot;: &quot;9800&quot;,</span><br><span class="line">          &quot;regex&quot;: &quot;^(\\d+)$&quot;,</span><br><span class="line">          &quot;site&quot;: &quot;ftp-transport-env&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>metainfo.xm</code> 文件里标注快速链接信息，在<code>metainfo.xm</code>已介绍过，如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;quickLinksConfigurations&gt;</span><br><span class="line">  &lt;quickLinksConfiguration&gt;</span><br><span class="line">    &lt;fileName&gt;quicklinks.json&lt;/fileName&gt;</span><br><span class="line">    &lt;default&gt;true&lt;/default&gt;</span><br><span class="line">  &lt;/quickLinksConfiguration&gt;</span><br><span class="line">&lt;/quickLinksConfigurations&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="重启-Ambari"><a href="#重启-Ambari" class="headerlink" title="重启 Ambari"></a>重启 Ambari</h2><p>编写好 stacks 文件后，可以直接放到 Ambari server 的文件夹 <code>/var/lib/ambari-server/resources/stacks/HDP/3.0/services/</code> 中，放置好后需要重启 Ambari。</p>
+<p>重启 Ambari server</p>
+<p>Server 节点：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-server restart</span><br></pre></td></tr></table></figure>
+
+<p>重启 Ambari agent</p>
+<p>全部节点：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ambari-agent restart</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>接下来进行安装流程，</p>
+<ul>
+<li>添加服务</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416155640.png" alt=""></p>
+<ul>
+<li>选择服务</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416155735.png" alt=""></p>
+<ul>
+<li>选择服务的 master 安装节点</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416155801.png" alt=""></p>
+<ul>
+<li>配置参数</li>
+</ul>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210416155935.png" alt=""></p>
+<ul>
+<li><p>检查<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210420165905.png" alt=""></p>
+</li>
+<li><p>安装<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210420165924.png" alt=""></p>
+</li>
+<li><p>概要<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210420165953.png" alt=""></p>
+</li>
+<li><p>服务概要<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210420170025.png" alt=""><br>可见服务已经安装成功，并且为启动状态，之后可进一步测试服务。</p>
+</li>
+</ul>
+<p>至此，Ambari 集成服务完成。</p>
+]]></content>
+      <categories>
+        <category>Ambari</category>
+      </categories>
+      <tags>
+        <tag>Ambari</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ambari 滚动升级方法</title>
     <url>/2021/04/16/Ambari-rolling-upgrade/</url>
     <content><![CDATA[<p>本文主要演示通过 Ambari 滚动升级的方法，将 <code>HDP 3.0.1.0</code> 版本升级到自定义的 <code>HDP 3.0.2.0</code> 版本，将 ZooKeeper 3.4.6 版本升级到 3.4.14 版本。</p>
