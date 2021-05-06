@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Windows 10 安装 Maven</title>
+    <url>/2021/05/06/window-install-maven/</url>
+    <content><![CDATA[<p>本文详细介绍了 Windows 10 中安装设置 Maven 的具体步骤。</p>
+<a id="more"></a>
+
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>官方下载地址：<a href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener">https://maven.apache.org/download.cgi</a></p>
+<p>历史版本：<a href="https://ftp.kddi-research.jp/infosystems/apache/maven/maven-3/" target="_blank" rel="noopener">https://ftp.kddi-research.jp/infosystems/apache/maven/maven-3/</a></p>
+<p>本文以 <code>apache-maven-3.6.3-bin.zip</code> 为例做演示，备用下载地址：<a href="https://gitee.com/erik_ly/blog_share_files/raw/master/maven/apache-maven-3.6.3-bin.zip" target="_blank" rel="noopener">https://gitee.com/erik_ly/blog_share_files/raw/master/maven/apache-maven-3.6.3-bin.zip</a></p>
+<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><p>将下载的 <code>zip</code> 包解压，例如：<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210506162919.png" alt=""></p>
+<h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><p>在<code>此电脑</code> 右键 —— 属性 —— 高级系统设置 —— 环境变量 —— 系统变量，然后点击“新建”，流程如下：</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210506163547.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210506163628.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210506163741.png" alt=""></p>
+<p>新建系统变量</p>
+<p>变量名：<code>MAVEN_HOME</code></p>
+<p>变量值：<code>C:\Software\apache-maven-3.6.3</code></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210506163902.png" alt=""></p>
+<p>编辑 <code>path</code> 环境变量<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/05/20210506170027.png" alt=""></p>
+<p>新增 <code>%MAVEN_HOME%\bin</code></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210506164026.png" alt=""></p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p><code>Win</code> + R 调出运行 <code>cmd</code>，然后执行 <code>mvn -v</code> 查看 Maven 信息</p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210506164053.png" alt=""></p>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/04/20210506164207.png" alt=""></p>
+<p>能正常输出 Maven 信息即为安装设置成功。</p>
+]]></content>
+      <categories>
+        <category>软件工具</category>
+      </categories>
+      <tags>
+        <tag>maven</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ambari 集成自定义服务方法</title>
     <url>/2021/04/20/Ambari-custom-service/</url>
     <content><![CDATA[<p>本文主要介绍 Ambari 集成自定义服务的详细过程，包括制作 RPM 包、metainfo 文件、配置文件、安装、启动、停止等脚本，以及快速链接。</p>
