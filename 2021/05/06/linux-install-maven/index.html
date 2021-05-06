@@ -20,30 +20,21 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="本文主要介绍了 Log Search 的特点和安装使用方法。">
-<meta name="keywords" content="Ambari">
+  <meta name="description" content="本文详细介绍在 CentOS 中安装设置 Maven 的方法步骤。">
+<meta name="keywords" content="maven">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ambari Log Search 介绍">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;12&#x2F;05&#x2F;log-search&#x2F;index.html">
+<meta property="og:title" content="Linux 安装设置 Maven">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;05&#x2F;06&#x2F;linux-install-maven&#x2F;index.html">
 <meta property="og:site_name" content="Erik-ly">
-<meta property="og:description" content="本文主要介绍了 Log Search 的特点和安装使用方法。">
+<meta property="og:description" content="本文详细介绍在 CentOS 中安装设置 Maven 的方法步骤。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;a5b504671664105edb04c200d611d535.jpeg">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;77f339239a5527169bb193349e3fb487.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;4b33b4c37b369e7616ea291de279f4d8.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;2d79775ce6c00a5dece629c78ab2154a.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;7ed21019a3f16ee09ffbcd4481d8a9cd.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;e3ed409eec1552d67ec51020692d787c.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;0fc21778b48c27e7dfb58ceb88cedbfd.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;d0bb3d3bd79d288a1046b82a25207e40.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;20201205112513.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;08cd0857c61bbfa7d5568544a32bf216.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;79f8f8040903e778732c244b655aacb0.png">
-<meta property="og:updated_time" content="2020-12-05T03:51:23.726Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2021&#x2F;05&#x2F;20210506173141.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2021&#x2F;05&#x2F;20210506173245.png">
+<meta property="og:updated_time" content="2021-05-06T09:36:28.389Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2020&#x2F;a5b504671664105edb04c200d611d535.jpeg">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;gitee.com&#x2F;Erik_ly&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;2021&#x2F;05&#x2F;20210506173141.png">
 
-<link rel="canonical" href="http://yoursite.com/2020/12/05/log-search/">
+<link rel="canonical" href="http://yoursite.com/2021/05/06/linux-install-maven/">
 
 
 <script id="page-configurations">
@@ -56,7 +47,7 @@
   };
 </script>
 
-  <title>Ambari Log Search 介绍 | Erik-ly</title>
+  <title>Linux 安装设置 Maven | Erik-ly</title>
   
 
 
@@ -205,7 +196,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/05/log-search/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/05/06/linux-install-maven/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://gitee.com/Erik_ly/images/raw/master/img/2020/avatar.png">
@@ -218,7 +209,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Ambari Log Search 介绍
+          Linux 安装设置 Maven
         </h1>
 
         <div class="post-meta">
@@ -229,7 +220,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-12-05 11:31:07 / 修改时间：11:51:23" itemprop="dateCreated datePublished" datetime="2020-12-05T11:31:07+08:00">2020-12-05</time>
+              <time title="创建时间：2021-05-06 17:35:15 / 修改时间：17:36:28" itemprop="dateCreated datePublished" datetime="2021-05-06T17:35:15+08:00">2021-05-06</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -237,7 +228,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Ambari/" itemprop="url" rel="index"><span itemprop="name">Ambari</span></a>
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
                 </span>
             </span>
 
@@ -259,59 +250,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文主要介绍了 Log Search 的特点和安装使用方法。</p>
+        <p>本文详细介绍在 CentOS 中安装设置 Maven 的方法步骤。</p>
 <a id="more"></a>
 
-<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Log Search 是 Ambari 平台的日志聚合、分析与可视化工具。</p>
-<h1 id="GitHub地址"><a href="#GitHub地址" class="headerlink" title="GitHub地址"></a>GitHub地址</h1><p>apache/ambari-logsearch: Apache Ambari subproject - Logsearch<br><a href="https://github.com/apache/ambari-logsearch" target="_blank" rel="noopener">https://github.com/apache/ambari-logsearch</a> </p>
-<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><ul>
-<li>提供可视化日志展示</li>
-</ul>
-<p>支持以数据表格和文件方式展示日志信息。</p>
-<ul>
-<li>支持按条件查询日志</li>
-</ul>
-<p>可根据时间、节点、信息关键词等查询需要的日志。</p>
-<ul>
-<li>提供审计用户及审计资源统计</li>
-</ul>
-<p>提供审计日志单独统计，给出资源及用户排行榜。</p>
-<ul>
-<li>提供日志级别统计</li>
-</ul>
-<p>Log Search会在界面上给出各服务各组件每种日志级别的统计数，对日志情况一目了然。</p>
-<ul>
-<li>支持高可靠</li>
-</ul>
-<p>Log Search 利用 Solr 建立索引，由于 Solr 的副本策略，确保了日志索引的可靠性。</p>
-<ul>
-<li>支持分别配置各组件的日志等级</li>
-</ul>
-<p>默认情况下，会采集 WARN 级别及以上的日志，用户也可以分别配置各组件的日志等级。</p>
-<h1 id="架构原理"><a href="#架构原理" class="headerlink" title="架构原理"></a>架构原理</h1><p>Log Search 主要由两类组件组成：Log Feeder 和 Log Search Server。Log Feeder 任务是监控解析节点上每个服务的日志，并将日志发送到索引模块 Log Index。Log Search Server 运行 Log Search UI 程序。Log Search 的整体架构见下图：</p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/a5b504671664105edb04c200d611d535.jpeg" alt=""></p>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><ul>
-<li>选择服务</li>
-</ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/77f339239a5527169bb193349e3fb487.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/4b33b4c37b369e7616ea291de279f4d8.png" alt=""></p>
-<ul>
-<li>参数配置</li>
-</ul>
-<p>配置登录名和密码，webUI 登录需要用到。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2d79775ce6c00a5dece629c78ab2154a.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/7ed21019a3f16ee09ffbcd4481d8a9cd.png" alt=""></p>
-<h1 id="WebUI-界面"><a href="#WebUI-界面" class="headerlink" title="WebUI 界面"></a>WebUI 界面</h1><p><a href="http://IP:61888/#/login" target="_blank" rel="noopener">http://IP:61888/#/login</a><br>输入刚才设置的用户名和密码。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/e3ed409eec1552d67ec51020692d787c.png" alt=""></p>
-<ul>
-<li>服务日志</li>
-</ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/0fc21778b48c27e7dfb58ceb88cedbfd.png" alt=""></p>
-<p>可以根据主机、组件、级别等筛选。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/d0bb3d3bd79d288a1046b82a25207e40.png" alt=""></p>
-<p>也可以通过筛选列查看更多列信息。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/20201205112513.png" alt=""></p>
-<ul>
-<li>审计日志</li>
-</ul>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/08cd0857c61bbfa7d5568544a32bf216.png" alt=""></p>
-<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/79f8f8040903e778732c244b655aacb0.png" alt=""></p>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><p>官方下载地址：<a href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener">https://maven.apache.org/download.cgi</a></p>
+<p>本文以 <code>apache-maven-3.6.3-bin.tar.gz</code> 为例做演示，备用下载地址：</p>
+<p><a href="https://gitee.com/erik_ly/blog_share_files/raw/master/maven/apache-maven-3.6.3-bin.tar.gz" target="_blank" rel="noopener">https://gitee.com/erik_ly/blog_share_files/raw/master/maven/apache-maven-3.6.3-bin.tar.gz</a></p>
+<h1 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h1><p>上传文件到服务器，然后解压</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /usr/local/maven</span><br><span class="line">tar -xzvf apache-maven-3.6.3-bin.tar.gz -C /usr/local/maven</span><br></pre></td></tr></table></figure>
+
+<h1 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+<p>在结尾加上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># maven</span><br><span class="line">MAVEN_HOME=/usr/local/maven/apache-maven-3.6.3</span><br><span class="line">export PATH=$&#123;MAVEN_HOME&#125;/bin:$&#123;PATH&#125;</span><br></pre></td></tr></table></figure>
+
+<p>生效环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h1 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn -v</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/05/20210506173141.png" alt=""></p>
+<h1 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/05/20210506173245.png" alt=""></p>
+<p>可以修改本地库地址，并添加阿里云源。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;localRepository&gt;~/.m2/repository&lt;/localRepository&gt;</span><br><span class="line"> </span><br><span class="line">  &lt;!-- 阿里云 --&gt;</span><br><span class="line">  &lt;mirror&gt;</span><br><span class="line">      &lt;id&gt;central&lt;/id&gt;</span><br><span class="line">      &lt;name&gt;aliyun maven&lt;/name&gt;</span><br><span class="line">      &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;</span><br><span class="line">      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;        </span><br><span class="line">    &lt;/mirror&gt;</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -321,7 +280,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Ambari/" rel="tag"># Ambari</a>
+              <a href="/tags/maven/" rel="tag"># maven</a>
           </div>
 
         
@@ -330,13 +289,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/12/03/ambari-install/" rel="prev" title="Ambari 安装详细步骤">
-      <i class="fa fa-chevron-left"></i> Ambari 安装详细步骤
+    <a href="/2021/05/06/window-install-maven/" rel="prev" title="Windows 10 安装 Maven">
+      <i class="fa fa-chevron-left"></i> Windows 10 安装 Maven
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/12/13/ambari-dev-by-replace-class/" rel="next" title="Ambari 二次开发快速部署测试方法">
-      Ambari 二次开发快速部署测试方法 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -395,7 +351,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GitHub地址"><span class="nav-number">2.</span> <span class="nav-text">GitHub地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特点"><span class="nav-number">3.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#架构原理"><span class="nav-number">4.</span> <span class="nav-text">架构原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">5.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebUI-界面"><span class="nav-number">6.</span> <span class="nav-text">WebUI 界面</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#下载"><span class="nav-number">1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解压"><span class="nav-number">2.</span> <span class="nav-text">解压</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置环境变量"><span class="nav-number">3.</span> <span class="nav-text">设置环境变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查看"><span class="nav-number">4.</span> <span class="nav-text">查看</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改配置文件"><span class="nav-number">5.</span> <span class="nav-text">修改配置文件</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
