@@ -845,6 +845,7 @@
 </ul>
 <p>配置登录名和密码，webUI 登录需要用到。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/2d79775ce6c00a5dece629c78ab2154a.png" alt=""></p>
 <p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/7ed21019a3f16ee09ffbcd4481d8a9cd.png" alt=""></p>
+<h1 id="安装目录"><a href="#安装目录" class="headerlink" title="安装目录"></a>安装目录</h1><p><img src="https://gitee.com/Erik_ly/images/raw/master/img/2021/05/20210513172725.png" alt=""></p>
 <h1 id="WebUI-界面"><a href="#WebUI-界面" class="headerlink" title="WebUI 界面"></a>WebUI 界面</h1><p><a href="http://IP:61888/#/login" target="_blank" rel="noopener">http://IP:61888/#/login</a><br>输入刚才设置的用户名和密码。<br><img src="https://gitee.com/Erik_ly/images/raw/master/img/2020/e3ed409eec1552d67ec51020692d787c.png" alt=""></p>
 <ul>
 <li>服务日志</li>
