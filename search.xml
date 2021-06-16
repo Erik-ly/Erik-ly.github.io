@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Ambari role permissions</title>
+    <title>Ambari 角色权限列表</title>
     <url>/2021/06/16/Ambari-role-permissions/</url>
     <content><![CDATA[<p>本文主要从服务级别、主机级别、集群级别和 Ambari 级别，介绍 Ambari 的角色权限列表，</p>
 <a id="more"></a>
