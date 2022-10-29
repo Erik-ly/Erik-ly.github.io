@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍 ZooKeeper 的常用命令，包括常用命令行命令、ACL 访问控制、四字命令、解析日志和快照等命令。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZooKeeper 常用命令">
+<meta property="og:url" content="http://yoursite.com/2022/04/03/zookeeper-common-commands/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要介绍 ZooKeeper 的常用命令，包括常用命令行命令、ACL 访问控制、四字命令、解析日志和快照等命令。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-03T07:40:24.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.461Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="BigData">
+<meta property="article:tag" content="ZooKeeper">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2022/04/03/zookeeper-common-commands/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ZooKeeper 常用命令 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/03/zookeeper-common-commands/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ZooKeeper 常用命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-03 15:40:24" itemprop="dateCreated datePublished" datetime="2022-04-03T15:40:24+08:00">2022-04-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍 ZooKeeper 的常用命令，包括常用命令行命令、ACL 访问控制、四字命令、解析日志和快照等命令。</p>
+<a id="more"></a>
+
+<h1 id="ZooKeeper-命令行"><a href="#ZooKeeper-命令行" class="headerlink" title="ZooKeeper 命令行"></a>ZooKeeper 命令行</h1><h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><ul>
+<li>全局变量连接当前节点</li>
+</ul>
+<p>当集群中的节点已安装 ZooKeeper Client，且 <code>zookeeper-client</code> 为全局环境变量时，可以直接在任意位置使用 <code>zookeeper-client</code> 命令连接当前节点的 ZooKeeper，进入命令行界面。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@manager ~]# zookeeper-client</span><br><span class="line">Connecting to localhost:2181</span><br><span class="line">…………</span><br><span class="line"></span><br><span class="line">WATCHER::</span><br><span class="line"></span><br><span class="line">WatchedEvent state:SyncConnected type:None path:null</span><br><span class="line">[zk: localhost:2181(CONNECTED) 0]</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>shell 脚本连接</li>
+</ul>
+<p>使用 <code>zkCli.sh</code> 进行连接当前节点 ZooKeeper。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@manager bin]# pwd</span><br><span class="line">/usr/hdp/3.0.1.0-187/zookeeper/bin</span><br><span class="line">[root@manager bin]# ll</span><br><span class="line">total 40</span><br><span class="line">-rwxr-xr-x. 1 root root 2155 Nov 23  2019 zkCleanup.sh</span><br><span class="line">-rwxr-xr-x. 1 root root 1709 Nov 23  2019 zkCli.sh</span><br><span class="line">-rwxr-xr-x. 1 root root 2840 Nov 23  2019 zkEnv.sh</span><br><span class="line">-rwxr-xr-x. 1 root root   12 Nov 23  2019 zkServer-initialize.sh</span><br><span class="line">-rwxr-xr-x. 1 root root 6822 Nov 23  2019 zkServer.sh</span><br><span class="line">-rwxr-xr-x. 1 root root  304 Nov 23  2019 zookeeper-client</span><br><span class="line">-rwxr-xr-x. 1 root root  649 Nov 23  2019 zookeeper-server</span><br><span class="line">-rwxr-xr-x. 1 root root  650 Nov 23  2019 zookeeper-server-cleanup</span><br><span class="line">-rwxr-xr-x. 1 root root  660 Nov 23  2019 zookeeper-server-initialize</span><br><span class="line">[root@manager bin]# ./zkCli.sh </span><br><span class="line">Connecting to localhost:2181</span><br><span class="line">…………</span><br><span class="line"></span><br><span class="line">WATCHER::</span><br><span class="line"></span><br><span class="line">WatchedEvent state:SyncConnected type:None path:null</span><br><span class="line">[zk: localhost:2181(CONNECTED) 0]</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>连接某个节点的 ZooKeeper</li>
+</ul>
+<p>无论是全局变量或 shell 脚本，都可以使用 <code>-server ip:port</code> 的方法连接到某个节点的 ZooKeeper。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@manager ~]# zookeeper-client -server master.bigdata:2181</span><br><span class="line">Connecting to master.bigdata:2181</span><br><span class="line">…………</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@manager bin]# pwd</span><br><span class="line">/usr/hdp/3.0.1.0-187/zookeeper/bin</span><br><span class="line">[root@manager bin]# ll</span><br><span class="line">total 40</span><br><span class="line">-rwxr-xr-x. 1 root root 2155 Nov 23  2019 zkCleanup.sh</span><br><span class="line">-rwxr-xr-x. 1 root root 1709 Nov 23  2019 zkCli.sh</span><br><span class="line">-rwxr-xr-x. 1 root root 2840 Nov 23  2019 zkEnv.sh</span><br><span class="line">-rwxr-xr-x. 1 root root   12 Nov 23  2019 zkServer-initialize.sh</span><br><span class="line">-rwxr-xr-x. 1 root root 6822 Nov 23  2019 zkServer.sh</span><br><span class="line">-rwxr-xr-x. 1 root root  304 Nov 23  2019 zookeeper-client</span><br><span class="line">-rwxr-xr-x. 1 root root  649 Nov 23  2019 zookeeper-server</span><br><span class="line">-rwxr-xr-x. 1 root root  650 Nov 23  2019 zookeeper-server-cleanup</span><br><span class="line">-rwxr-xr-x. 1 root root  660 Nov 23  2019 zookeeper-server-initialize</span><br><span class="line">[root@manager bin]# ./zkCli.sh -server master.bigdata:2181</span><br><span class="line">Connecting to master.bigdata:2181</span><br><span class="line">…………</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h2><p>在 ZooKeeper Client 命令行交互窗口输入 <code>quit</code>，退出命令行界面。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] quit</span><br><span class="line">Quitting...</span><br><span class="line">2022-01-03 13:51:57,780 - INFO  [main:ZooKeeper@692] - Session: 0x17e03c37bbc0010 closed</span><br><span class="line">2022-01-03 13:51:57,782 - INFO  [main-EventThread:ClientCnxn$EventThread@517] - EventThread shut down</span><br><span class="line">[root@manager ~]#</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Znode-基本操作"><a href="#Znode-基本操作" class="headerlink" title="Znode 基本操作"></a>Znode 基本操作</h2><h3 id="help-命令"><a href="#help-命令" class="headerlink" title="help 命令"></a>help 命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] help</span><br><span class="line">ZooKeeper -server host:port cmd args</span><br><span class="line">	stat path [watch]</span><br><span class="line">	set path data [version]</span><br><span class="line">	ls path [watch]</span><br><span class="line">	delquota [-n|-b] path</span><br><span class="line">	ls2 path [watch]</span><br><span class="line">	setAcl path acl</span><br><span class="line">	setquota -n|-b val path</span><br><span class="line">	history </span><br><span class="line">	redo cmdno</span><br><span class="line">	printwatches on|off</span><br><span class="line">	delete path [version]</span><br><span class="line">	sync path</span><br><span class="line">	listquota path</span><br><span class="line">	rmr path</span><br><span class="line">	get path [watch]</span><br><span class="line">	create [-s] [-e] path data acl</span><br><span class="line">	addauth scheme auth</span><br><span class="line">	quit </span><br><span class="line">	getAcl path</span><br><span class="line">	close </span><br><span class="line">	connect host:port</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="列出当前节点的子节点"><a href="#列出当前节点的子节点" class="headerlink" title="列出当前节点的子节点"></a>列出当前节点的子节点</h3><p>使用 <code>ls path</code> 查看 znode 节点的子节点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] ls /</span><br><span class="line">[cluster, controller, brokers, zookeeper, hbase-unsecure, dolphinscheduler, admin, isr_change_notification, log_dir_event_notification, hiveserver2, controller_epoch, hiveserver2-leader, kafka-manager, rmstore, atsv2-hbase-unsecure, ambari-metrics-cluster, consumers, latest_producer_id_block, config]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 1] ls /brokers</span><br><span class="line">[ids, topics, seqid]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 2] ls /brokers/ids</span><br><span class="line">[1003, 1002, 1001]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 3]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="获取节点存储内容"><a href="#获取节点存储内容" class="headerlink" title="获取节点存储内容"></a>获取节点存储内容</h3><p>使用 <code>get path</code> 获取该节点的存储内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 3] get &#x2F;brokers&#x2F;ids&#x2F;1001</span><br><span class="line">&#123;&quot;listener_security_protocol_map&quot;:&#123;&quot;PLAINTEXT&quot;:&quot;PLAINTEXT&quot;&#125;,&quot;endpoints&quot;:[&quot;PLAINTEXT:&#x2F;&#x2F;master.bigdata:6667&quot;],&quot;jmx_port&quot;:-1,&quot;host&quot;:&quot;master.bigdata&quot;,&quot;timestamp&quot;:&quot;1640751404064&quot;,&quot;port&quot;:6667,&quot;version&quot;:4&#125;</span><br><span class="line">cZxid &#x3D; 0x60000014a</span><br><span class="line">ctime &#x3D; Wed Dec 29 12:16:44 CST 2021</span><br><span class="line">mZxid &#x3D; 0x60000014a</span><br><span class="line">mtime &#x3D; Wed Dec 29 12:16:44 CST 2021</span><br><span class="line">pZxid &#x3D; 0x60000014a</span><br><span class="line">cversion &#x3D; 0</span><br><span class="line">dataVersion &#x3D; 0</span><br><span class="line">aclVersion &#x3D; 0</span><br><span class="line">ephemeralOwner &#x3D; 0x17e03c37bbc0001</span><br><span class="line">dataLength &#x3D; 198</span><br><span class="line">numChildren &#x3D; 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 4]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="获取节点状态"><a href="#获取节点状态" class="headerlink" title="获取节点状态"></a>获取节点状态</h3><p>使用 <code>stat path</code> 获取该节点的状态。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 4] stat /brokers/ids/1001</span><br><span class="line">cZxid = 0x60000014a</span><br><span class="line">ctime = Wed Dec 29 12:16:44 CST 2021</span><br><span class="line">mZxid = 0x60000014a</span><br><span class="line">mtime = Wed Dec 29 12:16:44 CST 2021</span><br><span class="line">pZxid = 0x60000014a</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x17e03c37bbc0001</span><br><span class="line">dataLength = 198</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 5]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="创建节点"><a href="#创建节点" class="headerlink" title="创建节点"></a>创建节点</h3><p>使用 <code>create path data</code> 创建节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 8] create /t1 test1</span><br><span class="line">Created /t1</span><br><span class="line">[zk: localhost:2181(CONNECTED) 9] ls /</span><br><span class="line">[cluster, controller, brokers, zookeeper, hbase-unsecure, dolphinscheduler, admin, isr_change_notification, log_dir_event_notification, hiveserver2, controller_epoch, hiveserver2-leader, kafka-manager, rmstore, atsv2-hbase-unsecure, ambari-metrics-cluster, consumers, latest_producer_id_block, config, t1]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 10] get /t1</span><br><span class="line">test1</span><br><span class="line">cZxid = 0x600001e24</span><br><span class="line">ctime = Mon Jan 03 14:30:20 CST 2022</span><br><span class="line">mZxid = 0x600001e24</span><br><span class="line">mtime = Mon Jan 03 14:30:20 CST 2022</span><br><span class="line">pZxid = 0x600001e24</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 5</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 11]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="创建临时节点"><a href="#创建临时节点" class="headerlink" title="创建临时节点"></a>创建临时节点</h3><p>使用 <code>create -e path data</code> 创建临时节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 16] create -e /t1/e1 ephemeral_1</span><br><span class="line">Created /t1/e1</span><br><span class="line">[zk: localhost:2181(CONNECTED) 17] get /t1/e1                  </span><br><span class="line">ephemeral_1</span><br><span class="line">cZxid = 0x600001e2b</span><br><span class="line">ctime = Mon Jan 03 14:35:17 CST 2022</span><br><span class="line">mZxid = 0x600001e2b</span><br><span class="line">mtime = Mon Jan 03 14:35:17 CST 2022</span><br><span class="line">pZxid = 0x600001e2b</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x17e03c37bbc0014</span><br><span class="line">dataLength = 11</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 18] quit</span><br><span class="line">Quitting...</span><br><span class="line">2022-01-03 14:35:45,076 - INFO  [main:ZooKeeper@692] - Session: 0x17e03c37bbc0014 closed</span><br><span class="line">2022-01-03 14:35:45,077 - INFO  [main-EventThread:ClientCnxn$EventThread@517] - EventThread shut down</span><br></pre></td></tr></table></figure>
+
+
+
+<p>重新登录后 <code>e1</code> 节点消失。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] ls &#x2F;t1</span><br><span class="line">[]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 1]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="创建顺序节点"><a href="#创建顺序节点" class="headerlink" title="创建顺序节点"></a>创建顺序节点</h3><p>使用 <code>create -s path data</code> 创建顺序节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 3] create -s /t1/s1 123</span><br><span class="line">Created /t1/s10000000002</span><br><span class="line">[zk: localhost:2181(CONNECTED) 4] create -s /t1/s1 123</span><br><span class="line">Created /t1/s10000000003</span><br><span class="line">[zk: localhost:2181(CONNECTED) 5] ls /t1</span><br><span class="line">[s10000000002, s10000000003]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="修改节点"><a href="#修改节点" class="headerlink" title="修改节点"></a>修改节点</h3><p>使用 <code>set path data</code> 进行修改节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 1] create /t2 test2</span><br><span class="line">Created /t2</span><br><span class="line">[zk: localhost:2181(CONNECTED) 3] get /t2</span><br><span class="line">test2</span><br><span class="line">cZxid = 0x600001e99</span><br><span class="line">ctime = Mon Jan 03 16:19:33 CST 2022</span><br><span class="line">mZxid = 0x600001e99</span><br><span class="line">mtime = Mon Jan 03 16:19:33 CST 2022</span><br><span class="line">pZxid = 0x600001e99</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 5</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 4] set /t2 test</span><br><span class="line">cZxid = 0x600001e99</span><br><span class="line">ctime = Mon Jan 03 16:19:33 CST 2022</span><br><span class="line">mZxid = 0x600001e9d</span><br><span class="line">mtime = Mon Jan 03 16:20:48 CST 2022</span><br><span class="line">pZxid = 0x600001e99</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 1</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 4</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 5] get /t2</span><br><span class="line">test</span><br><span class="line">cZxid = 0x600001e99</span><br><span class="line">ctime = Mon Jan 03 16:19:33 CST 2022</span><br><span class="line">mZxid = 0x600001e9d</span><br><span class="line">mtime = Mon Jan 03 16:20:48 CST 2022</span><br><span class="line">pZxid = 0x600001e99</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 1</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 4</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 6]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="删除节点"><a href="#删除节点" class="headerlink" title="删除节点"></a>删除节点</h3><p>使用 <code>delete path</code> 删除指定路径的节点；</p>
+<p>使用 <code>rmr path</code> 可循环删除路径下的节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 8] ls /t2</span><br><span class="line">[]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 9] create /t2/a1 a1</span><br><span class="line">Created /t2/a1</span><br><span class="line">[zk: localhost:2181(CONNECTED) 10] create /t2/a2 a2</span><br><span class="line">Created /t2/a2</span><br><span class="line">[zk: localhost:2181(CONNECTED) 11] create /t2/a3 a3</span><br><span class="line">Created /t2/a3</span><br><span class="line">[zk: localhost:2181(CONNECTED) 12] ls /t2</span><br><span class="line">[a1, a2, a3]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 13] delete /t2/a1</span><br><span class="line">[zk: localhost:2181(CONNECTED) 14] ls /t2</span><br><span class="line">[a2, a3]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 15] rmr /t2</span><br><span class="line">[zk: localhost:2181(CONNECTED) 16] ls /</span><br><span class="line">[cluster, controller, brokers, zookeeper, hbase-unsecure, dolphinscheduler, admin, isr_change_notification, log_dir_event_notification, hiveserver2, controller_epoch, hiveserver2-leader, kafka-manager, rmstore, atsv2-hbase-unsecure, ambari-metrics-cluster, consumers, latest_producer_id_block, config, t1]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 17]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="设置节点配额"><a href="#设置节点配额" class="headerlink" title="设置节点配额"></a>设置节点配额</h3><p>使用 <code>setquota -n|-b val path</code> 可限制节点的值的长度或其子节点的个数。</p>
+<p>- -n 限制节点(包含当前节点)的个数为 val</p>
+<p>- -b 限制节点值的长度为 val</p>
+<p>- path 要限制的节点路径</p>
+<p>限制节点数：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 1] create /t3 test3</span><br><span class="line">Created /t3</span><br><span class="line">[zk: localhost:2181(CONNECTED) 2] setquota -n 2 /t3</span><br><span class="line">Comment: the parts are option -n val 2 path /t3</span><br><span class="line">[zk: localhost:2181(CONNECTED) 3] create /t3/a1 a1</span><br><span class="line">Created /t3/a1</span><br><span class="line">[zk: localhost:2181(CONNECTED) 4] create /t3/a2 a2</span><br><span class="line">Created /t3/a2</span><br><span class="line">[zk: localhost:2181(CONNECTED) 5] create /t3/a3 a3</span><br><span class="line">Created /t3/a3</span><br><span class="line"> [zk: localhost:2181(CONNECTED) 6] ls /t3</span><br><span class="line">[a1, a2, a3]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 7]</span><br></pre></td></tr></table></figure>
+
+<p>超额，不会抛出异常，只是在日志中出现警告信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2022-01-03 16:38:33,532 - WARN  [CommitProcessor:1:DataTree@302] - Quota exceeded: &#x2F;t3 count&#x3D;3 limit&#x3D;2</span><br><span class="line">2022-01-03 16:38:40,136 - WARN  [CommitProcessor:1:DataTree@302] - Quota exceeded: &#x2F;t3 count&#x3D;4 limit&#x3D;2</span><br></pre></td></tr></table></figure>
+
+
+
+<p>限制节点长度：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 9] create /t5 test5</span><br><span class="line">Created /t5</span><br><span class="line">[zk: localhost:2181(CONNECTED) 10] setquota -b 5 /t5</span><br><span class="line">Comment: the parts are option -b val 5 path /t5</span><br><span class="line">[zk: localhost:2181(CONNECTED) 11] create /t5/abc abc</span><br><span class="line">Created /t5/abc</span><br><span class="line">[zk: localhost:2181(CONNECTED) 12] create /t5/abcdef abcdef</span><br><span class="line">Created /t5/abcdef</span><br><span class="line">[zk: localhost:2181(CONNECTED) 13] ls /t5</span><br><span class="line">[abcdef, abc]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 14]</span><br></pre></td></tr></table></figure>
+
+<p>同样，超出显示也不会报错，只是在日志中出现警告信息。</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2022-01-03 16:59:33,229 - WARN  [CommitProcessor:1:DataTree@348] - Quota exceeded: /t5 bytes=8 limit=5</span><br><span class="line">2022-01-03 16:59:45,076 - WARN  [CommitProcessor:1:DataTree@348] - Quota exceeded: /t5 bytes=14 limit=5</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看节点配额"><a href="#查看节点配额" class="headerlink" title="查看节点配额"></a>查看节点配额</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 7] listquota /t3</span><br><span class="line">absolute path is /zookeeper/quota/t3/zookeeper_limits</span><br><span class="line">Output quota for /t3 count=2,bytes=-1</span><br><span class="line">Output stat for /t3 count=4,bytes=11</span><br><span class="line">[zk: localhost:2181(CONNECTED) 8] </span><br><span class="line"></span><br><span class="line">[zk: localhost:2181(CONNECTED) 14] listquota /t5</span><br><span class="line">absolute path is /zookeeper/quota/t5/zookeeper_limits</span><br><span class="line">Output quota for /t5 count=-1,bytes=5</span><br><span class="line">Output stat for /t5 count=3,bytes=14</span><br><span class="line">[zk: localhost:2181(CONNECTED) 15]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="删除节点配额"><a href="#删除节点配额" class="headerlink" title="删除节点配额"></a>删除节点配额</h3><p>使用 <code>delquota [-n|-b] path</code> 删除配额信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 15] delquota -n /t3</span><br><span class="line"> </span><br><span class="line">[zk: localhost:2181(CONNECTED) 18] delquota -b /t5</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="列出历史操作命令"><a href="#列出历史操作命令" class="headerlink" title="列出历史操作命令"></a>列出历史操作命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 22] history</span><br><span class="line">12 - create /t5/abcdef abcdef</span><br><span class="line">13 - ls /t5</span><br><span class="line">14 - listquota /t5</span><br><span class="line">15 - delquota -n /t3</span><br><span class="line">16 - listquota /t3</span><br><span class="line">17 - delquota -b4 /t5</span><br><span class="line">18 - delquota -b /t5</span><br><span class="line">19 - listquota /t5</span><br><span class="line">20 - ls /t3</span><br><span class="line">21 - create /t3/a4 a4</span><br><span class="line">22 - history</span><br><span class="line">[zk: localhost:2181(CONNECTED) 23]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="重新执行-history-中的命令"><a href="#重新执行-history-中的命令" class="headerlink" title="重新执行 history 中的命令"></a>重新执行 history 中的命令</h3><p>使用 <code>redo cmdno</code> 可以重新执行history中的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 23] redo 20</span><br><span class="line">[a1, a2, a3, a4]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 24]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="连接其他服务器"><a href="#连接其他服务器" class="headerlink" title="连接其他服务器"></a>连接其他服务器</h3><p>使用 <code>connect host:port</code> 可以连接其他服务器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] connect master.bigdata:2181</span><br><span class="line">2022-01-03 17:15:37,507 - INFO  [main:ZooKeeper@692] - Session: 0x17e03c37bbc001a closed</span><br><span class="line">2022-01-03 17:15:37,507 - INFO  [main:ZooKeeper@438] - Initiating client connection, connectString=master.bigdata:2181 sessionTimeout=30000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@1c655221</span><br><span class="line">…………</span><br><span class="line"></span><br><span class="line">WATCHER::</span><br><span class="line"></span><br><span class="line">WatchedEvent state:SyncConnected type:None path:null</span><br><span class="line"></span><br><span class="line">[zk: master.bigdata:2181(CONNECTED) 1] ls /</span><br><span class="line">[cluster, t5, controller, brokers, zookeeper, hbase-unsecure, dolphinscheduler, admin, isr_change_notification, log_dir_event_notification, hiveserver2, controller_epoch, hiveserver2-leader, kafka-manager, rmstore, atsv2-hbase-unsecure, ambari-metrics-cluster, consumers, latest_producer_id_block, config, t1, t3]</span><br><span class="line">[zk: master.bigdata:2181(CONNECTED) 2] close</span><br><span class="line">2022-01-03 17:16:08,866 - INFO  [main:ZooKeeper@692] - Session: 0x27e03c37a4f000c closed</span><br><span class="line">[zk: master.bigdata:2181(CLOSED) 3] 2022-01-03 17:16:08,867 - INFO  [main-EventThread:ClientCnxn$EventThread@517] - EventThread shut down</span><br><span class="line"></span><br><span class="line">[zk: master.bigdata:2181(CLOSED) 3] quit</span><br><span class="line">Quitting...</span><br><span class="line">[root@manager bin]#</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="ACL-访问控制"><a href="#ACL-访问控制" class="headerlink" title="ACL 访问控制"></a>ACL 访问控制</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Zookeeper类似于unix文件系统，节点类比文件，客户端可以删除节点，创建节点，修改节点。Zookeeper可以使用ACL（access control list）访问控制列表来对节点的权限进行控制。</p>
+<p>acl 权限控制使用：scheme id permission 来标志，主要涵盖三个方面：</p>
+<ul>
+<li>权限模式（scheme）：授权的策略。</li>
+<li>权限对象（id）：授权的对象。</li>
+<li>权限（permission）：授予的权限。</li>
+</ul>
+<h2 id="权限模式种类"><a href="#权限模式种类" class="headerlink" title="权限模式种类"></a>权限模式种类</h2><table>
+<thead>
+<tr>
+<th align="center">模式</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">world</td>
+<td align="center">这种模式方法的授权对象只有一个anyone，代表登录到服务器的所有客户端都能对该节点执行某种权限</td>
+</tr>
+<tr>
+<td align="center">ip</td>
+<td align="center">对连接的客户端使用IP地址认证方式进行认证</td>
+</tr>
+<tr>
+<td align="center">auth</td>
+<td align="center">使用以添加认证的用户进行认证</td>
+</tr>
+<tr>
+<td align="center">digest</td>
+<td align="center">使用 用户:密码方式验证</td>
+</tr>
+</tbody></table>
+<h2 id="权限的类型"><a href="#权限的类型" class="headerlink" title="权限的类型"></a>权限的类型</h2><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">ACL简写</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">read</td>
+<td align="center">r</td>
+<td align="center">读取节点及显示子节点列表的权限</td>
+</tr>
+<tr>
+<td align="center">write</td>
+<td align="center">w</td>
+<td align="center">设置节点数据的权限</td>
+</tr>
+<tr>
+<td align="center">create</td>
+<td align="center">c</td>
+<td align="center">创建子节点的权限</td>
+</tr>
+<tr>
+<td align="center">delete</td>
+<td align="center">d</td>
+<td align="center">删除子节点的权限</td>
+</tr>
+<tr>
+<td align="center">admin</td>
+<td align="center">a</td>
+<td align="center">设置该节点ACL权限的权限</td>
+</tr>
+</tbody></table>
+<h2 id="关于授权的命令"><a href="#关于授权的命令" class="headerlink" title="关于授权的命令"></a>关于授权的命令</h2><table>
+<thead>
+<tr>
+<th align="center">命令</th>
+<th align="center">用法</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">getAcl</td>
+<td align="center">getAcl path</td>
+<td align="center">读取节点的 ACL</td>
+</tr>
+<tr>
+<td align="center">setAcl</td>
+<td align="center">setAcl path acl</td>
+<td align="center">设置节点的 ACL</td>
+</tr>
+<tr>
+<td align="center">create</td>
+<td align="center">create path data acl</td>
+<td align="center">创建节点时设置 ACL</td>
+</tr>
+<tr>
+<td align="center">addAuth</td>
+<td align="center">addAuth scheme auth</td>
+<td align="center">添加认证用户，类似于登录操作</td>
+</tr>
+</tbody></table>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 4] create /test/ta t1</span><br><span class="line">Created /test/ta</span><br><span class="line">[zk: localhost:2181(CONNECTED) 5] getAcl /test/ta</span><br><span class="line">'world,'anyone</span><br><span class="line">: cdrwa</span><br><span class="line">[zk: localhost:2181(CONNECTED) 6]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 6] setAcl /test/ta world:anyone:cdwa</span><br><span class="line">cZxid = 0x800000093</span><br><span class="line">ctime = Tue Mar 22 15:38:03 CST 2022</span><br><span class="line">mZxid = 0x800000093</span><br><span class="line">mtime = Tue Mar 22 15:38:03 CST 2022</span><br><span class="line">pZxid = 0x800000093</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 1</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 2</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 7] getAcl /test/ta</span><br><span class="line">'world,'anyone</span><br><span class="line">: cdwa</span><br><span class="line">[zk: localhost:2181(CONNECTED) 8] get /test/ta</span><br><span class="line">Authentication is not valid : /test/ta</span><br><span class="line">[zk: localhost:2181(CONNECTED) 9] </span><br><span class="line">[zk: localhost:2181(CONNECTED) 9] setAcl /test/ta world:anyone:cdrwa</span><br><span class="line">cZxid = 0x800000093</span><br><span class="line">ctime = Tue Mar 22 15:38:03 CST 2022</span><br><span class="line">mZxid = 0x800000093</span><br><span class="line">mtime = Tue Mar 22 15:38:03 CST 2022</span><br><span class="line">pZxid = 0x800000093</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 2</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 2</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 10] get /test/ta                      </span><br><span class="line">t1</span><br><span class="line">cZxid = 0x800000093</span><br><span class="line">ctime = Tue Mar 22 15:38:03 CST 2022</span><br><span class="line">mZxid = 0x800000093</span><br><span class="line">mtime = Tue Mar 22 15:38:03 CST 2022</span><br><span class="line">pZxid = 0x800000093</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 2</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 2</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 11]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 16] create /test2 t2</span><br><span class="line">Created /test2</span><br><span class="line">[zk: localhost:2181(CONNECTED) 18] </span><br><span class="line">[zk: localhost:2181(CONNECTED) 18] addauth digest hdfs:123456   </span><br><span class="line">[zk: localhost:2181(CONNECTED) 19] setAcl /test2 auth:hdfs:cdrwa</span><br><span class="line">cZxid = 0x800000099</span><br><span class="line">ctime = Tue Mar 22 15:46:58 CST 2022</span><br><span class="line">mZxid = 0x800000099</span><br><span class="line">mtime = Tue Mar 22 15:46:58 CST 2022</span><br><span class="line">pZxid = 0x800000099</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 1</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 2</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 20] </span><br><span class="line">[zk: localhost:2181(CONNECTED) 20] getAcl /test2</span><br><span class="line">'digest,'hdfs:w071ZtmzC5+0fMHyY6QQSDnW3YY=</span><br><span class="line">: cdrwa</span><br><span class="line">[zk: localhost:2181(CONNECTED) 21]</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="四字命令"><a href="#四字命令" class="headerlink" title="四字命令"></a>四字命令</h1><ul>
+<li>启用四字命令</li>
+</ul>
+<p>在配置文件 <code>zoo.cfg</code> 添加如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4lw.commands.whitelist&#x3D;*</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>conf</li>
+</ul>
+<p>打印服务配置详细信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@manager ~]# echo conf | nc 127.0.0.1 2181</span><br><span class="line">clientPort=2181</span><br><span class="line">dataDir=/hadoop/zookeeper/version-2</span><br><span class="line">dataLogDir=/hadoop/zookeeper/version-2</span><br><span class="line">tickTime=3000</span><br><span class="line">maxClientCnxns=60</span><br><span class="line">minSessionTimeout=6000</span><br><span class="line">maxSessionTimeout=60000</span><br><span class="line">serverId=1</span><br><span class="line">initLimit=10</span><br><span class="line">syncLimit=5</span><br><span class="line">electionAlg=3</span><br><span class="line">electionPort=3888</span><br><span class="line">quorumPort=2888</span><br><span class="line">peerType=0</span><br><span class="line">[root@manager ~]#</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>cons</li>
+</ul>
+<p>列出连接到此服务器的所有客户端的完整连接/会话详细信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# echo cons | nc 127.0.0.1 2181</span><br><span class="line"> /127.0.0.1:56412[0](queued=0,recved=1,sent=0)</span><br><span class="line"> /10.180.249.80:36610[1](queued=0,recved=11248,sent=11248,sid=0x200000487520016,lop=PING,est=1648707979813,to=60000,lcxid=0x941,lzxid=0xffffffffffffffff,lresp=180432277,llat=0,minlat=0,avglat=0,maxlat=4)</span><br><span class="line"> /10.180.249.81:57640[1](queued=0,recved=8882,sent=8884,sid=0x100002b03ce0000,lop=PING,est=1648707956970,to=60000,lcxid=0x7,lzxid=0xffffffffffffffff,lresp=180429864,llat=0,minlat=0,avglat=0,maxlat=10)</span><br><span class="line"> /10.180.249.81:57642[1](queued=0,recved=9023,sent=9036,sid=0x30000047001000a,lop=PING,est=1648707956983,to=60000,lcxid=0x5a0,lzxid=0xffffffffffffffff,lresp=180440871,llat=0,minlat=0,avglat=0,maxlat=18)</span><br><span class="line"> /10.180.249.80:36612[1]</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>envi</li>
+</ul>
+<p>打印有关服务环境的详细信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# echo envi |nc 127.0.0.1 2181</span><br><span class="line">Environment:</span><br><span class="line">zookeeper.version=3.4.14--1, built on 01/20/2021 05:51 GMT</span><br><span class="line">host.name=manager80.bigdata</span><br><span class="line">java.version=1.8.0_121</span><br><span class="line">java.vendor=Oracle Corporation</span><br><span class="line">java.home=/usr/jdk64/java/jre</span><br><span class="line">java.class.path=/usr/hdp/current/zookeeper-server/bin/../build/classes:/usr/hdp/current/zookeeper-server/bin/../build/lib/*.jar:/usr/hdp/current/zookeeper-server/bin/../lib/slf4j-log4j12-1.7.25.jar:/usr/hdp/current/zookeeper-server/bin/../lib/slf4j-api-1.7.25.jar:/usr/hdp/current/zookeeper-server/bin/../lib/netty-3.10.6.Final.jar:/usr/hdp/current/zookeeper-server/bin/../lib/log4j-1.2.17.jar:/usr/hdp/current/zookeeper-server/bin/../lib/jline-0.9.94.jar:/usr/hdp/current/zookeeper-server/bin/../lib/audience-annotations-0.5.0.jar:/usr/hdp/current/zookeeper-server/bin/../zookeeper-3.4.14.jar:/usr/hdp/current/zookeeper-server/bin/../src/java/lib/*.jar:/usr/hdp/current/zookeeper-server/conf:/usr/jdk64/java/lib:/usr/share/zookeeper/*:/usr/share/zookeeper/*</span><br><span class="line">java.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib</span><br><span class="line">java.io.tmpdir=/tmp</span><br><span class="line">java.compiler=&lt;NA&gt;</span><br><span class="line">os.name=Linux</span><br><span class="line">os.arch=amd64</span><br><span class="line">os.version=3.10.0-693.el7.x86_64</span><br><span class="line">user.name=zookeeper</span><br><span class="line">user.home=/home/zookeeper</span><br><span class="line">user.dir=/home/zookeeper</span><br><span class="line">[root@manager ~]#</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>srvr</li>
+</ul>
+<p>列出服务器的完整详细信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# echo srvr |nc 127.0.0.1 2181</span><br><span class="line">Zookeeper version: 3.4.14--1, built on 01/20/2021 05:51 GMT</span><br><span class="line">Latency min/avg/max: 0/0/2558</span><br><span class="line">Received: 141894</span><br><span class="line">Sent: 141978</span><br><span class="line">Connections: 10</span><br><span class="line">Outstanding: 0</span><br><span class="line">Zxid: 0x200000513</span><br><span class="line">Mode: follower</span><br><span class="line">Node count: 83</span><br><span class="line">[root@manager ~]#</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>stat</li>
+</ul>
+<p>列出服务器和连接的客户端的简要详细信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@manager ~]# echo stat | nc 127.0.0.1 2181</span><br><span class="line">Zookeeper version: 3.4.14--1, built on 01/20/2021 05:51 GMT</span><br><span class="line">Clients:</span><br><span class="line"> /10.180.249.61:33984[1](queued=0,recved=597,sent=597)</span><br><span class="line"> /127.0.0.1:50258[0](queued=0,recved=1,sent=0)</span><br><span class="line"> /10.180.249.61:33988[1](queued=0,recved=595,sent=595)</span><br><span class="line"> /10.180.249.61:33950[1](queued=0,recved=599,sent=599)</span><br><span class="line"> /10.180.249.61:33976[1](queued=0,recved=595,sent=595)</span><br><span class="line"> /10.180.249.61:33966[1](queued=0,recved=593,sent=593)</span><br><span class="line"> /10.180.249.61:33954[1](queued=0,recved=590,sent=590)</span><br><span class="line"> /10.180.249.61:33982[1](queued=0,recved=590,sent=590)</span><br><span class="line"> /10.180.249.61:33978[1](queued=0,recved=589,sent=589)</span><br><span class="line"> /10.180.249.61:33944[1](queued=0,recved=1695,sent=1695)</span><br><span class="line"> /10.180.249.61:33962[1](queued=0,recved=597,sent=597)</span><br><span class="line"> /10.180.249.61:33952[1](queued=0,recved=597,sent=597)</span><br><span class="line"></span><br><span class="line">Latency min/avg/max: 0/0/4945</span><br><span class="line">Received: 7843</span><br><span class="line">Sent: 7842</span><br><span class="line">Connections: 12</span><br><span class="line">Outstanding: 0</span><br><span class="line">Zxid: 0x200021901</span><br><span class="line">Mode: follower</span><br><span class="line">Node count: 378</span><br><span class="line">[root@manager ~]#</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>wchs</li>
+</ul>
+<p>列出服务器监视的简要信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# echo wchs | nc 127.0.0.1 2181</span><br><span class="line">6 connections watching 15 paths</span><br><span class="line">Total watches:43</span><br><span class="line">[root@manager80 ~]#</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="解析日志和快照"><a href="#解析日志和快照" class="headerlink" title="解析日志和快照"></a>解析日志和快照</h1><ul>
+<li>解析日志</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 zookeeper]# cd /usr/hdp/3.0.1.0-187/zookeeper</span><br><span class="line">[root@manager80 zookeeper]# ll</span><br><span class="line">total 1484</span><br><span class="line">drwxr-xr-x 2 root root     255 Feb 25 16:17 bin</span><br><span class="line">lrwxrwxrwx 1 root root      28 Feb 25 16:17 conf -&gt; /etc/zookeeper/3.0.1.0-187/0</span><br><span class="line">drwxr-xr-x 6 root root    4096 Feb 25 16:16 doc</span><br><span class="line">drwxr-xr-x 3 root root      18 Feb 25 16:16 etc</span><br><span class="line">drwxr-xr-x 2 root root     182 Feb 25 16:16 lib</span><br><span class="line">drwxr-xr-x 3 root root      18 Feb 25 16:16 man</span><br><span class="line">-rw-r--r-- 1 root root 1515059 Jan 21  2021 zookeeper-3.4.14.jar</span><br><span class="line">lrwxrwxrwx 1 root root      20 Feb 25 16:16 zookeeper.jar -&gt; zookeeper-3.4.14.jar</span><br><span class="line">[root@manager80 zookeeper]# java -cp zookeeper.jar:lib/* org.apache.zookeeper.server.LogFormatter /hadoop/zookeeper/version-2/log.100000001</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>解析快照</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hdp/3.0.1.0-187/zookeeper</span><br><span class="line">java -cp zookeeper.jar:lib/* org.apache.zookeeper.server.SnapshotFormatter /hadoop/zookeeper/version-2/snapshot.400000044</span><br><span class="line"></span><br><span class="line">java -cp zookeeper.jar:lib/* org.apache.zookeeper.server.SnapshotFormatter /hadoop/zookeeper/version-2/snapshot.400000044 | grep count</span><br><span class="line"></span><br><span class="line">java -cp zookeeper.jar:lib/* org.apache.zookeeper.server.SnapshotFormatter /hadoop/zookeeper/version-2/snapshot.400000044 | grep /rmstore | wc -l</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li>ZooKeeper: Because Coordinating Distributed Systems is a Zoo<br><a href="https://zookeeper.apache.org/doc/r3.4.14/zookeeperAdmin.html" target="_blank" rel="noopener">https://zookeeper.apache.org/doc/r3.4.14/zookeeperAdmin.html</a></li>
+</ul>
+<ul>
+<li>zookeeper常用命令 - 掘金<br><a href="https://juejin.cn/post/6844903876123066376" target="_blank" rel="noopener">https://juejin.cn/post/6844903876123066376</a></li>
+</ul>
+<ul>
+<li>Zookeeper权限控制ACL详解_我会努力变强的的博客-CSDN博客_zookeeper的acl<br><a href="https://blog.csdn.net/qq_40837310/article/details/106826963" target="_blank" rel="noopener">https://blog.csdn.net/qq_40837310/article/details/106826963</a></li>
+</ul>
+<ul>
+<li>zookeeper ACL 权限控制 - 云+社区 - 腾讯云<br><a href="https://cloud.tencent.com/developer/article/1414462" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1414462</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BigData/" rel="tag"># BigData</a>
+              <a href="/tags/ZooKeeper/" rel="tag"># ZooKeeper</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/14/Ambari-interface-about-metrics/" rel="prev" title="Ambari 监控相关接口">
+      <i class="fa fa-chevron-left"></i> Ambari 监控相关接口
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ZooKeeper-命令行"><span class="nav-number">1.</span> <span class="nav-text">ZooKeeper 命令行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#连接"><span class="nav-number">1.1.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#退出"><span class="nav-number">1.2.</span> <span class="nav-text">退出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Znode-基本操作"><span class="nav-number">1.3.</span> <span class="nav-text">Znode 基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#help-命令"><span class="nav-number">1.3.1.</span> <span class="nav-text">help 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列出当前节点的子节点"><span class="nav-number">1.3.2.</span> <span class="nav-text">列出当前节点的子节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取节点存储内容"><span class="nav-number">1.3.3.</span> <span class="nav-text">获取节点存储内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取节点状态"><span class="nav-number">1.3.4.</span> <span class="nav-text">获取节点状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建节点"><span class="nav-number">1.3.5.</span> <span class="nav-text">创建节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建临时节点"><span class="nav-number">1.3.6.</span> <span class="nav-text">创建临时节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建顺序节点"><span class="nav-number">1.3.7.</span> <span class="nav-text">创建顺序节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改节点"><span class="nav-number">1.3.8.</span> <span class="nav-text">修改节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除节点"><span class="nav-number">1.3.9.</span> <span class="nav-text">删除节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置节点配额"><span class="nav-number">1.3.10.</span> <span class="nav-text">设置节点配额</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看节点配额"><span class="nav-number">1.3.11.</span> <span class="nav-text">查看节点配额</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除节点配额"><span class="nav-number">1.3.12.</span> <span class="nav-text">删除节点配额</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列出历史操作命令"><span class="nav-number">1.3.13.</span> <span class="nav-text">列出历史操作命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重新执行-history-中的命令"><span class="nav-number">1.3.14.</span> <span class="nav-text">重新执行 history 中的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连接其他服务器"><span class="nav-number">1.3.15.</span> <span class="nav-text">连接其他服务器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ACL-访问控制"><span class="nav-number">2.</span> <span class="nav-text">ACL 访问控制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">2.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#权限模式种类"><span class="nav-number">2.2.</span> <span class="nav-text">权限模式种类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#权限的类型"><span class="nav-number">2.3.</span> <span class="nav-text">权限的类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于授权的命令"><span class="nav-number">2.4.</span> <span class="nav-text">关于授权的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#示例"><span class="nav-number">2.5.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四字命令"><span class="nav-number">3.</span> <span class="nav-text">四字命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解析日志和快照"><span class="nav-number">4.</span> <span class="nav-text">解析日志和快照</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

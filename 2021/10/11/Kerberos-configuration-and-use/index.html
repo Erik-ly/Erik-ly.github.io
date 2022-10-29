@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍了 Kerberos 的单机模式和主备模式的配置方式，以及一些常用的操作命令。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kerberos 配置及基本操作">
+<meta property="og:url" content="http://yoursite.com/2021/10/11/Kerberos-configuration-and-use/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要介绍了 Kerberos 的单机模式和主备模式的配置方式，以及一些常用的操作命令。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-11T06:16:20.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.456Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="BigData">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2021/10/11/Kerberos-configuration-and-use/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Kerberos 配置及基本操作 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/10/11/Kerberos-configuration-and-use/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kerberos 配置及基本操作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-11 14:16:20" itemprop="dateCreated datePublished" datetime="2021-10-11T14:16:20+08:00">2021-10-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍了 Kerberos 的单机模式和主备模式的配置方式，以及一些常用的操作命令。</p>
+<a id="more"></a>
+
+<h1 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h1><h2 id="集群信息"><a href="#集群信息" class="headerlink" title="集群信息"></a>集群信息</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# cat /etc/hosts</span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">10.180.249.80 manager80.bigdata</span><br><span class="line">10.180.249.81 master81.bigdata</span><br><span class="line">10.180.249.82 worker82.bigdata</span><br></pre></td></tr></table></figure>
+
+<h2 id="系统信息"><a href="#系统信息" class="headerlink" title="系统信息"></a>系统信息</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# cat /etc/*-release</span><br><span class="line">CentOS Linux release 7.4.1708 (Core) </span><br><span class="line">NAME="CentOS Linux"</span><br><span class="line">VERSION="7 (Core)"</span><br><span class="line">ID="centos"</span><br><span class="line">ID_LIKE="rhel fedora"</span><br><span class="line">VERSION_ID="7"</span><br><span class="line">PRETTY_NAME="CentOS Linux 7 (Core)"</span><br><span class="line">ANSI_COLOR="0;31"</span><br><span class="line">CPE_NAME="cpe:/o:centos:centos:7"</span><br><span class="line">HOME_URL="https://www.centos.org/"</span><br><span class="line">BUG_REPORT_URL="https://bugs.centos.org/"</span><br><span class="line"></span><br><span class="line">CENTOS_MANTISBT_PROJECT="CentOS-7"</span><br><span class="line">CENTOS_MANTISBT_PROJECT_VERSION="7"</span><br><span class="line">REDHAT_SUPPORT_PRODUCT="centos"</span><br><span class="line">REDHAT_SUPPORT_PRODUCT_VERSION="7"</span><br><span class="line"></span><br><span class="line">CentOS Linux release 7.4.1708 (Core) </span><br><span class="line">CentOS Linux release 7.4.1708 (Core)</span><br></pre></td></tr></table></figure>
+
+<h2 id="KDC-节点"><a href="#KDC-节点" class="headerlink" title="KDC 节点"></a>KDC 节点</h2><p>KDC 主节点：manager80.bigdata<br>KDC 备节点：master81.bigdata</p>
+<p>单机模式只有 KDC 主节点，主备模式有 KDC 主节点和 KDC 备节点。</p>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="Principal"><a href="#Principal" class="headerlink" title="Principal"></a>Principal</h2><p>认证的主体，可以认为等效于用户名。</p>
+<p>principal 的名称格式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name&#x2F;role@realm</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Realm"><a href="#Realm" class="headerlink" title="Realm"></a>Realm</h2><p>类似于编程语言中的 namespace，一个 realm 包含多个 principal，一个 principal 属于一个特定的 realm。</p>
+<h2 id="Keytab"><a href="#Keytab" class="headerlink" title="Keytab"></a>Keytab</h2><p>二进制文件，包含了 principal 和加密的 principal 秘钥信息，可以用来认证 principal。</p>
+<h2 id="Kadmin"><a href="#Kadmin" class="headerlink" title="Kadmin"></a>Kadmin</h2><p>kadmin 即 Kerberos administration server，运行在主 Kerberos 节点，负责存储 KDC 数据库，管理 principal 信息。</p>
+<h1 id="单机模式配置"><a href="#单机模式配置" class="headerlink" title="单机模式配置"></a>单机模式配置</h1><p>单机模式安装在 KDC 主节点：manager80.bigdata，以下简称 KDC 节点。</p>
+<h2 id="安装-Kerberos-服务"><a href="#安装-Kerberos-服务" class="headerlink" title="安装 Kerberos 服务"></a>安装 Kerberos 服务</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install krb5-server krb5-libs krb5-workstation</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><h3 id="krb5-conf"><a href="#krb5-conf" class="headerlink" title="krb5.conf"></a>krb5.conf</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/krb5.conf</span><br></pre></td></tr></table></figure>
+
+<p>完整内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">includedir /etc/krb5.conf.d/</span><br><span class="line"></span><br><span class="line">[logging]</span><br><span class="line">  default = FILE:/var/<span class="built_in">log</span>/krb5kdc.log</span><br><span class="line">  admin_server = FILE:/var/<span class="built_in">log</span>/kadmind.log</span><br><span class="line">  kdc = FILE:/var/<span class="built_in">log</span>/krb5kdc.log</span><br><span class="line"></span><br><span class="line">[libdefaults]</span><br><span class="line">  default_realm = BIGDATA</span><br><span class="line">  ticket_lifetime = 1d</span><br><span class="line">  renew_lifetime = 7d</span><br><span class="line">  forwardable = <span class="literal">true</span></span><br><span class="line">  dns_lookup_realm = <span class="literal">false</span></span><br><span class="line">  dns_lookup_kdc = <span class="literal">false</span></span><br><span class="line">  default_ccache_name = /tmp/krb5cc_%&#123;uid&#125;</span><br><span class="line"></span><br><span class="line">[realms]</span><br><span class="line"> BIGDATA = &#123;</span><br><span class="line">    admin_server = manager80.bigdata</span><br><span class="line">    kdc = manager80.bigdata</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong> <code>admin_server = manager80.bigdata</code> 和 <code>kdc = manager80.bigdata</code> 要换成对应的 KDC 节点 hostname</p>
+<p>配置说明</p>
+<p>[logging]：日志配置模块。</p>
+<p>[libdefaults]：Kerberos 库使用设置。</p>
+<ul>
+<li>default_realm：默认安全域。</li>
+<li>ticket_lifetime：设置初始票证请求的默认生命周期。 默认值为 1 天。</li>
+<li>renew_lifetime：为初始票证请求设置默认的可更新生命周期。 默认值为 0。</li>
+<li>forwardable：如果此标志为 true，则默认情况下，如果 KDC 允许，初始票证将是可转发的。 默认值为 false。</li>
+<li>dns_lookup_realm、dns_lookup_kdc：通过 DNS 查找 realm 或 kdc。</li>
+<li>default_ccache_name：默认票据缓存名称。</li>
+</ul>
+<p>[realms]：安全域相关设置</p>
+<ul>
+<li>admin_server：主 KDC 服务器，必须设置。</li>
+<li>kdc：运行 KDC 的主机，可加端口号。</li>
+</ul>
+<p>官方配置说明：krb5.conf — MIT Kerberos Documentation<br><a href="http://web.mit.edu/kerberos/krb5-latest/doc/admin/conf_files/krb5_conf.html" target="_blank" rel="noopener">http://web.mit.edu/kerberos/krb5-latest/doc/admin/conf_files/krb5_conf.html</a></p>
+<h3 id="kdc-conf"><a href="#kdc-conf" class="headerlink" title="kdc.conf"></a>kdc.conf</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /var/kerberos/krb5kdc/kdc.conf</span><br></pre></td></tr></table></figure>
+
+<p>完整内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[kdcdefaults]</span><br><span class="line"> kdc_ports = 88</span><br><span class="line"> kdc_tcp_ports = 88</span><br><span class="line"></span><br><span class="line">[realms]</span><br><span class="line">BIGDATA = &#123;</span><br><span class="line">  acl_file = /var/kerberos/krb5kdc/kadm5.acl</span><br><span class="line">  dict_file = /usr/share/dict/words</span><br><span class="line">  admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab</span><br><span class="line">  supported_enctypes = aes256-cts:normal aes128-cts:normal des3-hmac-sha1:normal arcfour-hmac:normal camellia256-cts:normal camellia128-cts:normal des-hmac-sha1:normal des-cbc-md5:normal des-cbc-crc:normal</span><br><span class="line">  max_life = 1d</span><br><span class="line">  max_renewable_life = 7d </span><br><span class="line">  default_principal_flags = +renewable, +forwardable</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置说明：</p>
+<p>[kdcdefaults]：KDC 默认值</p>
+<ul>
+<li>kdc_ports：KDC UDP 默认端口 88。</li>
+<li>kdc_tcp_ports：KDC tpc 默认端口 88。</li>
+</ul>
+<p>[realms]：安全域相关设置</p>
+<ul>
+<li>acl_file：访问控制列表文件。</li>
+<li>dict_file：包含不允许作为密码的字符串的字典文件的位置。</li>
+<li>admin_keytab：admin keytab 文件位置。</li>
+<li>supported_enctypes：支持的加密算法类型。</li>
+<li>max_life：票证生命周期，定义了票据的有效期。默认值为24小时。</li>
+<li>max_renewable_life：票据可再生周期，票据超过有效期后可以更新票据以延长票据的使用周期。默认为 0 。</li>
+<li>default_principal_flags：默认认证主体的标志。启用标注前有“+”，禁用标志前有“-”。+renewable 允许 principal 获得可更新的票据。+forwardable 允许 principal 获得可转发的票据。</li>
+</ul>
+<p>官方配置说明：kdc.conf — MIT Kerberos Documentation<br><a href="http://web.mit.edu/kerberos/krb5-latest/doc/admin/conf_files/kdc_conf.html" target="_blank" rel="noopener">http://web.mit.edu/kerberos/krb5-latest/doc/admin/conf_files/kdc_conf.html</a></p>
+<h3 id="kadm5-acl"><a href="#kadm5-acl" class="headerlink" title="kadm5.acl"></a>kadm5.acl</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /var/kerberos/krb5kdc/kadm5.acl</span><br></pre></td></tr></table></figure>
+
+<p>完整内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/admin@BIGDATA *</span><br></pre></td></tr></table></figure>
+
+<p>ACL 文件用于控制 kadmin数据库的访问权限，以及哪些 principal 可以操作其他的 principal。  </p>
+<p>设置为 <code>*/admin@BIGDATA *</code> 表示所有后缀为 /admin@BIGDATA 的 principal 具有所有权限，充当管理员角色。  </p>
+<p>官方配置说明：kadm5.acl — MIT Kerberos Documentation<br><a href="http://web.mit.edu/kerberos/krb5-latest/doc/admin/conf_files/kadm5_acl.html" target="_blank" rel="noopener">http://web.mit.edu/kerberos/krb5-latest/doc/admin/conf_files/kadm5_acl.html</a></p>
+<h2 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# kdb5_util create -s -r BIGDATA</span><br><span class="line">Loading random data</span><br><span class="line">Initializing database '/var/kerberos/krb5kdc/principal' for realm 'BIGDATA',</span><br><span class="line">master key name 'K/M@BIGDATA'</span><br><span class="line">You will be prompted for the database Master Password.</span><br><span class="line">It is important that you NOT FORGET this password.</span><br><span class="line">Enter KDC database master key: -- 输入密码，可与 MySQL 数据库密码相同</span><br><span class="line">Re-enter KDC database master key to verify: -- 再次输入密码</span><br></pre></td></tr></table></figure>
+
+<p>检查生成的文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# cd /var/kerberos/krb5kdc/</span><br><span class="line">[root@manager80 krb5kdc]# ll</span><br><span class="line">total 24</span><br><span class="line">-rw-------. 1 root root   18 Sep 28 14:02 kadm5.acl</span><br><span class="line">-rw-------. 1 root root  478 Sep 28 14:01 kdc.conf</span><br><span class="line">-rw-------. 1 root root 8192 Sep 28 14:06 principal</span><br><span class="line">-rw-------. 1 root root 8192 Sep 28 14:06 principal.kadm5</span><br><span class="line">-rw-------. 1 root root    0 Sep 28 14:06 principal.kadm5.lock</span><br><span class="line">-rw-------. 1 root root    0 Sep 28 14:06 principal.ok</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="创建-KDC-超级管理员"><a href="#创建-KDC-超级管理员" class="headerlink" title="创建 KDC 超级管理员"></a>创建 KDC 超级管理员</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 krb5kdc]# kadmin.local -q "addprinc admin/admin@BIGDATA"</span><br><span class="line">Authenticating as principal root/admin@BIGDATA with password.</span><br><span class="line">WARNING: no policy specified for admin/admin@BIGDATA; defaulting to no policy</span><br><span class="line">Enter password for principal "admin/admin@BIGDATA":  -- 输入密码，可与 root 密码一致</span><br><span class="line">Re-enter password for principal "admin/admin@BIGDATA":  -- 再次输入密码</span><br><span class="line">Principal "admin/admin@BIGDATA" created.</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start krb5kdc.service</span><br><span class="line">systemctl start kadmin.service</span><br></pre></td></tr></table></figure>
+
+<p>正常情况下，没有任何输出</p>
+<p>设置开机自启</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable krb5kdc.service </span><br><span class="line">systemctl enable kadmin.service</span><br></pre></td></tr></table></figure>
+
+<p>查看启动状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl status krb5kdc.service</span><br><span class="line">systemctl status kadmin.service</span><br></pre></td></tr></table></figure>
+
+<p>查看开机自启状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl is-enabled krb5kdc.service</span><br><span class="line">systemctl is-enabled kadmin.service</span><br></pre></td></tr></table></figure>
+
+<p>以上操作命令及正常输出为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 krb5kdc]# systemctl start krb5kdc.service</span><br><span class="line">[root@manager80 krb5kdc]# systemctl start kadmin.service</span><br><span class="line">[root@manager80 krb5kdc]# systemctl enable krb5kdc.service </span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/krb5kdc.service to /usr/lib/systemd/system/krb5kdc.service.</span><br><span class="line">[root@manager80 krb5kdc]# systemctl enable kadmin.service</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/kadmin.service to /usr/lib/systemd/system/kadmin.service.</span><br><span class="line">[root@manager80 krb5kdc]# systemctl is-enabled krb5kdc.service</span><br><span class="line">enabled</span><br><span class="line">[root@manager80 krb5kdc]# systemctl is-enabled kadmin.service</span><br><span class="line">enabled</span><br><span class="line">[root@manager80 krb5kdc]#</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>简单测试下是否可用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 krb5kdc]# kinit admin/admin</span><br><span class="line">Password for admin/admin@BIGDATA: </span><br><span class="line">[root@manager80 krb5kdc]# klist</span><br><span class="line">Ticket cache: FILE:/tmp/krb5cc_0</span><br><span class="line">Default principal: admin/admin@BIGDATA</span><br><span class="line"></span><br><span class="line">Valid starting       Expires              Service principal</span><br><span class="line">09/28/2021 14:21:34  09/29/2021 14:21:34  krbtgt/BIGDATA@BIGDATA</span><br><span class="line">	renew until 10/05/2021 14:21:34</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="服务端口"><a href="#服务端口" class="headerlink" title="服务端口"></a>服务端口</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@manager ~]# netstat -ntlp | grep kdc</span><br><span class="line">tcp        0      0 0.0.0.0:88              0.0.0.0:*               LISTEN      1338/krb5kdc        </span><br><span class="line">tcp6       0      0 :::88                   :::*                    LISTEN      1338/krb5kdc        </span><br><span class="line">[root@manager ~]# </span><br><span class="line">[root@manager ~]# netstat -ntlp | grep kadmin</span><br><span class="line">tcp        0      0 0.0.0.0:749             0.0.0.0:*               LISTEN      1498/kadmind        </span><br><span class="line">tcp        0      0 0.0.0.0:464             0.0.0.0:*               LISTEN      1498/kadmind        </span><br><span class="line">tcp6       0      0 :::749                  :::*                    LISTEN      1498/kadmind        </span><br><span class="line">tcp6       0      0 :::464                  :::*                    LISTEN      1498/kadmind</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="主备模式配置"><a href="#主备模式配置" class="headerlink" title="主备模式配置"></a>主备模式配置</h1><p>KDC 主节点：manager80.bigdata<br>KDC 备节点：master81.bigdata</p>
+<h2 id="安装服务"><a href="#安装服务" class="headerlink" title="安装服务"></a>安装服务</h2><p><strong>在 KDC 主节点：manager80.bigdata 和 KDC 备节点：master81.bigdata 都要执行</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install krb5-server krb5-libs krb5-workstation</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="修改配置-1"><a href="#修改配置-1" class="headerlink" title="修改配置"></a>修改配置</h2><p><strong>以下修改配置操作都在 KDC 主节点：manager80.bigdata 执行</strong></p>
+<h3 id="krb5-conf-1"><a href="#krb5-conf-1" class="headerlink" title="krb5.conf"></a>krb5.conf</h3><p>修改 <code>krb5.conf</code> </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/krb5.conf</span><br></pre></td></tr></table></figure>
+
+<p>完整内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">includedir /etc/krb5.conf.d/</span><br><span class="line"></span><br><span class="line">[logging]</span><br><span class="line">  default = FILE:/var/<span class="built_in">log</span>/krb5kdc.log</span><br><span class="line">  admin_server = FILE:/var/<span class="built_in">log</span>/kadmind.log</span><br><span class="line">  kdc = FILE:/var/<span class="built_in">log</span>/krb5kdc.log</span><br><span class="line"></span><br><span class="line">[libdefaults]</span><br><span class="line">  default_realm = BIGDATA</span><br><span class="line">  ticket_lifetime = 1d</span><br><span class="line">  renew_lifetime = 7d</span><br><span class="line">  forwardable = <span class="literal">true</span></span><br><span class="line">  dns_lookup_realm = <span class="literal">false</span></span><br><span class="line">  dns_lookup_kdc = <span class="literal">false</span></span><br><span class="line">  default_ccache_name = /tmp/krb5cc_%&#123;uid&#125;</span><br><span class="line"></span><br><span class="line">[realms]</span><br><span class="line"> BIGDATA = &#123;</span><br><span class="line">    admin_server = manager80.bigdata</span><br><span class="line">    kdc = manager80.bigdata</span><br><span class="line">    kdc = master81.bigdata</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong> <code>admin_server = manager80.bigdata</code> 、 <code>kdc = manager80.bigdata</code> 和 <code>kdc = master81.bigdata</code> 要换成对应的 KDC 主节点和备节点的 hostname，而且主的 hostname 在前，备的 hostname 在后。</p>
+<h3 id="kdc-conf-1"><a href="#kdc-conf-1" class="headerlink" title="kdc.conf"></a>kdc.conf</h3><p>修改 <code>kdc.conf</code> </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /var/kerberos/krb5kdc/kdc.conf</span><br></pre></td></tr></table></figure>
+
+<p>完整内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[kdcdefaults]</span><br><span class="line"> kdc_ports = 88</span><br><span class="line"> kdc_tcp_ports = 88</span><br><span class="line"></span><br><span class="line">[realms]</span><br><span class="line">BIGDATA = &#123;</span><br><span class="line">  acl_file = /var/kerberos/krb5kdc/kadm5.acl</span><br><span class="line">  dict_file = /usr/share/dict/words</span><br><span class="line">  admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab</span><br><span class="line">  supported_enctypes = aes256-cts:normal aes128-cts:normal des3-hmac-sha1:normal arcfour-hmac:normal camellia256-cts:normal camellia128-cts:normal des-hmac-sha1:normal des-cbc-md5:normal des-cbc-crc:normal</span><br><span class="line">  max_life = 1d</span><br><span class="line">  max_renewable_life = 7d </span><br><span class="line">  default_principal_flags = +renewable, +forwardable</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="kadm5-acl-1"><a href="#kadm5-acl-1" class="headerlink" title="kadm5.acl"></a>kadm5.acl</h3><p>修改 <code>kadm5.acl</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /var/kerberos/krb5kdc/kadm5.acl</span><br></pre></td></tr></table></figure>
+
+<p>完整内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/admin@BIGDATA *</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="复制配置文件"><a href="#复制配置文件" class="headerlink" title="复制配置文件"></a>复制配置文件</h3><p>将上述修改的 KDC 主节点的配置复制到 KDC 备节点。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scp /etc/krb5.conf root@master81.bigdata:/etc/</span><br><span class="line">scp /var/kerberos/krb5kdc/kdc.conf  root@master81.bigdata:/var/kerberos/krb5kdc/</span><br><span class="line">scp /var/kerberos/krb5kdc/kadm5.acl root@master81.bigdata:/var/kerberos/krb5kdc/</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> <code>master81.bigdata</code> 要换成对应的 KDC 备节点的 hostname。</p>
+<h2 id="创建数据库-1"><a href="#创建数据库-1" class="headerlink" title="创建数据库"></a>创建数据库</h2><p><strong>在 KDC 主节点：manager80.bigdata 和 KDC 备节点：master81.bigdata 都要执行</strong>，数据库密码要一样。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# kdb5_util create -s -r BIGDATA</span><br><span class="line">Loading random data</span><br><span class="line">Initializing database '/var/kerberos/krb5kdc/principal' for realm 'BIGDATA',</span><br><span class="line">master key name 'K/M@BIGDATA'</span><br><span class="line">You will be prompted for the database Master Password.</span><br><span class="line">It is important that you NOT FORGET this password.</span><br><span class="line">Enter KDC database master key: -- 输入密码</span><br><span class="line">Re-enter KDC database master key to verify: -- 再次输入密码</span><br></pre></td></tr></table></figure>
+
+
+<p>查看生成的文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# cd /var/kerberos/krb5kdc/</span><br><span class="line">[root@manager80 krb5kdc]# ll</span><br><span class="line">total 24</span><br><span class="line">-rw-------. 1 root root   18 Oct  3 14:27 kadm5.acl</span><br><span class="line">-rw-------. 1 root root  512 Oct  3 14:26 kdc.conf</span><br><span class="line">-rw-------. 1 root root 8192 Oct  3 14:38 principal</span><br><span class="line">-rw-------. 1 root root 8192 Oct  3 14:38 principal.kadm5</span><br><span class="line">-rw-------. 1 root root    0 Oct  3 14:38 principal.kadm5.lock</span><br><span class="line">-rw-------. 1 root root    0 Oct  3 14:38 principal.ok</span><br></pre></td></tr></table></figure>
+
+
+
+<p>也可以直接使用 <code>-P</code> 加密码的方式创建数据库。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@master81 ~]# kdb5_util create -s -r BIGDATA -P Bigdata123</span><br><span class="line">Loading random data</span><br><span class="line">Initializing database '/var/kerberos/krb5kdc/principal' for realm 'BIGDATA',</span><br><span class="line">master key name 'K/M@BIGDATA'</span><br></pre></td></tr></table></figure>
+
+<p>此命令中 <code>Bigdata123</code> 为密码。</p>
+<p>查看 KDC 备节点生成的文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@master81 ~]# cd /var/kerberos/krb5kdc/</span><br><span class="line">[root@master81 krb5kdc]# ll</span><br><span class="line">total 24</span><br><span class="line">-rw-------. 1 root root   18 Oct  3 14:32 kadm5.acl</span><br><span class="line">-rw-------. 1 root root  512 Oct  3 14:32 kdc.conf</span><br><span class="line">-rw-------. 1 root root 8192 Oct  3 14:41 principal</span><br><span class="line">-rw-------. 1 root root 8192 Oct  3 14:41 principal.kadm5</span><br><span class="line">-rw-------. 1 root root    0 Oct  3 14:41 principal.kadm5.lock</span><br><span class="line">-rw-------. 1 root root    0 Oct  3 14:41 principal.ok</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="设置同步"><a href="#设置同步" class="headerlink" title="设置同步"></a>设置同步</h2><h3 id="安装服务-1"><a href="#安装服务-1" class="headerlink" title="安装服务"></a>安装服务</h3><p><strong>在 KDC 主节点：manager80.bigdata 和 KDC 备节点：master81.bigdata 都要执行</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install crontabs cronie -y</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="设置定时任务"><a href="#设置定时任务" class="headerlink" title="设置定时任务"></a>设置定时任务</h3><p><strong>在 KDC 主节点：manager80.bigdata 执行</strong></p>
+<p>使用 <code>root</code> 用户编辑定时任务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+<p>添加以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">*/2 * * * * /usr/sbin/kdb5_util dump /var/kerberos/krb5kdc/dump</span><br><span class="line">*/2 * * * * scp /var/kerberos/krb5kdc/dump root@master81.bigdata:/var/kerberos/krb5kdc/</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> <code>master81.bigdata</code> 要换成对应的 KDC 备节点的 hostname。</p>
+<p><strong>在 KDC 备节点：master81.bigdata 执行</strong></p>
+<p>使用 <code>root</code> 用户编辑定时任务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+<p>添加以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/2 * * * * /usr/sbin/kdb5_util load /var/kerberos/krb5kdc/dump</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="启动及自启"><a href="#启动及自启" class="headerlink" title="启动及自启"></a>启动及自启</h2><p><strong>在 KDC 主节点：manager80.bigdata 和 KDC 备节点：master81.bigdata 都要执行</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl start krb5kdc.service</span><br><span class="line">systemctl start kadmin.service</span><br><span class="line">systemctl enable krb5kdc.service </span><br><span class="line">systemctl enable kadmin.service</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="创建超级管理员"><a href="#创建超级管理员" class="headerlink" title="创建超级管理员"></a>创建超级管理员</h2><p><strong>在 KDC 主节点：manager80.bigdata 执行</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 krb5kdc]# kadmin.local -q "addprinc -pw admin admin/admin"</span><br><span class="line">Authenticating as principal root/admin@BIGDATA with password.</span><br><span class="line">WARNING: no policy specified for admin/admin@BIGDATA; defaulting to no policy</span><br><span class="line">Principal "admin/admin@BIGDATA" created.</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>此命令中，密码为：admin（可自行配置），用户为：admin/admin</p>
+<p>登录验证</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 krb5kdc]# kinit admin/admin</span><br><span class="line">Password for admin/admin@BIGDATA: -- 输入上步设置的密码</span><br><span class="line">[root@manager80 krb5kdc]# klist</span><br><span class="line">Ticket cache: FILE:/tmp/krb5cc_0</span><br><span class="line">Default principal: admin/admin@BIGDATA</span><br><span class="line"></span><br><span class="line">Valid starting       Expires              Service principal</span><br><span class="line">10/03/2021 15:09:34  10/04/2021 15:09:34  krbtgt/BIGDATA@BIGDATA</span><br><span class="line">	renew until 10/10/2021 15:09:34</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="验证主备同步"><a href="#验证主备同步" class="headerlink" title="验证主备同步"></a>验证主备同步</h2><p>等待一段时间（大于 2 分钟，约 5 分钟），在 KDC 备节点验证</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@master81 krb5kdc]# kinit admin/admin</span><br><span class="line">Password for admin/admin@BIGDATA: </span><br><span class="line">[root@master81 krb5kdc]# klist</span><br><span class="line">Ticket cache: FILE:/tmp/krb5cc_0</span><br><span class="line">Default principal: admin/admin@BIGDATA</span><br><span class="line"></span><br><span class="line">Valid starting       Expires              Service principal</span><br><span class="line">10/03/2021 15:09:49  10/04/2021 15:09:49  krbtgt/BIGDATA@BIGDATA</span><br><span class="line">	renew until 10/10/2021 15:09:49</span><br></pre></td></tr></table></figure>
+
+<p>如果出现以上信息，说明主备同步正常。</p>
+<h1 id="Kerberos-基本操作"><a href="#Kerberos-基本操作" class="headerlink" title="Kerberos 基本操作"></a>Kerberos 基本操作</h1><h2 id="kadmin-数据库操作"><a href="#kadmin-数据库操作" class="headerlink" title="kadmin 数据库操作"></a>kadmin 数据库操作</h2><p>在运行 kadmin 的节点上执行 <code>kadmin.local</code> 命令进入 kadmin 操作模式，输入 “？” 可查看所有的命令及解释。</p>
+<p>如果有访问 KDC 服务器的 root 权限，但没有 kerberos admin 账户，使用 <code>kadmin.local</code> ；</p>
+<p>如果没有访问 KDC 服务器的 root 权限，但有 kerberos admin 账户，使用 <code>kadmin</code> 。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# kadmin.local </span><br><span class="line">Authenticating as principal admin/admin@BIGDATA with password.</span><br><span class="line">kadmin.local:  ?</span><br><span class="line">Available kadmin.local requests:</span><br><span class="line"></span><br><span class="line">add_principal, addprinc, ank</span><br><span class="line">                         Add principal</span><br><span class="line">delete_principal, delprinc</span><br><span class="line">                         Delete principal</span><br><span class="line">modify_principal, modprinc</span><br><span class="line">                         Modify principal</span><br><span class="line">rename_principal, renprinc</span><br><span class="line">                         Rename principal</span><br><span class="line">change_password, cpw     Change password</span><br><span class="line">get_principal, getprinc  Get principal</span><br><span class="line">list_principals, listprincs, get_principals, getprincs</span><br><span class="line">                         List principals</span><br><span class="line">add_policy, addpol       Add policy</span><br><span class="line">modify_policy, modpol    Modify policy</span><br><span class="line">delete_policy, delpol    Delete policy</span><br><span class="line">get_policy, getpol       Get policy</span><br><span class="line">list_policies, listpols, get_policies, getpols</span><br><span class="line">                         List policies</span><br><span class="line">get_privs, getprivs      Get privileges</span><br><span class="line">ktadd, xst               Add entry(s) to a keytab</span><br><span class="line">ktremove, ktrem          Remove entry(s) from a keytab</span><br><span class="line">lock                     Lock database exclusively (use with extreme caution!)</span><br><span class="line">unlock                   Release exclusive database lock</span><br><span class="line">purgekeys                Purge previously retained old keys from a principal</span><br><span class="line">get_strings, getstrs     Show string attributes on a principal</span><br><span class="line">set_string, setstr       Set a string attribute on a principal</span><br><span class="line">del_string, delstr       Delete a string attribute on a principal</span><br><span class="line">list_requests, lr, ?     List available requests.</span><br><span class="line">quit, exit, q            Exit program.</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="listprincs"><a href="#listprincs" class="headerlink" title="listprincs"></a>listprincs</h3><p>列出所有的 principal。</p>
+<p>以下为在大数据集群中的部分 principal。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">kadmin.local:  listprincs </span><br><span class="line">admin/admin@BIGDATA</span><br><span class="line">ambari-qa-cluster_80@BIGDATA</span><br><span class="line">ambari-server-cluster_80@BIGDATA</span><br><span class="line">dn/manager80.bigdata@BIGDATA</span><br><span class="line">dn/master81.bigdata@BIGDATA</span><br><span class="line">dn/worker82.bigdata@BIGDATA</span><br><span class="line">hbase-cluster_80@BIGDATA</span><br><span class="line">hbase/manager80.bigdata@BIGDATA</span><br><span class="line">hbase/worker82.bigdata@BIGDATA</span><br><span class="line">hdfs-cluster_80@BIGDATA</span><br><span class="line">kadmin/admin@BIGDATA</span><br><span class="line">kadmin/changepw@BIGDATA</span><br><span class="line">kadmin/manager80.bigdata@BIGDATA</span><br><span class="line">nm/manager80.bigdata@BIGDATA</span><br><span class="line">nm/master81.bigdata@BIGDATA</span><br><span class="line">nm/worker82.bigdata@BIGDATA</span><br><span class="line">nn/manager80.bigdata@BIGDATA</span><br><span class="line">nn/master81.bigdata@BIGDATA</span><br><span class="line">rm/manager80.bigdata@BIGDATA</span><br><span class="line">yarn-ats-cluster_80@BIGDATA</span><br><span class="line">yarn-ats-hbase/manager80.bigdata@BIGDATA</span><br><span class="line">yarn-ats-hbase/master81.bigdata@BIGDATA</span><br><span class="line">yarn-ats-hbase/worker82.bigdata@BIGDATA</span><br><span class="line">yarn/manager80.bigdata@BIGDATA</span><br><span class="line">yarn/master81.bigdata@BIGDATA</span><br><span class="line">zookeeper/manager80.bigdata@BIGDATA</span><br><span class="line">zookeeper/master81.bigdata@BIGDATA</span><br><span class="line">zookeeper/worker82.bigdata@BIGDATA</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="addprinc"><a href="#addprinc" class="headerlink" title="addprinc"></a>addprinc</h3><p>添加一个 principal。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kadmin.local:  addprinc test/localhost</span><br><span class="line">WARNING: no policy specified for test/localhost@BIGDATA; defaulting to no policy</span><br><span class="line">Enter password for principal "test/localhost@BIGDATA":  -- 输入密码</span><br><span class="line">Re-enter password for principal "test/localhost@BIGDATA": -- 再次输入密码</span><br><span class="line">Principal "test/localhost@BIGDATA" created.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>查看新增 principal</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# kinit test/localhost@BIGDATA</span><br><span class="line">Password for test/localhost@BIGDATA: -- 输入刚才输入的密码</span><br><span class="line">[root@manager80 ~]# klist</span><br><span class="line">Ticket cache: FILE:/tmp/krb5cc_0</span><br><span class="line">Default principal: test/localhost@BIGDATA</span><br><span class="line"></span><br><span class="line">Valid starting       Expires              Service principal</span><br><span class="line">10/04/2021 10:24:44  10/05/2021 10:24:44  krbtgt/BIGDATA@BIGDATA</span><br><span class="line">	renew until 10/11/2021 10:24:44</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="change-password"><a href="#change-password" class="headerlink" title="change_password"></a>change_password</h3><p>修改 principal 的密码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kadmin.local:  change_password test/localhost@BIGDATA</span><br><span class="line">Enter password for principal "test/localhost@BIGDATA":  -- 输入新的密码</span><br><span class="line">Re-enter password for principal "test/localhost@BIGDATA":  -- 重新输入新的密码</span><br><span class="line">Password for "test/localhost@BIGDATA" changed.</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="delprinc"><a href="#delprinc" class="headerlink" title="delprinc"></a>delprinc</h3><p>删除 principal。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kadmin.local:  delprinc test/localhost</span><br><span class="line">Are you sure you want to delete the principal "test/localhost@BIGDATA"? (yes/no): yes</span><br><span class="line">Principal "test/localhost@BIGDATA" deleted.</span><br><span class="line">Make sure that you have removed this principal from all ACLs before reusing.</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Kerberos-基本操作-1"><a href="#Kerberos-基本操作-1" class="headerlink" title="Kerberos 基本操作"></a>Kerberos 基本操作</h2><h3 id="kinit"><a href="#kinit" class="headerlink" title="kinit"></a>kinit</h3><p>获取并缓存一个初始票据。</p>
+<p>通过 <code>kinit -h</code> 命令查看帮助信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# kinit -h</span><br><span class="line">kinit: invalid option -- 'h'</span><br><span class="line">Usage: kinit [-V] [-l lifetime] [-s start_time] </span><br><span class="line">	[-r renewable_life] [-f | -F | --forwardable | --noforwardable] </span><br><span class="line">	[-p | -P | --proxiable | --noproxiable] </span><br><span class="line">	-n [-a | -A | --addresses | --noaddresses] </span><br><span class="line">	[--request-pac | --no-request-pac] </span><br><span class="line">	[-C | --canonicalize] </span><br><span class="line">	[-E | --enterprise] </span><br><span class="line">	[-v] [-R] [-k [-i|-t keytab_file]] [-c cachename] </span><br><span class="line">	[-S service_name] [-T ticket_armor_cache]</span><br><span class="line">	[-X &lt;attribute&gt;[=&lt;value&gt;]] [principal]</span><br><span class="line"></span><br><span class="line">    options:</span><br><span class="line">	-V verbose</span><br><span class="line">	-l lifetime</span><br><span class="line">	-s start time</span><br><span class="line">	-r renewable lifetime</span><br><span class="line">	-f forwardable</span><br><span class="line">	-F not forwardable</span><br><span class="line">	-p proxiable</span><br><span class="line">	-P not proxiable</span><br><span class="line">	-n anonymous</span><br><span class="line">	-a include addresses</span><br><span class="line">	-A do not include addresses</span><br><span class="line">	-v validate</span><br><span class="line">	-R renew</span><br><span class="line">	-C canonicalize</span><br><span class="line">	-E client is enterprise principal name</span><br><span class="line">	-k use keytab</span><br><span class="line">	-i use default client keytab (with -k)</span><br><span class="line">	-t filename of keytab to use</span><br><span class="line">	-c Kerberos 5 cache name</span><br><span class="line">	-S service</span><br><span class="line">	-T armor credential cache</span><br><span class="line">	-X &lt;attribute&gt;[=&lt;value&gt;]</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="使用密码认证"><a href="#使用密码认证" class="headerlink" title="使用密码认证"></a>使用密码认证</h4><p>直接输入 <code>kinit  principal</code>，然后根据提示输入密码进行认证。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# kinit admin/admin</span><br><span class="line">Password for admin/admin@BIGDATA: -- 输入密码</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="使用-keytab-认证"><a href="#使用-keytab-认证" class="headerlink" title="使用 keytab 认证"></a>使用 keytab 认证</h4><ul>
+<li>查看 keytab</li>
+</ul>
+<p>一般通过 keytab 文件进行认证，首先切换到 keytab 所在文件夹，默认为 <code>/etc/security/keytabs/</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# cd /etc/security/keytabs/</span><br><span class="line">[root@manager80 keytabs]# ll</span><br><span class="line">total 72</span><br><span class="line">-r--------. 1 infra-solr hadoop 393 Oct  3 15:19 ambari-infra-solr.service.keytab</span><br><span class="line">-r--------. 1 root       root   368 Oct  3 15:19 ambari.server.keytab</span><br><span class="line">-r--------. 1 ams        hadoop 373 Oct  3 15:19 ams-monitor.keytab</span><br><span class="line">-r--------. 1 hdfs       hadoop 353 Oct  3 15:19 dn.service.keytab</span><br><span class="line">-r--r-----. 1 hbase      hadoop 328 Oct  3 15:19 hbase.headless.keytab</span><br><span class="line">-r--------. 1 hbase      hadoop 368 Oct  3 15:19 hbase.service.keytab</span><br><span class="line">-r--------. 1 hdfs       hadoop 323 Oct  3 15:19 hdfs.headless.keytab</span><br><span class="line">-rw-r-----. 1 ambari-qa  hadoop 333 Oct  3 15:16 kerberos.service_check.100321.keytab</span><br><span class="line">-r--------. 1 yarn       hadoop 353 Oct  3 15:19 nm.service.keytab</span><br><span class="line">-r--------. 1 hdfs       hadoop 353 Oct  3 15:19 nn.service.keytab</span><br><span class="line">-r--------. 1 yarn       hadoop 353 Oct  3 15:19 rm.service.keytab</span><br><span class="line">-r--r-----. 1 ambari-qa  hadoop 348 Oct  3 15:19 smokeuser.headless.keytab</span><br><span class="line">-r--r-----. 1 root       hadoop 363 Oct  3 15:19 spnego.service.keytab</span><br><span class="line">-r--------. 1 yarn-ats   hadoop 343 Oct  3 15:19 yarn-ats.hbase-client.headless.keytab</span><br><span class="line">-r--------. 1 yarn-ats   hadoop 413 Oct  3 15:19 yarn-ats.hbase-master.service.keytab</span><br><span class="line">-r--------. 1 yarn-ats   hadoop 413 Oct  3 15:19 yarn-ats.hbase-regionserver.service.keytab</span><br><span class="line">-r--------. 1 yarn       hadoop 363 Oct  3 15:19 yarn.service.keytab</span><br><span class="line">-r--------. 1 zookeeper  hadoop 388 Oct  3 15:19 zk.service.keytab</span><br></pre></td></tr></table></figure>
+
+<p>这里有所有可用的 keytab，<strong>注意所用用户要有使用该 keytab 的权限</strong>。</p>
+<ul>
+<li>查看 principal</li>
+</ul>
+<p>这里以 <code>hdfs</code> 用户使用 <code>hdfs.headless.keytab</code> 为例。</p>
+<p>首先切换到  <code>hdfs</code> 用户，并查看 keytab 的 principal。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 keytabs]# su hdfs</span><br><span class="line">[hdfs@manager80 keytabs]$ klist -ket hdfs.headless.keytab</span><br><span class="line">Keytab name: FILE:hdfs.headless.keytab</span><br><span class="line">KVNO Timestamp           Principal</span><br><span class="line">---- ------------------- ------------------------------------------------------</span><br><span class="line">   2 10/03/2021 15:19:03 hdfs-cluster_80@BIGDATA (aes128-cts-hmac-sha1-96) </span><br><span class="line">   2 10/03/2021 15:19:03 hdfs-cluster_80@BIGDATA (aes256-cts-hmac-sha1-96) </span><br><span class="line">   2 10/03/2021 15:19:03 hdfs-cluster_80@BIGDATA (des3-cbc-sha1) </span><br><span class="line">   2 10/03/2021 15:19:03 hdfs-cluster_80@BIGDATA (des-cbc-md5) </span><br><span class="line">   2 10/03/2021 15:19:03 hdfs-cluster_80@BIGDATA (arcfour-hmac)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>认证并查看当前票据</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[hdfs@manager80 keytabs]$ kinit -kt hdfs.headless.keytab hdfs-cluster_80@BIGDATA</span><br><span class="line">[hdfs@manager80 keytabs]$ klist</span><br><span class="line">Ticket cache: FILE:/tmp/krb5cc_1007</span><br><span class="line">Default principal: hdfs-cluster_80@BIGDATA</span><br><span class="line"></span><br><span class="line">Valid starting       Expires              Service principal</span><br><span class="line">10/04/2021 15:04:54  10/05/2021 15:04:54  krbtgt/BIGDATA@BIGDATA</span><br><span class="line">	renew until 10/11/2021 15:04:54</span><br></pre></td></tr></table></figure>
+
+<p>可以看到已经通过 keytab 进行认证。</p>
+<ul>
+<li>查看 HDFS 文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hdfs@manager80 keytabs]$ hadoop fs -ls /tmp</span><br><span class="line">Found 3 items</span><br><span class="line">drwxr-xr-x   - hdfs hdfs          0 2021-03-31 15:29 /tmp/entity-file-history</span><br><span class="line">-rw-r--r--   3 hdfs hdfs       1024 2021-03-31 15:28 /tmp/idb40a50f9_date283121</span><br><span class="line">-rw-r--r--   3 hdfs hdfs       1024 2021-10-03 15:26 /tmp/idb40a52f9_date260321</span><br></pre></td></tr></table></figure>
+
+<p>可以查看 HDFS 数据，说明已认证成功。</p>
+<h3 id="kdestroy"><a href="#kdestroy" class="headerlink" title="kdestroy"></a>kdestroy</h3><p>销毁当前认证票据，删除凭据缓存。使用 <code>kdestroy -A</code> 清除所有缓存凭据。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hdfs@manager80 keytabs]$ kdestroy</span><br><span class="line">[hdfs@manager80 keytabs]$ klist</span><br><span class="line">klist: No credentials cache found (filename: /tmp/krb5cc_1007)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ktutil"><a href="#ktutil" class="headerlink" title="ktutil"></a>ktutil</h3><p><code>ktutil</code> 是操作 keytab 文件的工具集。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@manager80 ~]# ktutil</span><br><span class="line">ktutil:  ?</span><br><span class="line">Available ktutil requests:</span><br><span class="line"></span><br><span class="line">clear_list, clear        Clear the current keylist.</span><br><span class="line">read_kt, rkt             Read a krb5 keytab into the current keylist.</span><br><span class="line">read_st, rst             Read a krb4 srvtab into the current keylist.</span><br><span class="line">write_kt, wkt            Write the current keylist to a krb5 keytab.</span><br><span class="line">write_st, wst            Write the current keylist to a krb4 srvtab.</span><br><span class="line">add_entry, addent        Add an entry to the current keylist.</span><br><span class="line">delete_entry, delent     Delete an entry from the current keylist.</span><br><span class="line">list, l                  List the current keylist.</span><br><span class="line">list_requests, lr, ?     List available requests.</span><br><span class="line">quit, exit, q            Exit program.</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li>MIT Kerberos Documentation (1.19.2) — MIT Kerberos Documentation<br><a href="https://web.mit.edu/kerberos/krb5-latest/doc/" target="_blank" rel="noopener">https://web.mit.edu/kerberos/krb5-latest/doc/</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BigData/" rel="tag"># BigData</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/04/Sed-common-basic-commands/" rel="prev" title="Sed 常用基本命令">
+      <i class="fa fa-chevron-left"></i> Sed 常用基本命令
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/14/Ambari-interface-about-alert/" rel="next" title="Ambari 告警相关接口">
+      Ambari 告警相关接口 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境信息"><span class="nav-number">1.</span> <span class="nav-text">环境信息</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#集群信息"><span class="nav-number">1.1.</span> <span class="nav-text">集群信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统信息"><span class="nav-number">1.2.</span> <span class="nav-text">系统信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KDC-节点"><span class="nav-number">1.3.</span> <span class="nav-text">KDC 节点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">2.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Principal"><span class="nav-number">2.1.</span> <span class="nav-text">Principal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Realm"><span class="nav-number">2.2.</span> <span class="nav-text">Realm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Keytab"><span class="nav-number">2.3.</span> <span class="nav-text">Keytab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kadmin"><span class="nav-number">2.4.</span> <span class="nav-text">Kadmin</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单机模式配置"><span class="nav-number">3.</span> <span class="nav-text">单机模式配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Kerberos-服务"><span class="nav-number">3.1.</span> <span class="nav-text">安装 Kerberos 服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改配置"><span class="nav-number">3.2.</span> <span class="nav-text">修改配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#krb5-conf"><span class="nav-number">3.2.1.</span> <span class="nav-text">krb5.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kdc-conf"><span class="nav-number">3.2.2.</span> <span class="nav-text">kdc.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kadm5-acl"><span class="nav-number">3.2.3.</span> <span class="nav-text">kadm5.acl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建数据库"><span class="nav-number">3.3.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-KDC-超级管理员"><span class="nav-number">3.4.</span> <span class="nav-text">创建 KDC 超级管理员</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动服务"><span class="nav-number">3.5.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">3.6.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务端口"><span class="nav-number">3.7.</span> <span class="nav-text">服务端口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主备模式配置"><span class="nav-number">4.</span> <span class="nav-text">主备模式配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装服务"><span class="nav-number">4.1.</span> <span class="nav-text">安装服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改配置-1"><span class="nav-number">4.2.</span> <span class="nav-text">修改配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#krb5-conf-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">krb5.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kdc-conf-1"><span class="nav-number">4.2.2.</span> <span class="nav-text">kdc.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kadm5-acl-1"><span class="nav-number">4.2.3.</span> <span class="nav-text">kadm5.acl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制配置文件"><span class="nav-number">4.2.4.</span> <span class="nav-text">复制配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建数据库-1"><span class="nav-number">4.3.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置同步"><span class="nav-number">4.4.</span> <span class="nav-text">设置同步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装服务-1"><span class="nav-number">4.4.1.</span> <span class="nav-text">安装服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置定时任务"><span class="nav-number">4.4.2.</span> <span class="nav-text">设置定时任务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动及自启"><span class="nav-number">4.5.</span> <span class="nav-text">启动及自启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建超级管理员"><span class="nav-number">4.6.</span> <span class="nav-text">创建超级管理员</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证主备同步"><span class="nav-number">4.7.</span> <span class="nav-text">验证主备同步</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kerberos-基本操作"><span class="nav-number">5.</span> <span class="nav-text">Kerberos 基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kadmin-数据库操作"><span class="nav-number">5.1.</span> <span class="nav-text">kadmin 数据库操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#listprincs"><span class="nav-number">5.1.1.</span> <span class="nav-text">listprincs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#addprinc"><span class="nav-number">5.1.2.</span> <span class="nav-text">addprinc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#change-password"><span class="nav-number">5.1.3.</span> <span class="nav-text">change_password</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#delprinc"><span class="nav-number">5.1.4.</span> <span class="nav-text">delprinc</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kerberos-基本操作-1"><span class="nav-number">5.2.</span> <span class="nav-text">Kerberos 基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kinit"><span class="nav-number">5.2.1.</span> <span class="nav-text">kinit</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用密码认证"><span class="nav-number">5.2.1.1.</span> <span class="nav-text">使用密码认证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-keytab-认证"><span class="nav-number">5.2.1.2.</span> <span class="nav-text">使用 keytab 认证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kdestroy"><span class="nav-number">5.2.2.</span> <span class="nav-text">kdestroy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ktutil"><span class="nav-number">5.2.3.</span> <span class="nav-text">ktutil</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

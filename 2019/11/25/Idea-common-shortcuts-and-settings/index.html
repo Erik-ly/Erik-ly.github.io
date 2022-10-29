@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍 IDEA 的常用快捷键、常用配置以及常用的插件。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IDEA 常用快捷键和设置">
+<meta property="og:url" content="http://yoursite.com/2019/11/25/Idea-common-shortcuts-and-settings/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要介绍 IDEA 的常用快捷键、常用配置以及常用的插件。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191125212156656.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191125212209817.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191125212249153.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019112521252345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191201100900181.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191201095304868.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019120110215481.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614171454.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191201102814833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614171204.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614171911.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614172000.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614172714.png">
+<meta property="article:published_time" content="2019-11-25T12:37:44.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.456Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="IDEA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20191125212156656.png">
+
+<link rel="canonical" href="http://yoursite.com/2019/11/25/Idea-common-shortcuts-and-settings/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>IDEA 常用快捷键和设置 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/25/Idea-common-shortcuts-and-settings/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IDEA 常用快捷键和设置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-25 20:37:44" itemprop="dateCreated datePublished" datetime="2019-11-25T20:37:44+08:00">2019-11-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍 IDEA 的常用快捷键、常用配置以及常用的插件。</p>
+<a id="more"></a>
+
+<h1 id="IDEA-常用快捷键"><a href="#IDEA-常用快捷键" class="headerlink" title="IDEA 常用快捷键"></a>IDEA 常用快捷键</h1><ul>
+<li>alt + Insert ：生成 get/set 方法</li>
+<li>Ctrl + Alt + t ：    使用 try/catch </li>
+<li>Ctrl+Alt+Left/Right ：光标定位到上一个/下一个浏览位置处</li>
+<li>Ctrl+Shift+Backspace：光标定位到上次修改的地方</li>
+<li>Ctrl+Alt+L：格式化代码</li>
+<li>Ctrl+Alt+O：去除未使用的 import 包或类</li>
+<li>Ctrl+ +/-：当前方法展开、折叠</li>
+<li>Ctrl+Shift+ +/-：全部方法展开、折叠</li>
+<li>Ctrl + D：复制当前行到下一行</li>
+</ul>
+<h1 id="IDEA-常用设置"><a href="#IDEA-常用设置" class="headerlink" title="IDEA 常用设置"></a>IDEA 常用设置</h1><h2 id="设置字体大小"><a href="#设置字体大小" class="headerlink" title="设置字体大小"></a>设置字体大小</h2><p><img src="https://img-blog.csdnimg.cn/20191125212156656.png" alt=""><br><img src="https://img-blog.csdnimg.cn/20191125212209817.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="取消默认打开项目"><a href="#取消默认打开项目" class="headerlink" title="取消默认打开项目"></a>取消默认打开项目</h2><p><img src="https://img-blog.csdnimg.cn/20191125212249153.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="设置头文件"><a href="#设置头文件" class="headerlink" title="设置头文件"></a>设置头文件</h2><p><img src="https://img-blog.csdnimg.cn/2019112521252345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @author Erik</span><br><span class="line"> * @date $&#123;DATE&#125;</span><br><span class="line"> *&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置内存大小"><a href="#设置内存大小" class="headerlink" title="设置内存大小"></a>设置内存大小</h2><p>我现在了解到的情况是，修改 IDEA 的默认内存大小方式有两种，一种是通过设置<code>Edit Custom VM Options</code>，另一种是通过修改安装目录中<code>bin</code>文件夹下的<code>idea64.exe.vmoptions</code>或<code>idea.exe.vmoptions</code>，这个根据是否是64位选择。两种方式修改的内容都是一样的。<br><strong>如果设置过<code>Edit Custom VM Options</code>，再设置<code>bin</code>文件夹下的<code>idea64.exe.vmoptions</code>或<code>idea.exe.vmoptions</code>是无效的。</strong></p>
+<ul>
+<li>修改<code>idea64.exe.vmoptions</code><br><code>idea64.exe.vmoptions</code>或<code>idea.exe.vmoptions</code>存放位置<br><img src="https://img-blog.csdnimg.cn/20191201100900181.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></li>
+</ul>
+<ul>
+<li>设置<code>Edit Custom VM Options</code><br>依次点击<code>Help</code> — <code>Edit Custom VM Options</code>，然后按提示点击确认即可。<br>通过<code>Edit Custom VM Options</code>实际上也是生成一个<code>idea64.exe.vmoptions</code>，我的这个文件存放位置是<code>C:\Users\Erik\.IntelliJIdea2019.1\config\idea64.exe.vmoptions</code>。<br><img src="https://img-blog.csdnimg.cn/20191201095304868.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""><br>具体修改内容<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># custom IntelliJ IDEA VM options</span><br><span class="line"></span><br><span class="line">-Xms1024m</span><br><span class="line">-Xmx2048m</span><br><span class="line">-XX:ReservedCodeCacheSize&#x3D;1024m</span><br><span class="line">-XX:+UseConcMarkSweepGC</span><br><span class="line">-XX:SoftRefLRUPolicyMSPerMB&#x3D;50</span><br><span class="line">-ea</span><br><span class="line">-Dsun.io.useCanonCaches&#x3D;false</span><br><span class="line">-Djava.net.preferIPv4Stack&#x3D;true</span><br><span class="line">-Djdk.http.auth.tunneling.disabledSchemes&#x3D;&quot;&quot;</span><br><span class="line">-XX:+HeapDumpOnOutOfMemoryError</span><br><span class="line">-XX:-OmitStackTraceInFastThrow</span><br></pre></td></tr></table></figure>
+只修改</li>
+<li><code>-Xms1024m</code>，最小内存</li>
+<li><code>-Xmx2048m</code>,最大内存</li>
+<li><code>-XX:ReservedCodeCacheSize=1024m</code>，预留代码缓存的大小</li>
+</ul>
+<p>设置保存，重启 IDEA 生效。</p>
+<p>设置在 IDEA 右下角显示内存使用情况<br><img src="https://img-blog.csdnimg.cn/2019120110215481.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="字体滚轮放大缩小"><a href="#字体滚轮放大缩小" class="headerlink" title="字体滚轮放大缩小"></a>字体滚轮放大缩小</h2><p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614171454.png" alt=""><br>设置后，可以按住 Ctrl 键，使用鼠标滚轮放大缩小字体。</p>
+<h1 id="IDEA-常用插件"><a href="#IDEA-常用插件" class="headerlink" title="IDEA 常用插件"></a>IDEA 常用插件</h1><h2 id="Alibaba-Java-Coding-Guidelines"><a href="#Alibaba-Java-Coding-Guidelines" class="headerlink" title="Alibaba Java Coding Guidelines"></a>Alibaba Java Coding Guidelines</h2><p>Alibaba Java Coding Guidelines 插件由阿里巴巴 P3C 项目组研发的代码检测插件，可针对语法做出修改建议。<br><img src="https://img-blog.csdnimg.cn/20191201102814833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="ignore"><a href="#ignore" class="headerlink" title=".ignore"></a>.ignore</h2><p>.ignore 可以生成各种 .gitignore 文件<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614171204.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614171911.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614172000.png" alt=""></p>
+<h2 id="GitToolBox"><a href="#GitToolBox" class="headerlink" title="GitToolBox"></a>GitToolBox</h2><p>GitToolBox 可以在代码里显示每一行的提交记录，包括提交者，日期，commit 信息。<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/20210614172714.png" alt=""></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li>IntelliJ IDEA修改内存大小,使得idea运行更流畅_java_脚本之家<br><a href="https://www.jb51.net/article/149273.htm" target="_blank" rel="noopener">https://www.jb51.net/article/149273.htm</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/IDEA/" rel="tag"># IDEA</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/11/05/GitBucket-introduction/" rel="prev" title="GitBucket 安装部署">
+      <i class="fa fa-chevron-left"></i> GitBucket 安装部署
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/12/03/Install-MySQL-5-7-on-Windows/" rel="next" title="Windows 安装 MySQL 5.7详细步骤">
+      Windows 安装 MySQL 5.7详细步骤 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA-常用快捷键"><span class="nav-number">1.</span> <span class="nav-text">IDEA 常用快捷键</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA-常用设置"><span class="nav-number">2.</span> <span class="nav-text">IDEA 常用设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设置字体大小"><span class="nav-number">2.1.</span> <span class="nav-text">设置字体大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#取消默认打开项目"><span class="nav-number">2.2.</span> <span class="nav-text">取消默认打开项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置头文件"><span class="nav-number">2.3.</span> <span class="nav-text">设置头文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置内存大小"><span class="nav-number">2.4.</span> <span class="nav-text">设置内存大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字体滚轮放大缩小"><span class="nav-number">2.5.</span> <span class="nav-text">字体滚轮放大缩小</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA-常用插件"><span class="nav-number">3.</span> <span class="nav-text">IDEA 常用插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Alibaba-Java-Coding-Guidelines"><span class="nav-number">3.1.</span> <span class="nav-text">Alibaba Java Coding Guidelines</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ignore"><span class="nav-number">3.2.</span> <span class="nav-text">.ignore</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitToolBox"><span class="nav-number">3.3.</span> <span class="nav-text">GitToolBox</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

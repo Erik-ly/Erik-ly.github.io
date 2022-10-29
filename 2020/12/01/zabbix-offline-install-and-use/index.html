@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍 Zabbix 的离线安装方法，并且提供一键安装脚本，方便内网安装部署。介绍常用的监控配置包括主机自动发现及磁盘 IO 监控等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zabbix 离线安装及使用方法">
+<meta property="og:url" content="http://yoursite.com/2020/12/01/zabbix-offline-install-and-use/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要介绍 Zabbix 的离线安装方法，并且提供一键安装脚本，方便内网安装部署。介绍常用的监控配置包括主机自动发现及磁盘 IO 监控等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/96f536c46163c45460879377d851871f.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/e836d46e324c554099da149bb6b75b39.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/41ca56b17eb33703199227c8c33bd2d4.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/eea7e94de6db5d3afcf114af4179ff1a.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7cbd27b40b7c959c997b092855983ecc.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/3de81e069f42d8622fbbbf571ed534cc.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8d3dbbd5b6698350d8dbeff59cc41c6a.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/575b9bfc4e1788e2dc889548de3c0608.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/3a43df402e40aa5ff966804aaf44f8e4.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/477184a70606a99254a54832cf6942de.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/38f31dddd9a7637f07feea67e7d7bee9.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2517493bfe40f87402f8c8cf826c824d.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5ade38658a86c0af86b881666558a116.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/a17041da0d35e36af187d68d9351769d.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5fd403f9437d0f713e68ee9e0a17a41f.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/4493404fd8eeccf136181f80fa3b0851.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/782c935c807839648d01d76d4bb53596.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/72554966cb565ea853e4fc4f7ccdde4d.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/a8ef29f53da28922b74835974853dd6b.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8a3274faa5d0387340aaf60132646032.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c5970c6aa6f535731cfa7ee5db64cff4.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/329ed7e07257d5eee19e75b12b1e2721.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/bf4e011e1da51cf4b0807c09d9c4ee2a.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7b7812535a15bde5a22c242406ff5b69.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/72dc9247e4d79957968df854ff78d7ea.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/603d3c4996853c45a6693e08bb92a2d1.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/ea772d137ed0ef556374b9c18c282ee5.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2c019ea809a3020b9f4a51c93aa54917.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/681fc5d39ce2eb50f62624373ade7128.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/dba10aacb57f20ad1f826a663d0674b7.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f9f07909e862f21a4b1c799264251f8d.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/97b7125509b44be9d9c7a38173a38095.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/afd81f1d640ec8dd4099c26ac4043fe3.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/bf6d0726d05ad1d550027f94c3a60d34.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/908a4fbc813a996745e87f6f62415bcc.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7b7cfd3de0eb6ab97f6c15b2c7b6149c.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/031e2126e581ad543c6ef557b462dc57.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/aeb5f2117bdaa14627edc16965305b5f.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/e6c49e1aff1e7b91cab4b5cf938879eb.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/755bdc5c9a84e15bbbd3ac924ae9a007.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8021e3210e985b8e2c90c04309096f38.png">
+<meta property="article:published_time" content="2020-12-01T09:25:27.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.461Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="zabbix">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/96f536c46163c45460879377d851871f.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/12/01/zabbix-offline-install-and-use/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Zabbix 离线安装及使用方法 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/01/zabbix-offline-install-and-use/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Zabbix 离线安装及使用方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-01 17:25:27" itemprop="dateCreated datePublished" datetime="2020-12-01T17:25:27+08:00">2020-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍 Zabbix 的离线安装方法，并且提供一键安装脚本，方便内网安装部署。介绍常用的监控配置包括主机自动发现及磁盘 IO 监控等。</p>
+<a id="more"></a>
+
+<h1 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h1><p>Linux系统：CentOS 7.6</p>
+<h1 id="源文件"><a href="#源文件" class="headerlink" title="源文件"></a>源文件</h1><p>安装包及脚本已上传 GitHub，可前往下载源文件</p>
+<p>Erik-ly/install-zabbix-offline: 离线安装zabbix</p>
+<p><a href="https://github.com/Erik-ly/install-zabbix-offline" target="_blank" rel="noopener">https://github.com/Erik-ly/install-zabbix-offline</a></p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装zabbix-server"><a href="#安装zabbix-server" class="headerlink" title="安装zabbix server"></a>安装zabbix server</h2><p>如果安装主机是干净的系统，没有MySQL或mariadb，则使用zabbix，执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh autosetup.sh</span><br></pre></td></tr></table></figure>
+
+<p>如果安装主机中已经安装MySQL数据库，则使用zabbix_exist_mysql，执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh autosetup.sh dbpwd</span><br></pre></td></tr></table></figure>
+
+<p>dbpwd为MySQL数据库密码</p>
+<p><strong>登录webUI</strong></p>
+<p><a href="http://serverIP/zabbix/" target="_blank" rel="noopener">http://serverIP/zabbix/</a></p>
+<p>用户名/密码：Admin/zabbix</p>
+<p>如果出现如下提示</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/96f536c46163c45460879377d851871f.png" alt=""></p>
+<p>需要设置php的时区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;php.ini</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/e836d46e324c554099da149bb6b75b39.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">date.timezone &#x3D; &quot;Asia&#x2F;Shanghai&quot;</span><br><span class="line"></span><br><span class="line">systemctl restart httpd.service</span><br></pre></td></tr></table></figure>
+
+<p><strong>修改时区</strong></p>
+<p>如果监控显示的时间不正确，可以查看zabbix<br>server主机的时区是否正确，中国用户可执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Export TZ&#x3D;’Asia&#x2F;Shanghai’</span><br><span class="line"></span><br><span class="line">date</span><br><span class="line"></span><br><span class="line">Fri Sep 20 09:07:00 CST 2019</span><br><span class="line"></span><br><span class="line">date –s 09:07:00</span><br></pre></td></tr></table></figure>
+
+<p><strong>设置中文</strong></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/41ca56b17eb33703199227c8c33bd2d4.png" alt=""></p>
+<h2 id="安装zabbix-agent"><a href="#安装zabbix-agent" class="headerlink" title="安装zabbix agent"></a>安装zabbix agent</h2><p>使用batch_setup_zabbix_agent可以批量安装zabbix agent，</p>
+<p>修改ipList.txt，修改为需要安装zabbix agent的真实IP，中间以空格分隔。</p>
+<p>修改 zabbix_agent/setup_zabbix_agent.sh 中的 ServerIP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ServerIP&#x3D;&quot;10.180.100.100&quot;</span><br></pre></td></tr></table></figure>
+
+<p>修改为真是的zabbix server IP</p>
+<p>执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh batch_setup_zabbix_agent.sh rootpwd</span><br></pre></td></tr></table></figure>
+
+<p>rootpwd 为这些主机的root密码</p>
+<p><strong>默认使用root权限，并且配置磁盘io数据，可根据实际情况修改。</strong></p>
+<h1 id="配置监控"><a href="#配置监控" class="headerlink" title="配置监控"></a>配置监控</h1><h2 id="自动发现"><a href="#自动发现" class="headerlink" title="自动发现"></a>自动发现</h2><p>首先配置“发现规则”，依次点击“配置”——“自动发现”——“创建发现规则”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/eea7e94de6db5d3afcf114af4179ff1a.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7cbd27b40b7c959c997b092855983ecc.png" alt=""></p>
+<p>一定要点“添加”，否则无效</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/3de81e069f42d8622fbbbf571ed534cc.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8d3dbbd5b6698350d8dbeff59cc41c6a.png" alt=""></p>
+<p>创建动作，依次选择“配置”——“动作”，在“事件源”处选择“自动发现”，然后点击“创建动作”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/575b9bfc4e1788e2dc889548de3c0608.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/3a43df402e40aa5ff966804aaf44f8e4.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/477184a70606a99254a54832cf6942de.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/38f31dddd9a7637f07feea67e7d7bee9.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2517493bfe40f87402f8c8cf826c824d.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5ade38658a86c0af86b881666558a116.png" alt=""></p>
+<p>查看自动发现的主机</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/a17041da0d35e36af187d68d9351769d.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5fd403f9437d0f713e68ee9e0a17a41f.png" alt=""></p>
+<p>在主页可以添加自动发现组件</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/4493404fd8eeccf136181f80fa3b0851.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/782c935c807839648d01d76d4bb53596.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/72554966cb565ea853e4fc4f7ccdde4d.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/a8ef29f53da28922b74835974853dd6b.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8a3274faa5d0387340aaf60132646032.png" alt=""></p>
+<h2 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h2><p>批量安装zabbix agent时，默认已经配置了磁盘IO，只需在zabbix<br>界面配置显示即可，步骤为：</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c5970c6aa6f535731cfa7ee5db64cff4.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/329ed7e07257d5eee19e75b12b1e2721.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/bf4e011e1da51cf4b0807c09d9c4ee2a.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7b7812535a15bde5a22c242406ff5b69.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/72dc9247e4d79957968df854ff78d7ea.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/603d3c4996853c45a6693e08bb92a2d1.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/ea772d137ed0ef556374b9c18c282ee5.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2c019ea809a3020b9f4a51c93aa54917.png" alt=""></p>
+<p>io.scandisk</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/681fc5d39ce2eb50f62624373ade7128.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/dba10aacb57f20ad1f826a663d0674b7.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f9f07909e862f21a4b1c799264251f8d.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/97b7125509b44be9d9c7a38173a38095.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">io avgqu-sz on &#123;\#DISKNAME&#125; io.avgqu-sz[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io avgrq-sz on &#123;\#DISKNAME&#125; io.avgrq-sz[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io await on &#123;\#DISKNAME&#125; io.await[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io rMBps on &#123;\#DISKNAME&#125; io.rMBps[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io rps on &#123;\#DISKNAME&#125; io.rps[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io r_await on &#123;\#DISKNAME&#125; io.r_await[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io svctm on &#123;\#DISKNAME&#125; io.svctm[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io utils on &#123;\#DISKNAME&#125; io.util[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io wMBps on &#123;\#DISKNAME&#125; io.wMBps[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io wps on &#123;\#DISKNAME&#125; io.wps[&#123;\#DISKNAME&#125;]</span><br><span class="line"></span><br><span class="line">io w_await on &#123;\#DISKNAME&#125; io.w_await[&#123;\#DISKNAME&#125;]</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/afd81f1d640ec8dd4099c26ac4043fe3.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/bf6d0726d05ad1d550027f94c3a60d34.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/908a4fbc813a996745e87f6f62415bcc.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7b7cfd3de0eb6ab97f6c15b2c7b6149c.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/031e2126e581ad543c6ef557b462dc57.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/aeb5f2117bdaa14627edc16965305b5f.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/e6c49e1aff1e7b91cab4b5cf938879eb.png" alt="C:\\Users\\Erik\\Downloads\\Google Chrome\\0a8ebb2d-571e-4cb0-bf10-f7d0dac7c32b.png"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/755bdc5c9a84e15bbbd3ac924ae9a007.png" alt=""></p>
+<p>图形原型</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8021e3210e985b8e2c90c04309096f38.png" alt=""></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p>linux zabbix 安装 支持离线安装 支持批量添加主机 - fantasywith的博客 - CSDN博客<br><a href="https://blog.csdn.net/fantasywith/article/details/84193071" target="_blank" rel="noopener">https://blog.csdn.net/fantasywith/article/details/84193071</a> </p>
+</li>
+<li><p>Zabbix自动发现主机并批量添加监控 - 友人A的博客 - CSDN博客<br><a href="https://blog.csdn.net/tladagio/article/details/79185093" target="_blank" rel="noopener">https://blog.csdn.net/tladagio/article/details/79185093</a> </p>
+</li>
+<li><p>zabbix4.0 自动发现监控磁盘IO - 忆网 - CSDN博客<br><a href="https://blog.csdn.net/qq_24027457/article/details/83587826" target="_blank" rel="noopener">https://blog.csdn.net/qq_24027457/article/details/83587826</a> </p>
+</li>
+<li><p>linux系统修改系统时间与时区-百度经验<br><a href="https://jingyan.baidu.com/article/fa4125acb7328628ac70920e.html" target="_blank" rel="noopener">https://jingyan.baidu.com/article/fa4125acb7328628ac70920e.html</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/zabbix/" rel="tag"># zabbix</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/29/ambari-metainfo/" rel="prev" title="Ambari 中 metainfo.xml 文件解析">
+      <i class="fa fa-chevron-left"></i> Ambari 中 metainfo.xml 文件解析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/02/feiteng-kylin-install/" rel="next" title="飞腾银河麒麟系统安装步骤">
+      飞腾银河麒麟系统安装步骤 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实验环境"><span class="nav-number">1.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源文件"><span class="nav-number">2.</span> <span class="nav-text">源文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装zabbix-server"><span class="nav-number">3.1.</span> <span class="nav-text">安装zabbix server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装zabbix-agent"><span class="nav-number">3.2.</span> <span class="nav-text">安装zabbix agent</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置监控"><span class="nav-number">4.</span> <span class="nav-text">配置监控</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#自动发现"><span class="nav-number">4.1.</span> <span class="nav-text">自动发现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘IO"><span class="nav-number">4.2.</span> <span class="nav-text">磁盘IO</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

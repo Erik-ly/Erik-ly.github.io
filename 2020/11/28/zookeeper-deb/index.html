@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要以 ZooKeeper 为例，介绍了source2deb、deb2deb、rpm2deb、tar2deb四种打包 deb 的方法，具有好的通用性。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZooKeeper deb 打包方法">
+<meta property="og:url" content="http://yoursite.com/2020/11/28/zookeeper-deb/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要以 ZooKeeper 为例，介绍了source2deb、deb2deb、rpm2deb、tar2deb四种打包 deb 的方法，具有好的通用性。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201126201740.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201126201810.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/02543c81016507b725aadef93014e47d.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/bfe621e1462baaf97c984e8c9f376bfc.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f512a1a3def7fa3df6623a5cf6be12fa.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/0906697f47d90b97061928d01339ab9b.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c2e6b1a8cda4cc60a0632f70202d21b1.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/537accb1519754e7b60b52545103b9d2.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f7fc545130db2b64f98ffdc14c0dd069.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/b2d2d56fdf0713795f589f54e8443585.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/e74613be4fef44923cd2555c6e88c9ab.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/096ef884dba387c5b8330d01cbe2d7a3.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/6d8b434d38464f2632d7d46fe3ff96d0.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2763daa6e3397aa0a31c851f903d92a1.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/6b302ae1c043e51fdc99918efa2bf4b8.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/3ee6b8e467e0ea501d25d4e2b69bbd69.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/be8787b5f4af83a2ee5b082458ca8a8b.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5a1912bd8b5388027d5e8c6d9d151e9e.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/eaa198f04d67e9187295c1639c6866bd.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/73250e9b1f48cac2d40213915b2f06b6.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/bfbece7b8af4381f10eff7580c3ebce6.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/05e344b8cde7d5676106fc92ed7e0751.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/82c063bfa381ae968fc16e4243b6ad11.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/08edbf394ea0d549c80d264cd9800ee4.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c8dcaaeb70ba8c3e2d4e0eac60fd0de4.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/dbb093811dc9ce5cfa4c4b14a45c44ad.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f1f6a464c30aaa4ec14e026600da7581.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/73cf99ba14c0cc0ff7326859e8e19d5f.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2e207b14c69a51508678e5158467e385.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/1af2be1da931f3a675d6654a6d51f2d6.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5e42b2f08eacf00ed8c40e1fecfec1ca.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8cc988e70b158827184a910455a09d6e.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2c9ef4a9335604647677f37220d63605.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/284f15a3d23db1ed675173f8231d4c2a.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/4f096d036ad74fc91b3ad3fb4509ee63.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/6317963ffa9a4eeda718e9a3c169b649.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/dbb8ec55d14f7bca140133cd124c9014.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/a08d643763c16f8e4f43ef5ae86f1a59.png">
+<meta property="article:published_time" content="2020-11-28T02:07:05.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.461Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="BigData">
+<meta property="article:tag" content="ZooKeeper">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201126201740.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/11/28/zookeeper-deb/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ZooKeeper deb 打包方法 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/28/zookeeper-deb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ZooKeeper deb 打包方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-28 10:07:05" itemprop="dateCreated datePublished" datetime="2020-11-28T10:07:05+08:00">2020-11-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要以 ZooKeeper 为例，介绍了source2deb、deb2deb、rpm2deb、tar2deb四种打包 deb 的方法，具有好的通用性。</p>
+<a id="more"></a>
+
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>主要测试了四种zookeeper打包成deb的方式，分别为从源码直接打成deb包（source2deb）、逆向打包（deb2deb）、从rpm包转成deb包（rpm2deb）和使用源码编译成tar包，再将编译好的tar包打成deb包（tar2deb），推荐使用最后一种方式。</p>
+<h1 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h1><p>以下操作均为在 Ubuntu 19 中使用 root 用户操作。</p>
+<h1 id="Source2deb"><a href="#Source2deb" class="headerlink" title="Source2deb"></a>Source2deb</h1><p>有些组件官方提供直接从源码打包成 deb 的方式，比如 ZooKeeper</p>
+<h2 id="源码下载"><a href="#源码下载" class="headerlink" title="源码下载"></a>源码下载</h2><p>zookeeper-release-HDP-2.6.5.148-3-tag.tar.gz：<a href="https://github.com/hortonworks/zookeeper-release/releases/tag/HDP-2.6.5.148-3-tag" target="_blank" rel="noopener">https://github.com/hortonworks/zookeeper-release/releases/tag/HDP-2.6.5.148-3-tag</a></p>
+<h2 id="打成deb包"><a href="#打成deb包" class="headerlink" title="打成deb包"></a>打成deb包</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd zookeeper-release-HDP-2.6.5.148-3-tag&#x2F;</span><br><span class="line">ant deb</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd build</span><br></pre></td></tr></table></figure>
+
+<h1 id="Deb2deb"><a href="#Deb2deb" class="headerlink" title="Deb2deb"></a>Deb2deb</h1><p>这种属于逆向打包过程。</p>
+<h2 id="创建工作环境"><a href="#创建工作环境" class="headerlink" title="创建工作环境"></a>创建工作环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir zkdeb</span><br><span class="line">cd zkdeb&#x2F;</span><br><span class="line">mkdir zookeeper</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201126201740.png" alt=""></p>
+<h2 id="解包"><a href="#解包" class="headerlink" title="解包"></a>解包</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg -X zookeeper_3.4.6-1_amd64.deb zookeeper&#x2F;</span><br><span class="line">cd zookeeper&#x2F;</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201126201810.png" alt=""></p>
+<h2 id="提取DEBIAN信息"><a href="#提取DEBIAN信息" class="headerlink" title="提取DEBIAN信息"></a>提取DEBIAN信息</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir DEBIAN</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/02543c81016507b725aadef93014e47d.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;erik&#x2F;Downloads&#x2F;zkdeb</span><br><span class="line"></span><br><span class="line">dpkg -e zookeeper_3.4.6-1_amd64.deb .&#x2F;zookeeper&#x2F;DEBIAN&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/bfe621e1462baaf97c984e8c9f376bfc.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f512a1a3def7fa3df6623a5cf6be12fa.png" alt=""></p>
+<h2 id="重新打包deb"><a href="#重新打包deb" class="headerlink" title="重新打包deb"></a>重新打包deb</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line"></span><br><span class="line">cd &#x2F;home&#x2F;erik&#x2F;Downloads&#x2F;zkdeb</span><br><span class="line"></span><br><span class="line">dpkg-deb -b zookeeper&#x2F; build&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/0906697f47d90b97061928d01339ab9b.png" alt=""></p>
+<h2 id="查看deb文件"><a href="#查看deb文件" class="headerlink" title="查看deb文件"></a>查看deb文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd build&#x2F;</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c2e6b1a8cda4cc60a0632f70202d21b1.png" alt=""></p>
+<h1 id="DEBIAN文件解析"><a href="#DEBIAN文件解析" class="headerlink" title="DEBIAN文件解析"></a>DEBIAN文件解析</h1><p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/537accb1519754e7b60b52545103b9d2.png" alt=""></p>
+<h2 id="control"><a href="#control" class="headerlink" title="control"></a>control</h2><p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f7fc545130db2b64f98ffdc14c0dd069.png" alt=""></p>
+<h2 id="Preinst"><a href="#Preinst" class="headerlink" title="Preinst"></a>Preinst</h2><p>在Deb包文件解包之前，将会运行该脚本。许多“preinst”脚本的任务是停止作用于待升级软件包的服务，直到软件包安装或升级完成。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/b2d2d56fdf0713795f589f54e8443585.png" alt=""></p>
+<h2 id="Postinst"><a href="#Postinst" class="headerlink" title="Postinst"></a>Postinst</h2><p>该脚本的主要任务是完成安装包时的配置工作。许多“postinst”脚本负责执行有关命令为新安装或升级的软件重启服务。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/e74613be4fef44923cd2555c6e88c9ab.png" alt=""></p>
+<h2 id="prerm"><a href="#prerm" class="headerlink" title="prerm"></a>prerm</h2><p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/096ef884dba387c5b8330d01cbe2d7a3.png" alt=""></p>
+<h2 id="Postrm"><a href="#Postrm" class="headerlink" title="Postrm"></a>Postrm</h2><p>该脚本负责修改软件包链接或文件关联，或删除由它创建的文件。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/6d8b434d38464f2632d7d46fe3ff96d0.png" alt=""></p>
+<h2 id="md5sums"><a href="#md5sums" class="headerlink" title="md5sums"></a>md5sums</h2><p>各文件的md5值</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2763daa6e3397aa0a31c851f903d92a1.png" alt=""></p>
+<h2 id="conffile"><a href="#conffile" class="headerlink" title="conffile"></a>conffile</h2><p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/6b302ae1c043e51fdc99918efa2bf4b8.png" alt=""></p>
+<h1 id="Rpm2deb"><a href="#Rpm2deb" class="headerlink" title="Rpm2deb"></a>Rpm2deb</h1><p>打包好的rpm包可以直接使用“alien”工具转换为deb包。</p>
+<p>实验环境：Ubuntu 19</p>
+<p>工具：alien</p>
+<h2 id="安装工具"><a href="#安装工具" class="headerlink" title="安装工具"></a>安装工具</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install alien</span><br></pre></td></tr></table></figure>
+
+<p>因为zookeeper的来源可以是source2rpm和source2tar2rpm，所以现分别使用这两个rpm包进行测试</p>
+<h2 id="Source2rpm2deb"><a href="#Source2rpm2deb" class="headerlink" title="Source2rpm2deb"></a>Source2rpm2deb</h2><p>准备好之前打包好的rpm包</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/3ee6b8e467e0ea501d25d4e2b69bbd69.png" alt=""></p>
+<p>执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alien zookeeper-3.4.6-1.x86_64.rpm</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/be8787b5f4af83a2ee5b082458ca8a8b.png" alt=""></p>
+<h2 id="Source2tar2rpm2deb"><a href="#Source2tar2rpm2deb" class="headerlink" title="Source2tar2rpm2deb"></a>Source2tar2rpm2deb</h2><p>与之前方法类似，执行步骤如下图所示</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5a1912bd8b5388027d5e8c6d9d151e9e.png" alt=""></p>
+<h1 id="Tar2deb"><a href="#Tar2deb" class="headerlink" title="Tar2deb"></a>Tar2deb</h1><p>推荐使用这种方式，先使用源码编译成tar包，再使用tar包打成deb包，由于之前打rpm包时已经介绍过zookeeper打成tar包的流程，并且使用ant打包方法，不具有代表性，这里不再赘述，只介绍从tar包到deb包的步骤。</p>
+<p>实验环境：Ubuntu 19</p>
+<h2 id="创建工作目录"><a href="#创建工作目录" class="headerlink" title="创建工作目录"></a>创建工作目录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir zookeeper</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/eaa198f04d67e9187295c1639c6866bd.png" alt=""></p>
+<p>创建DEBIAN 目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd zookeeper&#x2F;</span><br><span class="line"></span><br><span class="line">mkdir DEBIAN</span><br><span class="line"></span><br><span class="line">cd DEBIAN&#x2F;</span><br><span class="line"></span><br><span class="line">vim control</span><br></pre></td></tr></table></figure>
+
+<h2 id="准备安装文件"><a href="#准备安装文件" class="headerlink" title="准备安装文件"></a>准备安装文件</h2><p>将<strong>编译好的</strong>zookeeper tar 包解压到DEBIAN的同级目录下,<br>也就是说我们把当前的目录当成根目录, 制作完成后安装时,<br>当前目录下除DEBIAN目录的其他目录都会被默认安装到系统的/目录下，比如之后要将zookeeper安装到/opt/zookeeper/这个目录下，那么就将编译好的zookeeper解压到/opt/zookeeper/目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;erik&#x2F;zookeeper&#x2F;tar2deb&#x2F;zookeeper</span><br><span class="line"></span><br><span class="line">mkdir opt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/73250e9b1f48cac2d40213915b2f06b6.png" alt=""></p>
+<p>cd opt</p>
+<p>将编译好的tar包上传到这个文件夹</p>
+<p>解压</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar –xvf zookeeper-3.4.6.tar.gz</span><br><span class="line"></span><br><span class="line">mv zookeeper-3.4.6 zookeeper</span><br><span class="line"></span><br><span class="line">rm –rf zookeeper-3.4.6.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/bfbece7b8af4381f10eff7580c3ebce6.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/05e344b8cde7d5676106fc92ed7e0751.png" alt=""></p>
+<h2 id="打包deb"><a href="#打包deb" class="headerlink" title="打包deb"></a>打包deb</h2><p>创建存放deb包目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;erik&#x2F;zookeeper&#x2F;tar2deb</span><br><span class="line"></span><br><span class="line">mkdir build</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/82c063bfa381ae968fc16e4243b6ad11.png" alt=""></p>
+<p>执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-deb -b zookeeper&#x2F; build&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/08edbf394ea0d549c80d264cd9800ee4.png" alt=""></p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>安装环境为另一台Ubuntu 19 虚拟机，模拟安装环境。</p>
+<h2 id="Deb2deb-1"><a href="#Deb2deb-1" class="headerlink" title="Deb2deb"></a>Deb2deb</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -i zookeeper_3.4.6_all.deb</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c8dcaaeb70ba8c3e2d4e0eac60fd0de4.png" alt=""></p>
+<p>修改打包时的依赖</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/dbb093811dc9ce5cfa4c4b14a45c44ad.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f1f6a464c30aaa4ec14e026600da7581.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/73cf99ba14c0cc0ff7326859e8e19d5f.png" alt=""></p>
+<p>寻找安装目录</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2e207b14c69a51508678e5158467e385.png" alt=""></p>
+<p>配置文件</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/1af2be1da931f3a675d6654a6d51f2d6.png" alt=""></p>
+<p>启动脚本</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5e42b2f08eacf00ed8c40e1fecfec1ca.png" alt=""></p>
+<p>启动</p>
+<p>在安装的主机上，</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8cc988e70b158827184a910455a09d6e.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/2c9ef4a9335604647677f37220d63605.png" alt=""></p>
+<h2 id="Source2tar2deb"><a href="#Source2tar2deb" class="headerlink" title="Source2tar2deb"></a>Source2tar2deb</h2><p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/284f15a3d23db1ed675173f8231d4c2a.png" alt=""></p>
+<p>找到安装目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;opt&#x2F;zookeeper&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>修改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd conf&#x2F;</span><br><span class="line"></span><br><span class="line">cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/4f096d036ad74fc91b3ad3fb4509ee63.png" alt=""></p>
+<p>启动</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/6317963ffa9a4eeda718e9a3c169b649.png" alt=""></p>
+<h2 id="Source2tar2rpm2deb-1"><a href="#Source2tar2rpm2deb-1" class="headerlink" title="Source2tar2rpm2deb"></a>Source2tar2rpm2deb</h2><p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/dbb8ec55d14f7bca140133cd124c9014.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/a08d643763c16f8e4f43ef5ae86f1a59.png" alt=""></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p>Ubuntu下制作deb包的方法详解 - AderStep - CSDN博客<br><a href="https://blog.csdn.net/gatieme/article/details/52829907" target="_blank" rel="noopener">https://blog.csdn.net/gatieme/article/details/52829907</a> </p>
+</li>
+<li><p>Deb包介绍 - 简书<br><a href="https://www.jianshu.com/p/67094ffe9578" target="_blank" rel="noopener">https://www.jianshu.com/p/67094ffe9578</a> </p>
+</li>
+<li><p>deb和rpm包相互转换 - chenyulancn的专栏 - CSDN博客<br><a href="https://blog.csdn.net/chenyulancn/article/details/62216190" target="_blank" rel="noopener">https://blog.csdn.net/chenyulancn/article/details/62216190</a> </p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BigData/" rel="tag"># BigData</a>
+              <a href="/tags/ZooKeeper/" rel="tag"># ZooKeeper</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/26/ambari-remote-debug/" rel="prev" title="Ambari 远程 Debug 调试">
+      <i class="fa fa-chevron-left"></i> Ambari 远程 Debug 调试
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/28/hdfs-command-line-operations/" rel="next" title="HDFS 命令行基本操作">
+      HDFS 命令行基本操作 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验环境"><span class="nav-number">2.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Source2deb"><span class="nav-number">3.</span> <span class="nav-text">Source2deb</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#源码下载"><span class="nav-number">3.1.</span> <span class="nav-text">源码下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打成deb包"><span class="nav-number">3.2.</span> <span class="nav-text">打成deb包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看"><span class="nav-number">3.3.</span> <span class="nav-text">查看</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deb2deb"><span class="nav-number">4.</span> <span class="nav-text">Deb2deb</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建工作环境"><span class="nav-number">4.1.</span> <span class="nav-text">创建工作环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解包"><span class="nav-number">4.2.</span> <span class="nav-text">解包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提取DEBIAN信息"><span class="nav-number">4.3.</span> <span class="nav-text">提取DEBIAN信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重新打包deb"><span class="nav-number">4.4.</span> <span class="nav-text">重新打包deb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看deb文件"><span class="nav-number">4.5.</span> <span class="nav-text">查看deb文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DEBIAN文件解析"><span class="nav-number">5.</span> <span class="nav-text">DEBIAN文件解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#control"><span class="nav-number">5.1.</span> <span class="nav-text">control</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preinst"><span class="nav-number">5.2.</span> <span class="nav-text">Preinst</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Postinst"><span class="nav-number">5.3.</span> <span class="nav-text">Postinst</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#prerm"><span class="nav-number">5.4.</span> <span class="nav-text">prerm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Postrm"><span class="nav-number">5.5.</span> <span class="nav-text">Postrm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#md5sums"><span class="nav-number">5.6.</span> <span class="nav-text">md5sums</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#conffile"><span class="nav-number">5.7.</span> <span class="nav-text">conffile</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Rpm2deb"><span class="nav-number">6.</span> <span class="nav-text">Rpm2deb</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装工具"><span class="nav-number">6.1.</span> <span class="nav-text">安装工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Source2rpm2deb"><span class="nav-number">6.2.</span> <span class="nav-text">Source2rpm2deb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Source2tar2rpm2deb"><span class="nav-number">6.3.</span> <span class="nav-text">Source2tar2rpm2deb</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tar2deb"><span class="nav-number">7.</span> <span class="nav-text">Tar2deb</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建工作目录"><span class="nav-number">7.1.</span> <span class="nav-text">创建工作目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备安装文件"><span class="nav-number">7.2.</span> <span class="nav-text">准备安装文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打包deb"><span class="nav-number">7.3.</span> <span class="nav-text">打包deb</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">8.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Deb2deb-1"><span class="nav-number">8.1.</span> <span class="nav-text">Deb2deb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Source2tar2deb"><span class="nav-number">8.2.</span> <span class="nav-text">Source2tar2deb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Source2tar2rpm2deb-1"><span class="nav-number">8.3.</span> <span class="nav-text">Source2tar2rpm2deb</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

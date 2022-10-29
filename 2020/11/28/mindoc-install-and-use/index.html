@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍在 CentOS 系统中安装使用在线文档管理工具 MinDoc 的安装使用方法，MinDoc使用 markdown 语法写作，简捷方便。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MinDoc 安装使用介绍">
+<meta property="og:url" content="http://yoursite.com/2020/11/28/mindoc-install-and-use/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要介绍在 CentOS 系统中安装使用在线文档管理工具 MinDoc 的安装使用方法，MinDoc使用 markdown 语法写作，简捷方便。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7bbd70f8d751bb2adb5ca7faf3f92c0c.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/4fc7902ace696cbaff47a3c71b7844bf.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/cf44f3b5482e85bb8d00ef54933897ff.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8f26715c888e9d377718a6b28fe24e26.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201128173812.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8212a43f3d66a42ac64d214085a5118b.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c9935922505bbd928b6636441a48e8ee.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/e49fda866fdff17afb4cc4e7ed5992d4.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/ac899db1349bb1be480a510f88b9b0bd.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/b2951075fb80f1835ac44ec3ece2ab78.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f3bc71fe8c9d8f768ad701301ba3a18f.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/eb21b40dd5061bd89ba39210639ce418.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/775b413481868e6738a7061f90cd8a6c.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/90a67462c390c7b984b880840960368a.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/44775600cefcc6bfac21a05a8a4ee36c.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/caad0323f8a1b6c2c3a90673b4799100.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5177793ed08c39047539c6a8069e38e3.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/79851e928babc651dc9dcf10d51471c8.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/aaba9d2c3768c8b05fde002e36253692.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/adc826527d0f2b6a0bb42986e80cb7c5.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7bd7104f714f5c6ff7e00c892a976f61.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c5ab7cfac2eb39257cb0eaf06aa199c1.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/cfaeb559039258a98bf523e424a23c21.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/fd839c856421e36147829f8197a93216.png">
+<meta property="article:published_time" content="2020-11-28T09:17:10.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.460Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="MinDoc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7bbd70f8d751bb2adb5ca7faf3f92c0c.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/11/28/mindoc-install-and-use/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MinDoc 安装使用介绍 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/28/mindoc-install-and-use/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MinDoc 安装使用介绍
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-28 17:17:10" itemprop="dateCreated datePublished" datetime="2020-11-28T17:17:10+08:00">2020-11-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍在 CentOS 系统中安装使用在线文档管理工具 MinDoc 的安装使用方法，MinDoc使用 markdown 语法写作，简捷方便。</p>
+<a id="more"></a>
+
+<h1 id="安装-MinDoc"><a href="#安装-MinDoc" class="headerlink" title="安装 MinDoc"></a>安装 MinDoc</h1><h2 id="GitHub项目地址"><a href="#GitHub项目地址" class="headerlink" title="GitHub项目地址"></a>GitHub项目地址</h2><ul>
+<li>源码地址</li>
+</ul>
+<p>lifei6671/mindoc: Golang实现的基于beego框架的接口在线文档管理系统</p>
+<p><a href="https://github.com/lifei6671/mindoc" target="_blank" rel="noopener">https://github.com/lifei6671/mindoc</a></p>
+<ul>
+<li>下载地址</li>
+</ul>
+<p>Releases · lifei6671/mindoc</p>
+<p><a href="https://github.com/lifei6671/mindoc/releases" target="_blank" rel="noopener">https://github.com/lifei6671/mindoc/releases</a></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7bbd70f8d751bb2adb5ca7faf3f92c0c.png" alt=""></p>
+<ul>
+<li>官方文档</li>
+</ul>
+<p>Linux 下安装和配置 MinDoc - Powered by MinDoc</p>
+<p><a href="https://www.iminho.me/wiki/docs/mindoc/mindoc-linux.md" target="_blank" rel="noopener">https://www.iminho.me/wiki/docs/mindoc/mindoc-linux.md</a></p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>Linux：CentOS 7</p>
+<p>安装目录：/home/app/mindoc</p>
+<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip mindoc_linux_amd64.zip</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mysql -u root -ppassword</span><br><span class="line"></span><br><span class="line">&gt; CREATE DATABASE mindoc_db DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/4fc7902ace696cbaff47a3c71b7844bf.png" alt=""></p>
+<p>然后在配置文件中设置数据库信息</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/cf44f3b5482e85bb8d00ef54933897ff.png" alt=""></p>
+<p>这里为配置数据库信息内容<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8f26715c888e9d377718a6b28fe24e26.png" alt=""></p>
+<p>根据实际情况填写<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201128173812.png" alt=""></p>
+<p>初始化数据库</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/8212a43f3d66a42ac64d214085a5118b.png" alt=""></p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>修改可执行权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x mindoc_linux_amd64</span><br></pre></td></tr></table></figure>
+
+<p>启动程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;mindoc_linux_amd64</span><br></pre></td></tr></table></figure>
+
+<p>设置后台启动</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c9935922505bbd928b6636441a48e8ee.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;mindoc_linux_amd64 \&gt; &#x2F;home&#x2F;app&#x2F;mindoc&#x2F;mindoc.log &amp;</span><br></pre></td></tr></table></figure>
+
+<p>以后执行这个后台启动脚本即可。</p>
+<h2 id="web页面"><a href="#web页面" class="headerlink" title="web页面"></a>web页面</h2><p>在浏览器中打开网址：<a href="http://IP:8181" target="_blank" rel="noopener">http://IP:8181</a></p>
+<p>默认用户名：admin 密码：123456</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/e49fda866fdff17afb4cc4e7ed5992d4.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/ac899db1349bb1be480a510f88b9b0bd.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/b2951075fb80f1835ac44ec3ece2ab78.png" alt=""></p>
+<h1 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h1><h2 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h2><p>点击用户名，在下拉框中选择“我的项目”  </p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/f3bc71fe8c9d8f768ad701301ba3a18f.png" alt=""></p>
+<p>跳转后点击右上角的“添加项目”  </p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/eb21b40dd5061bd89ba39210639ce418.png" alt=""></p>
+<p>在“添加项目”对话框中设置“项目标题”和“项目标识”，“项目标识”是之后项目网页链接标识  </p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/775b413481868e6738a7061f90cd8a6c.png" alt=""></p>
+<p>可根据文档保密程度选择“公开”或“私有”，“保存”成功后会在“我的项目”中看到刚创建的项目<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/90a67462c390c7b984b880840960368a.png" alt=""></p>
+<p>点击项目，在“设置”中开启“自动发布”（如果不开启此项，每次编辑后需要手动点击发布按钮才能更新文档页面）和“自动保存”（开启后每30秒自动保存，可使用快捷键Ctrl + S 保存）两个选项。  </p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/44775600cefcc6bfac21a05a8a4ee36c.png" alt=""></p>
+<h2 id="添加文档"><a href="#添加文档" class="headerlink" title="添加文档"></a>添加文档</h2><ul>
+<li>添加同级文档</li>
+</ul>
+<p>在编辑页面，可以点击“＋”添加同级别的文档  </p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/caad0323f8a1b6c2c3a90673b4799100.png" alt=""></p>
+<p>添加完成后  </p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/5177793ed08c39047539c6a8069e38e3.png" alt=""></p>
+<ul>
+<li>添加子文档</li>
+</ul>
+<p>右键文档后，点击“添加文档”  </p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/79851e928babc651dc9dcf10d51471c8.png" alt=""></p>
+<p>创建完成后  </p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/aaba9d2c3768c8b05fde002e36253692.png" alt=""></p>
+<h1 id="导出功能"><a href="#导出功能" class="headerlink" title="导出功能"></a>导出功能</h1><h2 id="安装calibre"><a href="#安装calibre" class="headerlink" title="安装calibre"></a>安装calibre</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo -v &amp;&amp; wget -nv -O- https:&#x2F;&#x2F;download.calibre-ebook.com&#x2F;linux-installer.sh | sudo sh &#x2F;dev&#x2F;stdin</span><br><span class="line"></span><br><span class="line">ebook-convert --version</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/adc826527d0f2b6a0bb42986e80cb7c5.png" alt=""></p>
+<h2 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h2><p>修改如下配置<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/7bd7104f714f5c6ff7e00c892a976f61.png" alt=""></p>
+<p>根据自己情况设置<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/c5ab7cfac2eb39257cb0eaf06aa199c1.png" alt=""></p>
+<p>然后在项目设置中开启导出功能</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/cfaeb559039258a98bf523e424a23c21.png" alt=""></p>
+<p>这样文档右上角就有下载按钮了<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/fd839c856421e36147829f8197a93216.png" alt=""></p>
+<h1 id="数据信息"><a href="#数据信息" class="headerlink" title="数据信息"></a>数据信息</h1><p>文档信息在表<code>md_documents</code>中的 <code>markdown</code>列，上传的图片和附件在<code>mindoc/uploads</code>目录中。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p>Linux 下安装和配置 MinDoc - Powered by MinDoc<br><a href="https://www.iminho.me/wiki/docs/mindoc/mindoc-linux.md" target="_blank" rel="noopener">https://www.iminho.me/wiki/docs/mindoc/mindoc-linux.md</a></p>
+</li>
+<li><p>MinDoc 的导出功能 - Powered by MinDoc<br><a href="https://www.iminho.me/wiki/docs/mindoc/mindoc-export.md" target="_blank" rel="noopener">https://www.iminho.me/wiki/docs/mindoc/mindoc-export.md</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MinDoc/" rel="tag"># MinDoc</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/28/linux-jdk/" rel="prev" title="Linux 设置 jdk 环境变量">
+      <i class="fa fa-chevron-left"></i> Linux 设置 jdk 环境变量
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/29/ambari-metainfo/" rel="next" title="Ambari 中 metainfo.xml 文件解析">
+      Ambari 中 metainfo.xml 文件解析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-MinDoc"><span class="nav-number">1.</span> <span class="nav-text">安装 MinDoc</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub项目地址"><span class="nav-number">1.1.</span> <span class="nav-text">GitHub项目地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境"><span class="nav-number">1.2.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解压"><span class="nav-number">1.3.</span> <span class="nav-text">解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置数据库"><span class="nav-number">1.4.</span> <span class="nav-text">配置数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动"><span class="nav-number">1.5.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web页面"><span class="nav-number">1.6.</span> <span class="nav-text">web页面</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本使用"><span class="nav-number">2.</span> <span class="nav-text">基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建项目"><span class="nav-number">2.1.</span> <span class="nav-text">新建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加文档"><span class="nav-number">2.2.</span> <span class="nav-text">添加文档</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#导出功能"><span class="nav-number">3.</span> <span class="nav-text">导出功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装calibre"><span class="nav-number">3.1.</span> <span class="nav-text">安装calibre</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改配置文件"><span class="nav-number">3.2.</span> <span class="nav-text">修改配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据信息"><span class="nav-number">4.</span> <span class="nav-text">数据信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

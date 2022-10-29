@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文详细介绍了制作启动盘、安装 Win10 的步骤，以及一些常用的配置和软件。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows 10 系统安装详细图文教程">
+<meta property="og:url" content="http://yoursite.com/2021/08/09/win10-install-and-setup/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文详细介绍了制作启动盘、安装 Win10 的步骤，以及一些常用的配置和软件。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093205.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093251.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093342.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093405.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093424.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093449.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093518.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102431.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102452.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102507.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102521.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102537.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102549.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102602.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102614.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102626.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102639.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102651.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102706.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809104921.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809104935.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809104948.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105001.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105020.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105035.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105049.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105100.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105118.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105130.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105147.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105159.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105212.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105225.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105344.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105400.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105440.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105453.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105506.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105517.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105530.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105542.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105558.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105611.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105627.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105641.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105655.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105710.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105729.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105755.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105808.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105820.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105832.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105844.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105856.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105909.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105924.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105936.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105950.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110003.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110016.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110027.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110040.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110052.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110108.png">
+<meta property="article:published_time" content="2021-08-09T00:42:36.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.461Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="win10">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093205.png">
+
+<link rel="canonical" href="http://yoursite.com/2021/08/09/win10-install-and-setup/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Windows 10 系统安装详细图文教程 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/09/win10-install-and-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Windows 10 系统安装详细图文教程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-09 08:42:36" itemprop="dateCreated datePublished" datetime="2021-08-09T08:42:36+08:00">2021-08-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文详细介绍了制作启动盘、安装 Win10 的步骤，以及一些常用的配置和软件。</p>
+<a id="more"></a>
+
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><h2 id="Windows-10-版本选择"><a href="#Windows-10-版本选择" class="headerlink" title="Windows 10 版本选择"></a>Windows 10 版本选择</h2><p>Windows 10分为家庭版、专业版、企业版和教育版，综合不同版本提供的服务、体验、管理和安全性方面考虑，企业版和教育版最为强大（Windows各版本功能详细对比可参见：<a href="http://www.iplaysoft.com/news/2674）。" target="_blank" rel="noopener">http://www.iplaysoft.com/news/2674）。</a></p>
+<p>本教程选择企业版为例，其它版本安装过程几乎完全一致，个人推荐使用Windows 10 企业版。</p>
+<h2 id="Windows-10-下载"><a href="#Windows-10-下载" class="headerlink" title="Windows 10 下载"></a>Windows 10 下载</h2><p>个人推荐在<a href="http://www.msdn.hk/6/719/" target="_blank" rel="noopener">http://www.msdn.hk/6/719/</a> 下载Windows 镜像文件，系统纯净。</p>
+<p>Windows 10 企业版 64位下载地址：<a href="http://www.msdn.hk/html/2015/1551.html" target="_blank" rel="noopener">http://www.msdn.hk/html/2015/1551.html</a> ，复制下载链接到迅雷即可。</p>
+<h1 id="制作U盘启动盘"><a href="#制作U盘启动盘" class="headerlink" title="制作U盘启动盘"></a>制作U盘启动盘</h1><p>推荐使用UltraISO来制作U盘启动盘，UltraISO下载地址：<a href="https://gitee.com/erik_ly/blog_share_files/raw/master/UltraISO/UltraISO.zip" target="_blank" rel="noopener">https://gitee.com/erik_ly/blog_share_files/raw/master/UltraISO/UltraISO.zip</a></p>
+<h2 id="安装UltraISO"><a href="#安装UltraISO" class="headerlink" title="安装UltraISO"></a>安装UltraISO</h2><p>UItraISO安装较为简单，安装时与普通软件差别不大，安装完成后在弹出的对话框中点击“输入注册码”，然后打开“注册码sn.txt”文件，将第一个注册名和注册码填入即可。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093205.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093251.png" alt=""></p>
+<p>安装路径可以默认或点击“浏览”存放在习惯存放的软件文件夹中</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093342.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093405.png" alt=""></p>
+<p>第二个和第三个的勾可以去掉</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093424.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093449.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809093518.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102431.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102452.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102507.png" alt=""></p>
+<h2 id="制作U盘启动盘-1"><a href="#制作U盘启动盘-1" class="headerlink" title="制作U盘启动盘"></a>制作U盘启动盘</h2><p>首先插入U盘，然后打开UltraISO，点击“文件”，选择“打开”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102521.png" alt=""></p>
+<p>在对话框中选择刚下载的系统镜像文件，点击“打开”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102537.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102549.png" alt=""></p>
+<p>点击“启动”，选择“写入硬盘映像”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102602.png" alt=""></p>
+<p>在弹出的对话框中查看“硬盘驱动器”所选盘符，默认会选择刚插入的U盘，如果不是可手动选择，其余选项默认即可。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102614.png" alt=""></p>
+<p>点击“格式化”进行格式化U盘（U盘内资料需提前备份），“文件系统”选择“FAT32（默认）”，然后点击“开始”，点击后系统会弹出确认信息，点击“确定”即可。格式化完成后点击“确定”并关闭格式化界面。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102626.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102639.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102651.png" alt=""></p>
+<p>点击“写入”，系统会弹出警告信息，由于U盘文件已经备份并格式化，所以点击“是”即可。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809102706.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809104921.png" alt=""></p>
+<p>这时会将系统文件写入U盘，根据U盘读写速度快慢差异，所用时间有所不同。当看到消息界面内出现“刻录成功！”信息后说明U盘启动盘已经制作完成，点击“返回”退出界面即可。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809104935.png" alt=""></p>
+<h1 id="安装Windows-10-系统"><a href="#安装Windows-10-系统" class="headerlink" title="安装Windows 10 系统"></a>安装Windows 10 系统</h1><p>将刚制作好的U盘启动盘插入需要安装系统的电脑上，本教程以联想笔记本为例，重启电脑，在出现Lenovo界面时按F12进入bios（重启时可以一直快速按着F12），使用“↓”选择“USB HDD”，按“Enter”进入。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809104948.png" alt=""></p>
+<p>出现系统加载界面，然后会出现系统安装对话框，点击“下一步”继续</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105001.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105020.png" alt=""></p>
+<p>点击“现在安装”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105035.png" alt=""></p>
+<p>在“我接受许可条款”前打勾，点击“下一步”继续</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105049.png" alt=""></p>
+<p>点击“自定义”选项</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105100.png" alt=""></p>
+<p>选中“驱动器 0 分区2”，然后点击“格式化”进行格式化，这是需要安装操作系统的盘，也就是安装好系统后的C盘，若之前电脑内其它盘有文件，不要动，只需将这一个盘格式化即可，安装好系统后其它盘的文件还存在。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105118.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105130.png" alt=""></p>
+<p>点击“下一步”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105147.png" alt=""></p>
+<p>此时系统会自动安装Windows</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105159.png" alt=""></p>
+<p>完成后会出现重启界面，此时直接拔掉U盘，让其自动重启即可。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105212.png" alt=""></p>
+<p>重启后会进入“快速上手”设置界面，选择“自定义”选项</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105225.png" alt=""></p>
+<p>个人建议将以下选项都设置为“关”，然后点击进入“下一步”，同样设置为“关”，如果感觉自己需要也可以保持默认开启</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105344.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105400.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105440.png" alt=""></p>
+<p>当出现以下界面时选择“加入本地Active Directory域”，然后点击“下一步”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105453.png" alt=""></p>
+<p>设置用户名和密码，建议用户名为英文，密码如果不填就默认为没有密码，个人强烈建议使用密码，并可加入数字或特殊符号等，但自己要牢记密码。密码提示会在输入密码错误时出现，所填信息最好是能让自己想起密码，但又与密码不同，且别人不会猜到密码。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105506.png" alt=""></p>
+<p>小娜语音助手可以开启，可进行语音操作等，点击“启用Cortana（小娜）”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105517.png" alt=""></p>
+<p>设置生效过程中会出现一些诗句</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105530.png" alt=""></p>
+<p>现在就安装完成了。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105542.png" alt=""></p>
+<h1 id="Windows-系统设置"><a href="#Windows-系统设置" class="headerlink" title="Windows 系统设置"></a>Windows 系统设置</h1><p>安装激活系统后需要对系统进行一些设置以方便自己使用，下面就个人一些使用习惯进行设置，仅供参考。</p>
+<h2 id="更新驱动"><a href="#更新驱动" class="headerlink" title="更新驱动"></a>更新驱动</h2><p>Windows 10 默认在联网状态下会自动更新驱动，无需下载第三方软件，个人推荐让系统自动更新，更新驱动时会出现闪屏或需要重启现象，系统也推荐更新，可以提升功能体验和安全性。</p>
+<p>具体方式可以点击左下角的Windows图标，选择设置，然后选择“更新与安全”，再点击“检查更新”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105558.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105611.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105627.png" alt=""></p>
+<h2 id="在桌面显示“此电脑”"><a href="#在桌面显示“此电脑”" class="headerlink" title="在桌面显示“此电脑”"></a>在桌面显示“此电脑”</h2><p>在桌面单机右键，选择“个性化”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105641.png" alt=""></p>
+<p>选择“主题”，然后选择“桌面图标设置”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105655.png" alt=""></p>
+<p>勾选“计算机”后点击“确定”即可。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105710.png" alt=""></p>
+<h2 id="任务栏设置"><a href="#任务栏设置" class="headerlink" title="任务栏设置"></a>任务栏设置</h2><p>将浏览器和应用商店解除任务栏固定，虽然Windows 10的Edge浏览器做了很大提升，但个人依然不太习惯，属于使用频率极低的应用，这样的应用就不要占用任务栏这么宝贵的地方了。应用商店我个人几乎不使用（有兴趣的可以试下，里面一些应用或游戏还是非常精良的），所以右键应用图标，选择“从任务栏取消固定”。这里保留下图中第一个“任务视图”和第三个“文件资源管理器”图标，这两个会常用，尤其第一个“任务视图”后面会单独做介绍。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105729.png" alt=""></p>
+<p>个人感觉windows 10的任务栏较宽，比较占屏幕空间，尤其是对于笔记本而言，所以进行如下设置。</p>
+<p>在任务栏上单击右键，选择“设置”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105755.png" alt=""></p>
+<p>在弹出的任务栏选设置对话框中将选项“使用小任务栏按钮”设置为“开”，这样可以降低任务栏高度，节省屏幕空间；在“合并任务栏按钮”中选择“从不”，这样任务栏中会显示当前打开应用的名称，方便快速切换工作任务。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105808.png" alt=""></p>
+<p>在“通知区域”中点击“选择哪些图标显示在任务栏上”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105820.png" alt=""></p>
+<p>在这里可以选择哪些图标在任务栏中显示，比如QQ默认是不在任务栏中显示的，可以在此打开，方便查看QQ信息。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105832.png" alt=""></p>
+<h2 id="“开始”屏幕设置"><a href="#“开始”屏幕设置" class="headerlink" title="“开始”屏幕设置"></a>“开始”屏幕设置</h2><p>点击左下角的Windows图标，会出现“生活动态”和“播放和浏览”等图标，感觉对许多国内的用户而言很多使用频率极低，所以可以换成常用应用，或不常用但又不想放在桌面上的应用图标，放这里方便启动。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105844.png" alt=""></p>
+<p>在图标上右键单击，选择“从’开始’屏幕取消固定”，也可以通过“调整大小”改变图标大小。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105856.png" alt=""></p>
+<p>既然将不常用的应用图标去掉了，那么就添加自己需要的图标吧，常用的方法有：可以右键点击桌面应用图标，选择“固定到’开始’屏幕”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105909.png" alt=""></p>
+<p>还可以在“开始”屏幕的应用列表中添加</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105924.png" alt=""></p>
+<p>或者在小娜语音助手中搜索应用，然后右键添加</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105936.png" alt=""></p>
+<h2 id="文件资源管理器设置"><a href="#文件资源管理器设置" class="headerlink" title="文件资源管理器设置"></a>文件资源管理器设置</h2><p>文件资源管理器中主要在“查看”选项卡中将“文件扩展名”前打勾，这样方便查看文件后缀名，从而知道文件类型，如：exe，docx，txt等。当然其它的图标大小也可以根据自己习惯进行设置。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809105950.png" alt=""></p>
+<h2 id="任务视图设置"><a href="#任务视图设置" class="headerlink" title="任务视图设置"></a>任务视图设置</h2><p>任务视图相当于虚拟桌面，当开启任务比较多而且从属不同类型的应用时可以放到不同的界面，比如工作，娱乐就可以分别放在两个不同的界面。</p>
+<p>点击“任务视图”图标，然后点击右侧的“新建桌面”，个人喜欢建立三个桌面，快捷键是Ctrl+Win+←或Ctrl+Win+→。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110003.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110016.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110027.png" alt=""></p>
+<h2 id="语音助手小娜设置"><a href="#语音助手小娜设置" class="headerlink" title="语音助手小娜设置"></a>语音助手小娜设置</h2><p>语音助手可以进行语音操作，我常用的是其搜索功能，比如想要打开控制面板时可以直接在此搜索快速打开</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110040.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110052.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/08/20210809110108.png" alt=""></p>
+<h1 id="Windows常用软件推荐"><a href="#Windows常用软件推荐" class="headerlink" title="Windows常用软件推荐"></a>Windows常用软件推荐</h1><p>浏览器：<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank" rel="noopener">Google Chrome浏览器</a>、<a href="http://chrome.360.cn/" target="_blank" rel="noopener">360极速浏览器</a></p>
+<p>音乐播放器：<a href="http://music.163.com/#/download" target="_blank" rel="noopener">网易云音乐</a></p>
+<p>视频播放器：<a href="https://potplayer.daum.net/" target="_blank" rel="noopener">potplayer</a></p>
+<p>压缩软件：<a href="http://www.7-zip.org/" target="_blank" rel="noopener">7 zip</a></p>
+<p>PDF阅读器：<a href="https://www.foxitsoftware.cn/downloads/" target="_blank" rel="noopener">福昕阅读器</a></p>
+<p>文档编辑器：<a href="https://notepad-plus-plus.org/download/v7.3.1.html" target="_blank" rel="noopener">Notepad ++</a></p>
+<p>文件同步软件：<a href="https://www.jianguoyun.com/" target="_blank" rel="noopener">坚果云</a>、<a href="http://pan.baidu.com/download" target="_blank" rel="noopener">百度云</a></p>
+<p>思维导图软件：<a href="http://www.xmindchina.net/xiazai.html" target="_blank" rel="noopener">XMind</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/win10/" rel="tag"># win10</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/16/MySQL-master-and-slave-synchronization/" rel="prev" title="CentOS7 设置 MySQL 主备同步">
+      <i class="fa fa-chevron-left"></i> CentOS7 设置 MySQL 主备同步
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/04/Typora-title-auto-numbering/" rel="next" title="Typora 设置标题自动编号">
+      Typora 设置标题自动编号 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#下载"><span class="nav-number">1.</span> <span class="nav-text">下载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows-10-版本选择"><span class="nav-number">1.1.</span> <span class="nav-text">Windows 10 版本选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows-10-下载"><span class="nav-number">1.2.</span> <span class="nav-text">Windows 10 下载</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#制作U盘启动盘"><span class="nav-number">2.</span> <span class="nav-text">制作U盘启动盘</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装UltraISO"><span class="nav-number">2.1.</span> <span class="nav-text">安装UltraISO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#制作U盘启动盘-1"><span class="nav-number">2.2.</span> <span class="nav-text">制作U盘启动盘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Windows-10-系统"><span class="nav-number">3.</span> <span class="nav-text">安装Windows 10 系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows-系统设置"><span class="nav-number">4.</span> <span class="nav-text">Windows 系统设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#更新驱动"><span class="nav-number">4.1.</span> <span class="nav-text">更新驱动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在桌面显示“此电脑”"><span class="nav-number">4.2.</span> <span class="nav-text">在桌面显示“此电脑”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#任务栏设置"><span class="nav-number">4.3.</span> <span class="nav-text">任务栏设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#“开始”屏幕设置"><span class="nav-number">4.4.</span> <span class="nav-text">“开始”屏幕设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件资源管理器设置"><span class="nav-number">4.5.</span> <span class="nav-text">文件资源管理器设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#任务视图设置"><span class="nav-number">4.6.</span> <span class="nav-text">任务视图设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语音助手小娜设置"><span class="nav-number">4.7.</span> <span class="nav-text">语音助手小娜设置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows常用软件推荐"><span class="nav-number">5.</span> <span class="nav-text">Windows常用软件推荐</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

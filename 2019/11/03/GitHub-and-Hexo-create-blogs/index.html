@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍使用 GitHub 和 Hexo 搭建个人博客的详细方法步骤，包括安装配置 Hexo、配置个人域名、编写并发布博客的详细步骤，最后介绍 Next 主题及设置，最终效果： Erik-lyhttp:&#x2F;&#x2F;www.erik-ly.com&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 GitHub 和 Hexo 搭建个人博客">
+<meta property="og:url" content="http://yoursite.com/2019/11/03/GitHub-and-Hexo-create-blogs/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要介绍使用 GitHub 和 Hexo 搭建个人博客的详细方法步骤，包括安装配置 Hexo、配置个人域名、编写并发布博客的详细步骤，最后介绍 Next 主题及设置，最终效果： Erik-lyhttp:&#x2F;&#x2F;www.erik-ly.com&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215005614.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215115643.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215144543.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215321256.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215411634.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215507467.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215541604.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215738167.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215928579.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105215945833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105220029159.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105221954833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105222016249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105222033945.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105223355405.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105222045758.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105222126549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019110522213891.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105222152698.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105222222584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191105222239293.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191120205556346.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191120205039140.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2019-11-03T02:39:21.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.455Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="GitHub">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20191105215005614.png">
+
+<link rel="canonical" href="http://yoursite.com/2019/11/03/GitHub-and-Hexo-create-blogs/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>使用 GitHub 和 Hexo 搭建个人博客 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/03/GitHub-and-Hexo-create-blogs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用 GitHub 和 Hexo 搭建个人博客
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-03 10:39:21" itemprop="dateCreated datePublished" datetime="2019-11-03T10:39:21+08:00">2019-11-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍使用 GitHub 和 Hexo 搭建个人博客的详细方法步骤，包括安装配置 Hexo、配置个人域名、编写并发布博客的详细步骤，最后介绍 Next 主题及设置，最终效果：</p>
+<p>Erik-ly<br><a href="http://www.erik-ly.com/" target="_blank" rel="noopener">http://www.erik-ly.com/</a></p>
+<a id="more"></a>
+
+<h1 id="Hexo-简介"><a href="#Hexo-简介" class="headerlink" title="Hexo 简介"></a>Hexo 简介</h1><ul>
+<li><p>Hexo 官网：<a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">https://hexo.io/zh-cn/</a></p>
+</li>
+<li><p>Hexo 文档：<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a></p>
+</li>
+<li><p>Hexo 视频教程</p>
+<p>  YouTube：<a href="https://www.youtube.com/playlist?list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX" target="_blank" rel="noopener">https://www.youtube.com/playlist?list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX</a><br>  Bilibili：<a href="https://space.bilibili.com/362224537/channel/detail?cid=61636" target="_blank" rel="noopener">https://space.bilibili.com/362224537/channel/detail?cid=61636</a></p>
+<!-- more -->
+
+</li>
+</ul>
+<h1 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h1><p>首先，本地需要有<code>node.js</code>和<code>git</code>，我的软件版本为：</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215005614.png" alt=""></p>
+<p>然后安装<code>Hexo</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191105215115643.png" alt=""></p>
+<h1 id="创建博客"><a href="#创建博客" class="headerlink" title="创建博客"></a>创建博客</h1><h2 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h2><p>首先创建一个文件夹，用于存放博客项目，我的博客项目文件夹名为<code>erik-ly-blog</code>，因此</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init erik-ly-blog</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191105215144543.png" alt=""></p>
+<p>创建完项目后可以切换到目录并查看目录结构</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215321256.png" alt=""></p>
+<h2 id="生成静态文件"><a href="#生成静态文件" class="headerlink" title="生成静态文件"></a>生成静态文件</h2><p>因为初始化项目后，项目中已经包含了一篇<code>hello world</code>的博客，所以先看下效果，可以使用以下命令生成静态文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191105215411634.png" alt=""></p>
+<h2 id="本地部署"><a href="#本地部署" class="headerlink" title="本地部署"></a>本地部署</h2><p>使用以下命令进行本地部署，查看效果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20191105215507467.png" alt=""></p>
+<p>然后打开网页 <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> ，显示效果为：</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215541604.png" alt=""></p>
+<h1 id="写作"><a href="#写作" class="headerlink" title="写作"></a>写作</h1><p>现在开始写第一篇文章，我这里为了方便使用，暂时使用 IDEA 打开项目并编辑文章，准备写第一篇文章，可以使用如下命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;GitHub and Hexo create blogs&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20191105215738167.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>然后使用 Markdown 语法编辑文章</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215928579.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>编辑好后依次执行如下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>查看网页显示效果</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105215945833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>现在对博客进行一些简单的设置，打开设置文件<code>_config.yml</code>，然后依据自己情况进行设置</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105220029159.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>更多配置参数说明可以查看：<a href="https://hexo.io/zh-cn/docs/configuration" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/configuration</a></p>
+<p>修改好后可以使用<code>hexo g</code>和<code>hexo s</code>命令查看效果</p>
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><h2 id="创建-GitHub-仓库"><a href="#创建-GitHub-仓库" class="headerlink" title="创建 GitHub 仓库"></a>创建 GitHub 仓库</h2><p>在 GitHub 上创建一个<code>用户名.github.io</code>的仓库，这个是固定写法，比如我的 GitHub 用户名为<code>Erik-ly</code>，那么我就要新建一个名为<code>Erik-ly.github.io</code>的仓库。</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105221954833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="安装-Hexo-插件"><a href="#安装-Hexo-插件" class="headerlink" title="安装 Hexo 插件"></a>安装 Hexo 插件</h2><p>安装插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>然后配置<code>_config.yml</code>，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Deployment</span><br><span class="line">## Docs: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;deployment.html</span><br><span class="line">deploy:</span><br><span class="line">  type: &#39;git&#39;</span><br><span class="line">  repo: https:&#x2F;&#x2F;github.com&#x2F;Erik-ly&#x2F;Erik-ly.github.io.git</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署-1"><a href="#部署-1" class="headerlink" title="部署"></a>部署</h2><p>使用下面命令部署到 GitHub 上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>部署完成后，打开 <a href="https://erik-ly.github.io/" target="_blank" rel="noopener">https://erik-ly.github.io/</a> 查看效果，这个是和你自己的仓库名称一致的，网页效果为</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222016249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h1 id="绑定域名"><a href="#绑定域名" class="headerlink" title="绑定域名"></a>绑定域名</h1><h2 id="查看仓库-IP"><a href="#查看仓库-IP" class="headerlink" title="查看仓库 IP"></a>查看仓库 IP</h2><p>如果想要一个自己的域名，可以在阿里云或腾讯云上购买域名，这里以阿里云为例示范域名解析过程。<br>首先使用<code>ping</code>查看自己 GitHub 上<code>用户名.github.io</code>的 IP 地址，</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222033945.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="设置域名解析"><a href="#设置域名解析" class="headerlink" title="设置域名解析"></a>设置域名解析</h2><p>然后在阿里云上进行域名解析</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105223355405.png" alt=""><br><img src="https://img-blog.csdnimg.cn/20191105222045758.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>分别添加如下两条记录</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222126549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/2019110522213891.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>查看域名解析效果</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222152698.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="配置-CNAME"><a href="#配置-CNAME" class="headerlink" title="配置 CNAME"></a>配置 CNAME</h2><p>在 Hexo 文件夹的<code>source</code>目录下创建一个名为<code>CNAME</code>的文件，然后输入你的域名</p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222222584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="部署-2"><a href="#部署-2" class="headerlink" title="部署"></a>部署</h2><p>使用<code>hexo d</code>部署，然后访问网页查看效果，我这里是 <a href="http://www.erik-ly.com/" target="_blank" rel="noopener">http://www.erik-ly.com/</a></p>
+<p><img src="https://img-blog.csdnimg.cn/20191105222239293.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""></p>
+<h1 id="Next-主题及设置"><a href="#Next-主题及设置" class="headerlink" title="Next 主题及设置"></a>Next 主题及设置</h1><h2 id="更换主题"><a href="#更换主题" class="headerlink" title="更换主题"></a>更换主题</h2><p>这里选择的是 <a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">Next主题</a> ，简洁方便，更换主题步骤为：</p>
+<p>由于我在 Windows 系统中编辑的博客，无法使用官方的命令安装，因此我直接下载的 <a href="https://github.com/theme-next/hexo-theme-next/releases/tag/v7.5.0" target="_blank" rel="noopener">Next V7.5.0</a> 版本的源码，放到<code>themes</code>目录中，在配置文件<code>_config.yml</code>中配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Extensions</span><br><span class="line">## Plugins: https:&#x2F;&#x2F;hexo.io&#x2F;plugins&#x2F;</span><br><span class="line">## Themes: https:&#x2F;&#x2F;hexo.io&#x2F;themes&#x2F;</span><br><span class="line">theme: next</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置布局"><a href="#设置布局" class="headerlink" title="设置布局"></a>设置布局</h2><p>在 <code>themes\next\_config.yml</code> 的配置文件中设置 Next 主题的布局，有四种布局，可以分别尝试下，这里选择的是“Pisces”。<br><img src="https://img-blog.csdnimg.cn/20191120205556346.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9lcmlrLWx5LmJsb2cuY3Nkbi5uZXQ=,size_16,color_FFFFFF,t_70" alt=""></p>
+<h2 id="设置左边栏"><a href="#设置左边栏" class="headerlink" title="设置左边栏"></a>设置左边栏</h2><p>Next 主题的详细设置可以参考 <a href="https://theme-next.org/docs/theme-settings/" target="_blank" rel="noopener">Next官方设置</a> 。<br>我这里主要根据自己的需要对左侧边栏内容进行设置，最终效果为：<br><img src="https://img-blog.csdnimg.cn/20191120205039140.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cDovL3d3dy5lcmlrLWx5LmNvbQ==,size_16,color_FFFFFF,t_70" alt=""><br>首先在<code>\themes\next\_config.yml</code>中设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: &#x2F; || home</span><br><span class="line">  categories: &#x2F;categories&#x2F; || th</span><br><span class="line">  tags: &#x2F;tags&#x2F; || tags</span><br><span class="line">  archives: &#x2F;archives&#x2F; || archive</span><br><span class="line">  #schedule: &#x2F;schedule&#x2F; || calendar</span><br><span class="line">  #sitemap: &#x2F;sitemap.xml || sitemap</span><br><span class="line">  #commonweal: &#x2F;404&#x2F; || heartbeat</span><br><span class="line">  about: &#x2F;about&#x2F; || user</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置分类"><a href="#设置分类" class="headerlink" title="设置分类"></a>设置分类</h2><p>新建分类页面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
+<h2 id="在-source-categories-index-md-中设置"><a href="#在-source-categories-index-md-中设置" class="headerlink" title="在 source\categories\index.md 中设置"></a>在 <code>source\categories\index.md</code> 中设置</h2><p>   title: 分类<br>   date: 2019-11-09 09:50:39<br>   type: “categories”</p>
+<hr>
+<p>以后在文章开头设置分类，如这篇文章为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 使用 GitHub 和 Hexo 搭建个人博客</span><br><span class="line">date: 2019-11-03 10:39:21</span><br><span class="line">tags:</span><br><span class="line">categories: 软件工具</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置标签"><a href="#设置标签" class="headerlink" title="设置标签"></a>设置标签</h2><p>新建标签页面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
+<p>在 <code>source\tags\index.md</code> 中设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 标签</span><br><span class="line">type: &quot;tags&quot;</span><br><span class="line">date: 2019-12-01 10:35:08</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>之后在文章开头设置 tags ，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: IDEA 常用快捷键和设置</span><br><span class="line">date: 2019-11-25 20:37:44</span><br><span class="line">tags: IDEA</span><br><span class="line">categories: 软件工具</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>如果需要设置多个标签可以使用<code>tats:[标签1，标签2，标签3]</code>，如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tags: [Hexo,GitHub]</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="设置关于"><a href="#设置关于" class="headerlink" title="设置关于"></a>设置关于</h2><p>“关于”页面与“分类”差相似，都需要新建页面，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page about</span><br></pre></td></tr></table></figure>
+<p>然后在 <code>\source\about\index.md</code> 中写“关于”页面的内容。</p>
+<h2 id="设置搜索"><a href="#设置搜索" class="headerlink" title="设置搜索"></a>设置搜索</h2><p>搜索使用的是 Next 自带的搜索工具 <a href="https://github.com/theme-next/hexo-generator-searchdb" target="_blank" rel="noopener">hexo-generator-searchdb</a> ，首先下载安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-searchdb</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>\themes\next\_config.yml</code>中设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># Local Search</span><br><span class="line"># Dependencies: https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-generator-searchdb</span><br><span class="line">local_search:</span><br><span class="line">  enable: true</span><br><span class="line">  # If auto, trigger search by changing input.</span><br><span class="line">  # If manual, trigger search by pressing enter key or search button.</span><br><span class="line">  trigger: auto</span><br><span class="line">  # Show top n results per article, show all results by setting to -1</span><br><span class="line">  top_n_per_article: 1</span><br><span class="line">  # Unescape html strings to the readable one.</span><br><span class="line">  unescape: false</span><br><span class="line">  # Preload the search data when the page loads.</span><br><span class="line">  preload: true</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置访问量"><a href="#设置访问量" class="headerlink" title="设置访问量"></a>设置访问量</h2><p>在<code>\themes\next\_config.yml</code>中设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">busuanzi_count:</span><br><span class="line">  enable: true</span><br><span class="line">  total_visitors: true</span><br><span class="line">  total_visitors_icon: user</span><br><span class="line">  total_views: true</span><br><span class="line">  total_views_icon: eye</span><br><span class="line">  post_views: true</span><br><span class="line">  post_views_icon: eye</span><br></pre></td></tr></table></figure>
+<h2 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h2><p>将头像图片放到 <code>images</code> 文件夹中，然后在<code>\themes\next\_config.yml</code>中设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Sidebar Avatar</span><br><span class="line">avatar:</span><br><span class="line">  # Replace the default image and set the url here.</span><br><span class="line">  url: &#x2F;images&#x2F;avatar.png</span><br><span class="line">  # If true, the avatar would be dispalyed in circle.</span><br><span class="line">  rounded: true</span><br><span class="line">  # If true, the avatar would be rotated with the cursor.</span><br><span class="line">  rotated: false</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置社交"><a href="#设置社交" class="headerlink" title="设置社交"></a>设置社交</h2><p>在<code>\themes\next\_config.yml</code>中设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">social:</span><br><span class="line">  GitHub: https:&#x2F;&#x2F;github.com&#x2F;Erik-ly || github</span><br><span class="line">  #E-Mail: mailto:Erik_ly@163.com || envelope</span><br><span class="line">  CSDN: https:&#x2F;&#x2F;erik-ly.blog.csdn.net || heartbeat</span><br></pre></td></tr></table></figure>
+
+<p>“||”后面的名称是图标名，图标可以去 <a href="https://fontawesome.com/icons?from=io" target="_blank" rel="noopener">Font Awesome Icon</a> 网站上找，填写相应的名字即可。</p>
+<h2 id="设置-Logo"><a href="#设置-Logo" class="headerlink" title="设置 Logo"></a>设置 Logo</h2><p>网站 logo 默认是 “N”,可以自定义，可以将自己的图片放到 <code>images</code> 中，然后在<code>\themes\next\_config.yml</code>中设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">favicon:</span><br><span class="line">  small: &#x2F;images&#x2F;favicon-16x16-erik-ly.png</span><br><span class="line">  medium: &#x2F;images&#x2F;favicon-32x32-erik-ly.png</span><br><span class="line">  apple_touch_icon: &#x2F;images&#x2F;favicon-32x32-erik-ly.png</span><br><span class="line">  safari_pinned_tab: &#x2F;images&#x2F;favicon-32x32-erik-ly.png</span><br></pre></td></tr></table></figure>
+
+<p>至此，个人博客网站搭建设置完毕，后续增加相应的文章即可。<br>欢迎访问我的个人博客网站：<a href="http://www.erik-ly.com/" target="_blank" rel="noopener">http://www.erik-ly.com/</a> </p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p>文档 | Hexo<br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a></p>
+</li>
+<li><p>Hexo教程 - YouTube<br><a href="https://www.youtube.com/watch?v=PsXWbI2Mqu0&amp;list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX&amp;index=7" target="_blank" rel="noopener">https://www.youtube.com/watch?v=PsXWbI2Mqu0&amp;list=PLD5dyQmlN6xPqBV0cxO7zAe1C8OmDPqfX&amp;index=7</a></p>
+</li>
+<li><p>GitHub+Hexo 搭建个人网站详细教程 - 知乎<br><a href="https://zhuanlan.zhihu.com/p/26625249" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/26625249</a></p>
+</li>
+<li><p>Hexo-NexT配置超炫网页效果 - 简书<br><a href="https://www.jianshu.com/p/9f0e90cc32c2" target="_blank" rel="noopener">https://www.jianshu.com/p/9f0e90cc32c2</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/GitHub/" rel="tag"># GitHub</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2019/11/04/EtherCalc-introduction/" rel="next" title="在线协同电子表格 EtherCalc 安装部署详细步骤">
+      在线协同电子表格 EtherCalc 安装部署详细步骤 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hexo-简介"><span class="nav-number">1.</span> <span class="nav-text">Hexo 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-Hexo"><span class="nav-number">2.</span> <span class="nav-text">安装 Hexo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建博客"><span class="nav-number">3.</span> <span class="nav-text">创建博客</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化项目"><span class="nav-number">3.1.</span> <span class="nav-text">初始化项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成静态文件"><span class="nav-number">3.2.</span> <span class="nav-text">生成静态文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地部署"><span class="nav-number">3.3.</span> <span class="nav-text">本地部署</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#写作"><span class="nav-number">4.</span> <span class="nav-text">写作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置"><span class="nav-number">5.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署"><span class="nav-number">6.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建-GitHub-仓库"><span class="nav-number">6.1.</span> <span class="nav-text">创建 GitHub 仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Hexo-插件"><span class="nav-number">6.2.</span> <span class="nav-text">安装 Hexo 插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署-1"><span class="nav-number">6.3.</span> <span class="nav-text">部署</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#绑定域名"><span class="nav-number">7.</span> <span class="nav-text">绑定域名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#查看仓库-IP"><span class="nav-number">7.1.</span> <span class="nav-text">查看仓库 IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置域名解析"><span class="nav-number">7.2.</span> <span class="nav-text">设置域名解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置-CNAME"><span class="nav-number">7.3.</span> <span class="nav-text">配置 CNAME</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署-2"><span class="nav-number">7.4.</span> <span class="nav-text">部署</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Next-主题及设置"><span class="nav-number">8.</span> <span class="nav-text">Next 主题及设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#更换主题"><span class="nav-number">8.1.</span> <span class="nav-text">更换主题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置布局"><span class="nav-number">8.2.</span> <span class="nav-text">设置布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置左边栏"><span class="nav-number">8.3.</span> <span class="nav-text">设置左边栏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置分类"><span class="nav-number">8.4.</span> <span class="nav-text">设置分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在-source-categories-index-md-中设置"><span class="nav-number">8.5.</span> <span class="nav-text">在 source\categories\index.md 中设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置标签"><span class="nav-number">8.6.</span> <span class="nav-text">设置标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置关于"><span class="nav-number">8.7.</span> <span class="nav-text">设置关于</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置搜索"><span class="nav-number">8.8.</span> <span class="nav-text">设置搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置访问量"><span class="nav-number">8.9.</span> <span class="nav-text">设置访问量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置头像"><span class="nav-number">8.10.</span> <span class="nav-text">设置头像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置社交"><span class="nav-number">8.11.</span> <span class="nav-text">设置社交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置-Logo"><span class="nav-number">8.12.</span> <span class="nav-text">设置 Logo</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Ambari 里将集群、主机、服务、组件、用户等视为资源，通过自定义资源即可实现类似 Ambari 风格的增删改查功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ambari 自定义资源类型">
+<meta property="og:url" content="http://yoursite.com/2020/12/13/ambari-custom-resource-type/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="Ambari 里将集群、主机、服务、组件、用户等视为资源，通过自定义资源即可实现类似 Ambari 风格的增删改查功能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201211160422.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201211160457.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201211160546.png">
+<meta property="article:published_time" content="2020-12-13T07:01:39.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.458Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="Ambari">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201211160422.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/12/13/ambari-custom-resource-type/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Ambari 自定义资源类型 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/13/ambari-custom-resource-type/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ambari 自定义资源类型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-13 15:01:39" itemprop="dateCreated datePublished" datetime="2020-12-13T15:01:39+08:00">2020-12-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ambari/" itemprop="url" rel="index"><span itemprop="name">Ambari</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Ambari 里将集群、主机、服务、组件、用户等视为资源，通过自定义资源即可实现类似 Ambari 风格的增删改查功能。</p>
+<a id="more"></a>
+
+<p>本文以在 Ambari 中添加 Yarn 资源，实现查询 Yarn 全部任务和查询某个任务的日志信息。</p>
+<h1 id="添加资源类型"><a href="#添加资源类型" class="headerlink" title="添加资源类型"></a>添加资源类型</h1><p>在 <code>org.apache.ambari.server.controller.spi.Resource</code> 接口中添加资源类型枚举类 Yarn。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"> &#x2F;**</span><br><span class="line">  * Enum of internal types.</span><br><span class="line">  *&#x2F;</span><br><span class="line"> enum InternalType &#123;</span><br><span class="line">   Cluster,</span><br><span class="line">   Service,</span><br><span class="line">   Setting,</span><br><span class="line">  </span><br><span class="line">   ……</span><br><span class="line">  </span><br><span class="line">   RemoteCluster,</span><br><span class="line">   Yarn;</span><br><span class="line">   </span><br><span class="line">   ……</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">   &#x2F;**</span><br><span class="line">  * Resource types.  Allows for the addition of external types.</span><br><span class="line">  *&#x2F;</span><br><span class="line"> final class Type implements Comparable&lt;Type&gt;&#123;</span><br><span class="line"></span><br><span class="line">……</span><br><span class="line"></span><br><span class="line">   &#x2F;**</span><br><span class="line">    * Internal types.  See &#123;@link InternalType&#125;.</span><br><span class="line">    *&#x2F;</span><br><span class="line">   public static final Type Cluster &#x3D; InternalType.Cluster.getType();</span><br><span class="line">   public static final Type Service &#x3D; InternalType.Service.getType();</span><br><span class="line">   public static final Type Setting &#x3D; InternalType.Setting.getType();</span><br><span class="line"></span><br><span class="line">……</span><br><span class="line"></span><br><span class="line">   public static final Type LoggingQuery &#x3D; InternalType.LoggingQuery.getType();</span><br><span class="line">   public static final Type RemoteCluster &#x3D; InternalType.RemoteCluster.getType();</span><br><span class="line"></span><br><span class="line">   &#x2F;**</span><br><span class="line">    * Yarn</span><br><span class="line">    *&#x2F;</span><br><span class="line">   public static final Type Yarn &#x3D; InternalType.Yarn.getType();</span><br><span class="line"></span><br><span class="line">……</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="新建控制器层"><a href="#新建控制器层" class="headerlink" title="新建控制器层"></a>新建控制器层</h1><p>新建 <code>org.apache.ambari.server.api.services.YarnService</code> 类，注意请求方式和资源类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ambari.server.api.services;</span><br><span class="line"></span><br><span class="line">import io.swagger.annotations.Api;</span><br><span class="line">import org.apache.ambari.server.api.resources.ResourceInstance;</span><br><span class="line">import org.apache.ambari.server.controller.spi.Resource;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line">import javax.ws.rs.GET;</span><br><span class="line">import javax.ws.rs.Path;</span><br><span class="line">import javax.ws.rs.PathParam;</span><br><span class="line">import javax.ws.rs.Produces;</span><br><span class="line">import javax.ws.rs.core.Context;</span><br><span class="line">import javax.ws.rs.core.HttpHeaders;</span><br><span class="line">import javax.ws.rs.core.Response;</span><br><span class="line">import javax.ws.rs.core.UriInfo;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Yarn 相关服务</span><br><span class="line"> *</span><br><span class="line"> * @author Erik</span><br><span class="line"> * @date 2020&#x2F;12&#x2F;7</span><br><span class="line"> *&#x2F;</span><br><span class="line">@Path(&quot;&#x2F;yarn&#x2F;&quot;)</span><br><span class="line">@Api(value &#x3D; &quot;yarn&quot;)</span><br><span class="line">public class YarnService extends BaseService &#123;</span><br><span class="line"></span><br><span class="line">    private static final Logger LOG &#x3D; LoggerFactory.getLogger(YarnService.class);</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Gets all yarn info.</span><br><span class="line">     * Handles: GET &#x2F;yarn requests.</span><br><span class="line">     *</span><br><span class="line">     * @param headers http headers</span><br><span class="line">     * @param ui      uri info</span><br><span class="line">     *</span><br><span class="line">     * @return information regarding all yarn</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @GET</span><br><span class="line">    @Produces(&quot;text&#x2F;plain&quot;)</span><br><span class="line">    public Response getYarnApplications(String body, @Context HttpHeaders headers, @Context UriInfo ui) &#123;</span><br><span class="line">        LOG.info(&quot;Into get all Yarn applications.&quot;);</span><br><span class="line">        return handleRequest(headers, body, ui, Request.Type.GET, createResource(null));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Handles: GET &#x2F;yarn&#x2F;&#123;applicationId&#125;</span><br><span class="line">     * Get a specific applicationId info.</span><br><span class="line">     *</span><br><span class="line">     * @param headers        http headers</span><br><span class="line">     * @param ui             uri info</span><br><span class="line">     * @param applicationId   applicationId</span><br><span class="line">     *</span><br><span class="line">     * @return yan instance representation</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @GET</span><br><span class="line">    @Path(&quot;&#123;applicationId&#125;&quot;)</span><br><span class="line">    @Produces(&quot;text&#x2F;plain&quot;)</span><br><span class="line">    public Response getClusterUser(@Context HttpHeaders headers, @Context UriInfo ui,</span><br><span class="line">                                 @PathParam(&quot;applicationId&quot;) String applicationId) &#123;</span><br><span class="line"></span><br><span class="line">        return handleRequest(headers, null, ui, Request.Type.GET, createResource(applicationId));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Create a yarn instance.</span><br><span class="line">     *</span><br><span class="line">     * @param applicationId applicationId</span><br><span class="line">     *</span><br><span class="line">     * @return a yarn resource instance</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private ResourceInstance createResource(String applicationId) &#123;</span><br><span class="line">        final Map&lt;Resource.Type, String&gt; mapIds &#x3D; new HashMap&lt;&gt;();</span><br><span class="line">        mapIds.put(Resource.Type.Yarn, applicationId);</span><br><span class="line">        return createResource(Resource.Type.Yarn, mapIds);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="新建资源-Provider"><a href="#新建资源-Provider" class="headerlink" title="新建资源 Provider"></a>新建资源 Provider</h1><p>新建 <code>org.apache.ambari.server.controller.internal.YarnResourceProvider</code>，这是具体的增删改查实现逻辑，先搭建整体框架，稍后具体实现这块逻辑。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ambari.server.controller.internal;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Yarn资源</span><br><span class="line"> *</span><br><span class="line"> * @author Erik</span><br><span class="line"> * @date 2020&#x2F;12&#x2F;7</span><br><span class="line"> *&#x2F;</span><br><span class="line">@StaticallyInject</span><br><span class="line">public class YarnResourceProvider extends AbstractControllerResourceProvider &#123;</span><br><span class="line"></span><br><span class="line">    private static final Logger LOG &#x3D; LoggerFactory.getLogger(YarnResourceProvider.class);</span><br><span class="line">    </span><br><span class="line">    public YarnResourceProvider(AmbariManagementController managementController) &#123;</span><br><span class="line">    super(Resource.Type.Yarn, propertyIds, keyPropertyIds, managementController);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ……</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>YarnResourceProvider</code> 是继承 <code>AbstractControllerResourceProvider</code>，所以要在 <code>org.apache.ambari.server.controller.internal.AbstractControllerResourceProvider</code> 中添加 <code>YarnResourceProvider</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Factory method for obtaining a resource provider based on a given type and management controller.</span><br><span class="line"> *</span><br><span class="line"> * @param type                  the resource type</span><br><span class="line"> * @param managementController  the management controller</span><br><span class="line"> *</span><br><span class="line"> * @return a new resource provider</span><br><span class="line"> *&#x2F;</span><br><span class="line">public static ResourceProvider getResourceProvider(Resource.Type type,</span><br><span class="line">                                                   AmbariManagementController managementController) &#123;</span><br><span class="line"></span><br><span class="line">  switch (type.getInternalType()) &#123;</span><br><span class="line">    case Cluster:</span><br><span class="line">      return new ClusterResourceProvider(managementController);</span><br><span class="line">    case Service:</span><br><span class="line">      return resourceProviderFactory.getServiceResourceProvider(managementController);</span><br><span class="line">    case Component:</span><br><span class="line">      return resourceProviderFactory.getComponentResourceProvider(managementController);</span><br><span class="line">    </span><br><span class="line"> ……</span><br><span class="line"> </span><br><span class="line">    case ViewInstance:</span><br><span class="line">      return resourceProviderFactory.getViewInstanceResourceProvider();</span><br><span class="line"></span><br><span class="line">    case Yarn:</span><br><span class="line">      return new YarnResourceProvider(managementController);</span><br><span class="line"></span><br><span class="line">    default:</span><br><span class="line">      throw new IllegalArgumentException(&quot;Unknown type &quot; + type);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="新建资源定义"><a href="#新建资源定义" class="headerlink" title="新建资源定义"></a>新建资源定义</h1><p>新建 Yarn 资源的定义类 <code>org.apache.ambari.server.api.resources.YarnResourceDefinition</code>，在 <code>getSubResourceDefinitions</code> 中可定义子资源查询，实现方法可参考 <code>UserResourceDefinition</code>类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ambari.server.api.resources;</span><br><span class="line"></span><br><span class="line">import org.apache.ambari.server.controller.spi.Resource;</span><br><span class="line"></span><br><span class="line">import java.util.Collections;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Yarn 资源定义</span><br><span class="line"> *</span><br><span class="line"> * @author Erik</span><br><span class="line"> * @date 2020&#x2F;12&#x2F;7</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class YarnResourceDefinition extends BaseResourceDefinition &#123;</span><br><span class="line"></span><br><span class="line">    public YarnResourceDefinition() &#123;</span><br><span class="line">        super(Resource.Type.Yarn);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String getPluralName() &#123;</span><br><span class="line">        return &quot;yarns&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String getSingularName() &#123;</span><br><span class="line">        return &quot;yarn&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Set&lt;SubResourceDefinition&gt; getSubResourceDefinitions() &#123;</span><br><span class="line">        return Collections.emptySet();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="添加新的资源实例"><a href="#添加新的资源实例" class="headerlink" title="添加新的资源实例"></a>添加新的资源实例</h1><p>在 <code>org.apache.ambari.server.api.resources.ResourceInstanceFactoryImpl</code> 中添加上一步的资源定义。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  switch (type.getInternalType()) &#123;</span><br><span class="line">    case Cluster:</span><br><span class="line">      resourceDefinition &#x3D; new ClusterResourceDefinition();</span><br><span class="line">      break;</span><br><span class="line"></span><br><span class="line">    case Service:</span><br><span class="line">      resourceDefinition &#x3D; new ServiceResourceDefinition();</span><br><span class="line">      break;</span><br><span class="line"></span><br><span class="line">……</span><br><span class="line"></span><br><span class="line">    case RemoteCluster:</span><br><span class="line">      resourceDefinition &#x3D; new RemoteClusterResourceDefinition();</span><br><span class="line">      break;</span><br><span class="line"></span><br><span class="line">    case Yarn:</span><br><span class="line">      resourceDefinition &#x3D; new YarnResourceDefinition();</span><br><span class="line">      break;</span><br><span class="line"></span><br><span class="line">    default:</span><br><span class="line">      throw new IllegalArgumentException(&quot;Unsupported resource type: &quot; + type);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="新建-request-和-response"><a href="#新建-request-和-response" class="headerlink" title="新建 request 和 response"></a>新建 request 和 response</h1><p>创建相应的 request 和 response 方法，这里新建 <code>org.apache.ambari.server.controller.YarnRequest</code> 和 <code>org.apache.ambari.server.controller.YarnResponse</code>。</p>
+<p><code>YarnRequest</code> 示例代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ambari.server.controller;</span><br><span class="line"></span><br><span class="line">import io.swagger.annotations.ApiModel;</span><br><span class="line"></span><br><span class="line">import java.util.Objects;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Yarn request</span><br><span class="line"> *</span><br><span class="line"> * @author Erik</span><br><span class="line"> * @date 2020&#x2F;12&#x2F;7</span><br><span class="line"> *&#x2F;</span><br><span class="line">@ApiModel</span><br><span class="line">public class YarnRequest &#123;</span><br><span class="line"></span><br><span class="line">    private String applicationId;</span><br><span class="line">    private String applicationName;</span><br><span class="line"></span><br><span class="line">    public YarnRequest(String applicationId) &#123;</span><br><span class="line">        this.applicationId &#x3D; applicationId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getApplicationId() &#123;</span><br><span class="line">        return applicationId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setApplicationId(String applicationId) &#123;</span><br><span class="line">        this.applicationId &#x3D; applicationId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getApplicationName() &#123;</span><br><span class="line">        return applicationName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setApplicationName(String applicationName) &#123;</span><br><span class="line">        this.applicationName &#x3D; applicationName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean equals(Object o) &#123;</span><br><span class="line">        if (this &#x3D;&#x3D; o) return true;</span><br><span class="line">        if (o &#x3D;&#x3D; null || getClass() !&#x3D; o.getClass()) return false;</span><br><span class="line">        YarnRequest that &#x3D; (YarnRequest) o;</span><br><span class="line">        return Objects.equals(applicationId, that.applicationId) &amp;&amp;</span><br><span class="line">                Objects.equals(applicationName, that.applicationName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int hashCode() &#123;</span><br><span class="line">        return Objects.hash(applicationId, applicationName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;YarnRequest&#123;&quot; +</span><br><span class="line">                &quot;applicationId&#x3D;&#39;&quot; + applicationId + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, applicationName&#x3D;&#39;&quot; + applicationName + &#39;\&#39;&#39; +</span><br><span class="line">                &#39;&#125;&#39;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>YarnResponse</code> 示例代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ambari.server.controller;</span><br><span class="line"></span><br><span class="line">import java.util.Objects;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Yarn response</span><br><span class="line"> *</span><br><span class="line"> * @author Erik</span><br><span class="line"> * @date 2020&#x2F;12&#x2F;7</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class YarnResponse implements ApiModel &#123;</span><br><span class="line"></span><br><span class="line">    private String applicationId;</span><br><span class="line">    private String applicationName;</span><br><span class="line">    private String applicationType;</span><br><span class="line">    private String user;</span><br><span class="line">    private String queue;</span><br><span class="line">    private String state;</span><br><span class="line">    private String finalState;</span><br><span class="line">    private String progress;</span><br><span class="line">    private String trackingUrl;</span><br><span class="line"></span><br><span class="line">    private String logInfo;</span><br><span class="line"></span><br><span class="line">    public YarnResponse() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getApplicationId() &#123;</span><br><span class="line">        return applicationId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setApplicationId(String applicationId) &#123;</span><br><span class="line">        this.applicationId &#x3D; applicationId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getApplicationName() &#123;</span><br><span class="line">        return applicationName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setApplicationName(String applicationName) &#123;</span><br><span class="line">        this.applicationName &#x3D; applicationName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getApplicationType() &#123;</span><br><span class="line">        return applicationType;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setApplicationType(String applicationType) &#123;</span><br><span class="line">        this.applicationType &#x3D; applicationType;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getUser() &#123;</span><br><span class="line">        return user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUser(String user) &#123;</span><br><span class="line">        this.user &#x3D; user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getQueue() &#123;</span><br><span class="line">        return queue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setQueue(String queue) &#123;</span><br><span class="line">        this.queue &#x3D; queue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getState() &#123;</span><br><span class="line">        return state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setState(String state) &#123;</span><br><span class="line">        this.state &#x3D; state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getFinalState() &#123;</span><br><span class="line">        return finalState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setFinalState(String finalState) &#123;</span><br><span class="line">        this.finalState &#x3D; finalState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getProgress() &#123;</span><br><span class="line">        return progress;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setProgress(String progress) &#123;</span><br><span class="line">        this.progress &#x3D; progress;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getTrackingUrl() &#123;</span><br><span class="line">        return trackingUrl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setTrackingUrl(String trackingUrl) &#123;</span><br><span class="line">        this.trackingUrl &#x3D; trackingUrl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getLogInfo() &#123;</span><br><span class="line">        return logInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setLogInfo(String logInfo) &#123;</span><br><span class="line">        this.logInfo &#x3D; logInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean equals(Object o) &#123;</span><br><span class="line">        if (this &#x3D;&#x3D; o) return true;</span><br><span class="line">        if (o &#x3D;&#x3D; null || getClass() !&#x3D; o.getClass()) return false;</span><br><span class="line">        YarnResponse that &#x3D; (YarnResponse) o;</span><br><span class="line">        return Objects.equals(applicationId, that.applicationId) &amp;&amp;</span><br><span class="line">                Objects.equals(applicationName, that.applicationName) &amp;&amp;</span><br><span class="line">                Objects.equals(applicationType, that.applicationType) &amp;&amp;</span><br><span class="line">                Objects.equals(user, that.user) &amp;&amp;</span><br><span class="line">                Objects.equals(queue, that.queue) &amp;&amp;</span><br><span class="line">                Objects.equals(state, that.state) &amp;&amp;</span><br><span class="line">                Objects.equals(finalState, that.finalState) &amp;&amp;</span><br><span class="line">                Objects.equals(progress, that.progress) &amp;&amp;</span><br><span class="line">                Objects.equals(trackingUrl, that.trackingUrl) &amp;&amp;</span><br><span class="line">                Objects.equals(logInfo, that.logInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int hashCode() &#123;</span><br><span class="line">        return Objects.hash(applicationId, applicationName, applicationType, user, queue, state, finalState, progress, trackingUrl, logInfo);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;YarnResponse&#123;&quot; +</span><br><span class="line">                &quot;applicationId&#x3D;&#39;&quot; + applicationId + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, applicationName&#x3D;&#39;&quot; + applicationName + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, applicationType&#x3D;&#39;&quot; + applicationType + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, user&#x3D;&#39;&quot; + user + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, queue&#x3D;&#39;&quot; + queue + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, state&#x3D;&#39;&quot; + state + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, finalState&#x3D;&#39;&quot; + finalState + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, progress&#x3D;&#39;&quot; + progress + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, trackingUrl&#x3D;&#39;&quot; + trackingUrl + &#39;\&#39;&#39; +</span><br><span class="line">                &quot;, logInfo&#x3D;&#39;&quot; + logInfo + &#39;\&#39;&#39; +</span><br><span class="line">                &#39;&#125;&#39;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="新建数据库相关类"><a href="#新建数据库相关类" class="headerlink" title="新建数据库相关类"></a>新建数据库相关类</h1><p>涉及到新增数据库表的情况，需要在 <code>org.apache.ambari.server.orm.dao</code> 包中新建相应的 DAO 层，在 <code>org.apache.ambari.server.orm.entities</code> 包中新建相应的实体类，并将实体类加入到 <code>ambari-server\src\main\resources\META-INF\persistence.xml</code> 中，这个例子中不涉及到新建数据表的情况。</p>
+<h1 id="实现具体逻辑"><a href="#实现具体逻辑" class="headerlink" title="实现具体逻辑"></a>实现具体逻辑</h1><p>整体框架搭建好后，具体的实现逻辑在 <code>YarnResourceProvider</code> 类中。</p>
+<h2 id="定义资源属性"><a href="#定义资源属性" class="headerlink" title="定义资源属性"></a>定义资源属性</h2><p>需要定义 Yarn 资源的属性，并组合成 yarn/属性 的方式，这样可以控制返回属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public static final String YARN_RESOURCE_CATEGORY &#x3D; &quot;yarn&quot;;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Yarn application info</span><br><span class="line"> *&#x2F;</span><br><span class="line">public static final String APPLICATION_ID_PROPERTY_ID &#x3D; &quot;applicationId&quot;;</span><br><span class="line">public static final String APPLICATION_NAME_PROPERTY_ID &#x3D; &quot;applicationName&quot;;</span><br><span class="line">public static final String APPLICATION_TYPE_PROPERTY_ID &#x3D; &quot;applicationType&quot;;</span><br><span class="line">public static final String USER_PROPERTY_ID &#x3D; &quot;user&quot;;</span><br><span class="line">public static final String QUEUE_PROPERTY_ID &#x3D; &quot;queue&quot;;</span><br><span class="line">public static final String STATE_PROPERTY_ID &#x3D; &quot;state&quot;;</span><br><span class="line">public static final String FINAL_STATE_PROPERTY_ID &#x3D; &quot;finalState&quot;;</span><br><span class="line">public static final String PROGRESS_PROPERTY_ID &#x3D; &quot;progress&quot;;</span><br><span class="line">public static final String TRACKINGURL_PROPERTY_ID &#x3D; &quot;trackingUrl&quot;;</span><br><span class="line">public static final String LOG_INFO_PROPERTY_ID &#x3D; &quot;logInfo&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public static final String YARN_APPLICATION_ID_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + APPLICATION_ID_PROPERTY_ID;</span><br><span class="line">public static final String YARN_APPLICATION_NAME_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + APPLICATION_NAME_PROPERTY_ID;</span><br><span class="line">public static final String YARN_APPLICATION_TYPE_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + APPLICATION_TYPE_PROPERTY_ID;</span><br><span class="line">public static final String YARN_USER_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + USER_PROPERTY_ID;</span><br><span class="line">public static final String YARN_QUEUE_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + QUEUE_PROPERTY_ID;</span><br><span class="line">public static final String YARN_STATE_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + STATE_PROPERTY_ID;</span><br><span class="line">public static final String YARN_FINAL_STATE_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + FINAL_STATE_PROPERTY_ID;</span><br><span class="line">public static final String YARN_PROGRESS_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + PROGRESS_PROPERTY_ID;</span><br><span class="line">public static final String YARN_TRACKINGURL_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + TRACKINGURL_PROPERTY_ID;</span><br><span class="line">public static final String YARN_LOG_INFO_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + LOG_INFO_PROPERTY_ID;</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置资源属性"><a href="#设置资源属性" class="headerlink" title="设置资源属性"></a>设置资源属性</h2><p>定义好资源属性后需要添加设置属性。</p>
+<p>首先是 <code>keyPropertyIds</code>， 这个可认为是 key 值，根据这个值寻找 Yarn 资源，且返回的时候必须要返回这个属性值，否则请求获取不到值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * The key property ids for a Yarn resource.</span><br><span class="line"> *&#x2F;</span><br><span class="line">private static Map&lt;Resource.Type, String&gt; keyPropertyIds &#x3D; ImmutableMap.&lt;Resource.Type, String&gt;builder()</span><br><span class="line">        .put(Resource.Type.Yarn, YARN_APPLICATION_ID_PROPERTY_ID)</span><br><span class="line">        .build();</span><br></pre></td></tr></table></figure>
+
+<p>然后是 <code>propertyIds</code>，这里必须包含 <code>keyPropertyIds</code> 中的值，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * The property ids for a Yarn resource.</span><br><span class="line"> *&#x2F;</span><br><span class="line">public static Set&lt;String&gt; propertyIds &#x3D; Sets.newHashSet(</span><br><span class="line">        YARN_APPLICATION_ID_PROPERTY_ID,</span><br><span class="line">        YARN_APPLICATION_NAME_PROPERTY_ID,</span><br><span class="line">        YARN_APPLICATION_TYPE_PROPERTY_ID,</span><br><span class="line">        YARN_USER_PROPERTY_ID,</span><br><span class="line">        YARN_QUEUE_PROPERTY_ID,</span><br><span class="line">        YARN_STATE_PROPERTY_ID,</span><br><span class="line">        YARN_FINAL_STATE_PROPERTY_ID,</span><br><span class="line">        YARN_PROGRESS_PROPERTY_ID,</span><br><span class="line">        YARN_TRACKINGURL_PROPERTY_ID,</span><br><span class="line">        YARN_LOG_INFO_PROPERTY_ID);</span><br></pre></td></tr></table></figure>
+
+<p>最后是 <code>getPKPropertyIds</code>，这个是固定写法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected Set&lt;String&gt; getPKPropertyIds() &#123;</span><br><span class="line">    return new HashSet&lt;&gt;(keyPropertyIds.values());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="添加注解"><a href="#添加注解" class="headerlink" title="添加注解"></a>添加注解</h2><p>Ambari 使用 Guice 进行注解，这里需要使用 <code>HostComponentStateDAO</code> 查询组件所在主机名，所有需要使用 <code>@Inject</code> 注解引入 <code>HostComponentStateDAO</code>，并且需要在类前加上 <code>@StaticallyInject</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@StaticallyInject</span><br><span class="line">public class YarnResourceProvider extends AbstractControllerResourceProvider &#123;</span><br><span class="line">    </span><br><span class="line">    ……</span><br><span class="line">    </span><br><span class="line">    @Inject</span><br><span class="line">    protected static HostComponentStateDAO hostComponentStateDAO;</span><br><span class="line">    </span><br><span class="line">    ……</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="查询逻辑"><a href="#查询逻辑" class="headerlink" title="查询逻辑"></a>查询逻辑</h2><p>在 <code>getResources</code> 方法中实现具体的查询逻辑，主要是通过 <code>getRequest</code> 方法解析请求参数，如果 applicationId 为空，则返回所有 application 信息；如果 applicationId 不为空，则查询改任务的日志信息。主要使用执行 shell 命令获取返回值，解析返回值获取相应信息。</p>
+<p>完整 <code>YarnResourceProvider</code> 示例代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ambari.server.controller.internal;</span><br><span class="line"></span><br><span class="line">import com.google.common.collect.ImmutableMap;</span><br><span class="line">import com.google.common.collect.Sets;</span><br><span class="line">import com.google.inject.Inject;</span><br><span class="line">import org.apache.ambari.server.StaticallyInject;</span><br><span class="line">import org.apache.ambari.server.controller.AmbariManagementController;</span><br><span class="line">import org.apache.ambari.server.controller.YarnRequest;</span><br><span class="line">import org.apache.ambari.server.controller.YarnResponse;</span><br><span class="line">import org.apache.ambari.server.controller.spi.*;</span><br><span class="line">import org.apache.ambari.server.orm.dao.HostComponentStateDAO;</span><br><span class="line">import org.apache.ambari.server.orm.entities.HostComponentStateEntity;</span><br><span class="line">import org.apache.ambari.server.utils.ShellCommandUtil;</span><br><span class="line">import org.apache.commons.io.FileUtils;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line">import java.io.*;</span><br><span class="line">import java.nio.charset.Charset;</span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Map;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Yarn资源</span><br><span class="line"> *</span><br><span class="line"> * @author Erik</span><br><span class="line"> * @date 2020&#x2F;12&#x2F;7</span><br><span class="line"> *&#x2F;</span><br><span class="line">@StaticallyInject</span><br><span class="line">public class YarnResourceProvider extends AbstractControllerResourceProvider &#123;</span><br><span class="line"></span><br><span class="line">    private static final Logger LOG &#x3D; LoggerFactory.getLogger(YarnResourceProvider.class);</span><br><span class="line"></span><br><span class="line">    @Inject</span><br><span class="line">    protected static HostComponentStateDAO hostComponentStateDAO;</span><br><span class="line"></span><br><span class="line">    public static final String YARN_RESOURCE_CATEGORY &#x3D; &quot;yarn&quot;;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * Yarn application info</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static final String APPLICATION_ID_PROPERTY_ID &#x3D; &quot;applicationId&quot;;</span><br><span class="line">    public static final String APPLICATION_NAME_PROPERTY_ID &#x3D; &quot;applicationName&quot;;</span><br><span class="line">    public static final String APPLICATION_TYPE_PROPERTY_ID &#x3D; &quot;applicationType&quot;;</span><br><span class="line">    public static final String USER_PROPERTY_ID &#x3D; &quot;user&quot;;</span><br><span class="line">    public static final String QUEUE_PROPERTY_ID &#x3D; &quot;queue&quot;;</span><br><span class="line">    public static final String STATE_PROPERTY_ID &#x3D; &quot;state&quot;;</span><br><span class="line">    public static final String FINAL_STATE_PROPERTY_ID &#x3D; &quot;finalState&quot;;</span><br><span class="line">    public static final String PROGRESS_PROPERTY_ID &#x3D; &quot;progress&quot;;</span><br><span class="line">    public static final String TRACKINGURL_PROPERTY_ID &#x3D; &quot;trackingUrl&quot;;</span><br><span class="line">    public static final String LOG_INFO_PROPERTY_ID &#x3D; &quot;logInfo&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static final String YARN_APPLICATION_ID_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + APPLICATION_ID_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_APPLICATION_NAME_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + APPLICATION_NAME_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_APPLICATION_TYPE_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + APPLICATION_TYPE_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_USER_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + USER_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_QUEUE_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + QUEUE_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_STATE_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + STATE_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_FINAL_STATE_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + FINAL_STATE_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_PROGRESS_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + PROGRESS_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_TRACKINGURL_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + TRACKINGURL_PROPERTY_ID;</span><br><span class="line">    public static final String YARN_LOG_INFO_PROPERTY_ID &#x3D; YARN_RESOURCE_CATEGORY + &quot;&#x2F;&quot; + LOG_INFO_PROPERTY_ID;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * The key property ids for a Yarn resource.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private static Map&lt;Resource.Type, String&gt; keyPropertyIds &#x3D; ImmutableMap.&lt;Resource.Type, String&gt;builder()</span><br><span class="line">            .put(Resource.Type.Yarn, YARN_APPLICATION_ID_PROPERTY_ID)</span><br><span class="line">            .build();</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * The property ids for a Yarn resource.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static Set&lt;String&gt; propertyIds &#x3D; Sets.newHashSet(</span><br><span class="line">            YARN_APPLICATION_ID_PROPERTY_ID,</span><br><span class="line">            YARN_APPLICATION_NAME_PROPERTY_ID,</span><br><span class="line">            YARN_APPLICATION_TYPE_PROPERTY_ID,</span><br><span class="line">            YARN_USER_PROPERTY_ID,</span><br><span class="line">            YARN_QUEUE_PROPERTY_ID,</span><br><span class="line">            YARN_STATE_PROPERTY_ID,</span><br><span class="line">            YARN_FINAL_STATE_PROPERTY_ID,</span><br><span class="line">            YARN_PROGRESS_PROPERTY_ID,</span><br><span class="line">            YARN_TRACKINGURL_PROPERTY_ID,</span><br><span class="line">            YARN_LOG_INFO_PROPERTY_ID);</span><br><span class="line"></span><br><span class="line">    public YarnResourceProvider(AmbariManagementController managementController) &#123;</span><br><span class="line">        super(Resource.Type.Yarn, propertyIds, keyPropertyIds, managementController);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected Set&lt;String&gt; getPKPropertyIds() &#123;</span><br><span class="line">        return new HashSet&lt;&gt;(keyPropertyIds.values());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Set&lt;Resource&gt; getResources(Request request, Predicate predicate)</span><br><span class="line">            throws SystemException, UnsupportedPropertyException, NoSuchResourceException, NoSuchParentResourceException &#123;</span><br><span class="line"></span><br><span class="line">        LOG.info(&quot;Into YarnResourceProvider:getResource.&quot;);</span><br><span class="line">        final Set&lt;YarnRequest&gt; requests &#x3D; new HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        if (predicate &#x3D;&#x3D; null) &#123;</span><br><span class="line">            LOG.info(&quot;Predicate is null.&quot;);</span><br><span class="line">            requests.add(getRequest(null));</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            LOG.info(&quot;Predicate not null.&quot;);</span><br><span class="line">            for (Map&lt;String, Object&gt; propertyMap : getPropertyMaps(predicate)) &#123;</span><br><span class="line">                YarnRequest req &#x3D; getRequest(propertyMap);</span><br><span class="line">                requests.add(req);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 获取 Yarn 资源</span><br><span class="line">        Set&lt;YarnResponse&gt; responses &#x3D; getYarnResources(requests);</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 构建返回数据</span><br><span class="line">        Set&lt;String&gt; requestedIds &#x3D; getRequestPropertyIds(request, predicate);</span><br><span class="line">        Set&lt;Resource&gt; resources &#x3D; new HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        for (YarnResponse yarnResponse : responses) &#123;</span><br><span class="line">            ResourceImpl resource &#x3D; new ResourceImpl(Resource.Type.Yarn);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_APPLICATION_ID_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getApplicationId(), requestedIds);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_APPLICATION_NAME_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getApplicationName(), requestedIds);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_APPLICATION_TYPE_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getApplicationType(), requestedIds);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_USER_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getUser(), requestedIds);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_QUEUE_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getQueue(), requestedIds);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_STATE_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getState(), requestedIds);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_FINAL_STATE_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getFinalState(), requestedIds);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_PROGRESS_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getProgress(), requestedIds);</span><br><span class="line"></span><br><span class="line">            setResourceProperty(resource, YARN_LOG_INFO_PROPERTY_ID,</span><br><span class="line">                    yarnResponse.getLogInfo(), requestedIds);</span><br><span class="line"></span><br><span class="line">            resources.add(resource);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return resources;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 获取 Yarn 资源信息</span><br><span class="line">     *</span><br><span class="line">     * @param requests requests</span><br><span class="line">     * @return Set&lt;YarnResponse&gt;</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private Set&lt;YarnResponse&gt; getYarnResources(Set&lt;YarnRequest&gt; requests) throws NoSuchResourceException &#123;</span><br><span class="line">        Set&lt;YarnResponse&gt; responsesSet &#x3D; new HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 获取 resourceManager 所在的节点</span><br><span class="line">        String hostName &#x3D; getHostName();</span><br><span class="line"></span><br><span class="line">        for (YarnRequest request : requests) &#123;</span><br><span class="line">            String applicationId &#x3D; request.getApplicationId();</span><br><span class="line"></span><br><span class="line">            &#x2F;**</span><br><span class="line">             * 如果 applicationId 为空，则返回所有 application 信息</span><br><span class="line">             * 如果 applicationId 不为空，则查询日志</span><br><span class="line">             *&#x2F;</span><br><span class="line">            if (null &#x3D;&#x3D; applicationId) &#123;</span><br><span class="line">                LOG.info(&quot;applicationId is null.&quot;);</span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; 执行语句</span><br><span class="line">                String[] remoteAppListCmdStr &#x3D; new String[]&#123;&quot;ssh&quot;, hostName, &quot;yarn&quot;, &quot;application&quot;, &quot;-list&quot;, &quot;-appStates&quot;, &quot;ALL&quot;&#125;;</span><br><span class="line">                printCmd(remoteAppListCmdStr);</span><br><span class="line"></span><br><span class="line">                String stdout &#x3D; null;</span><br><span class="line">                try &#123;</span><br><span class="line"></span><br><span class="line">                    ShellCommandUtil.Result cmdResult &#x3D; ShellCommandUtil.runCommand(remoteAppListCmdStr);</span><br><span class="line"></span><br><span class="line">                    &#x2F;&#x2F; 判断结果码</span><br><span class="line">                    if (cmdResult.getExitCode() &#x3D;&#x3D; 0) &#123;</span><br><span class="line">                        stdout &#x3D; cmdResult.getStdout();</span><br><span class="line"></span><br><span class="line">                        if (stdout !&#x3D; null) &#123;</span><br><span class="line"></span><br><span class="line">                            &#x2F;&#x2F; 解析输出结果</span><br><span class="line">                            responsesSet &#x3D; parseApplicationInfo(stdout);</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            LOG.error(&quot;Run command stdout is empty!&quot;);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        LOG.error(&quot;Run command error,exitCode is:&#123;&#125;.&quot;, cmdResult.getExitCode());</span><br><span class="line">                        throw new SystemException(&quot;Run command error!&quot;);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    LOG.error(&quot;Run command error - Executor exception (&#123;&#125;)&quot;, e.getMessage());</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                LOG.info(&quot;ApplicationId is:&#123;&#125;.&quot;, applicationId);</span><br><span class="line"></span><br><span class="line">                try &#123;</span><br><span class="line">                    String appLogCmdStr &#x3D; &quot;su hdfs -c \&#39;yarn logs -applicationId &quot; + applicationId + &quot;\&#39;&quot;;</span><br><span class="line">                    String[] remoteAppLogCmdStr &#x3D; new String[]&#123;&quot;ssh&quot;, hostName, appLogCmdStr&#125;;</span><br><span class="line">                    printCmd(remoteAppLogCmdStr);</span><br><span class="line"></span><br><span class="line">                    LOG.info(&quot;Start execute shell cmd.&quot;);</span><br><span class="line">                    ShellCommandUtil.Result cmdResult &#x3D; ShellCommandUtil.runCommand(remoteAppLogCmdStr);</span><br><span class="line">                    LOG.info(&quot;Execute finish.&quot;);</span><br><span class="line"></span><br><span class="line">                    LOG.info(&quot;cmdResult exitCode:&#123;&#125;&quot;, cmdResult.getExitCode());</span><br><span class="line">                    if (cmdResult.getExitCode() &#x3D;&#x3D; 0) &#123;</span><br><span class="line">                        String stdout &#x3D; cmdResult.getStdout();</span><br><span class="line"></span><br><span class="line">                        YarnResponse yarnResponse &#x3D; new YarnResponse();</span><br><span class="line">                        yarnResponse.setLogInfo(stdout);</span><br><span class="line">                        yarnResponse.setApplicationId(applicationId);</span><br><span class="line">                        responsesSet.add(yarnResponse);</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        LOG.error(&quot;Run command error,exitCode is:&#123;&#125;.&quot;, cmdResult.getExitCode());</span><br><span class="line">                        throw new SystemException(&quot;Run command error!&quot;);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    LOG.error(&quot;Run command error - Executor exception (&#123;&#125;)&quot;, e.getMessage());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return responsesSet;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 获取 resourcemanager 节点</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private String getHostName() throws NoSuchResourceException &#123;</span><br><span class="line">        String hostName &#x3D; null;</span><br><span class="line">        String serviceName &#x3D; &quot;YARN&quot;;</span><br><span class="line">        String componentName &#x3D; &quot;RESOURCEMANAGER&quot;;</span><br><span class="line"></span><br><span class="line">        List&lt;HostComponentStateEntity&gt; hostComponentStateEntities &#x3D; hostComponentStateDAO.findByServiceAndComponent(serviceName, componentName);</span><br><span class="line">        HostComponentStateEntity hostComponentStateEntity &#x3D; hostComponentStateEntities.get(0);</span><br><span class="line">        if (hostComponentStateEntity !&#x3D; null) &#123;</span><br><span class="line">            hostName &#x3D; hostComponentStateEntity.getHostName();</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw new NoSuchResourceException(&quot;Not find resourceManager in this cluster!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return hostName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 解析 application 信息</span><br><span class="line">     *</span><br><span class="line">     * @param stdout 输出信息</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private Set&lt;YarnResponse&gt; parseApplicationInfo(String stdout) &#123;</span><br><span class="line">        Set&lt;YarnResponse&gt; yarnResponseSet &#x3D; new HashSet&lt;&gt;();</span><br><span class="line">        &#x2F;&#x2F; 将字符串转换为字节流</span><br><span class="line">        ByteArrayInputStream byteArrayInputStream &#x3D; new ByteArrayInputStream(stdout.getBytes(Charset.forName(&quot;utf8&quot;)));</span><br><span class="line">        BufferedReader br &#x3D; new BufferedReader(new InputStreamReader(byteArrayInputStream, Charset.forName(&quot;utf8&quot;)));</span><br><span class="line"></span><br><span class="line">        &#x2F;**</span><br><span class="line">         * 逐行读取</span><br><span class="line">         * 只解析以“application_”开头的行</span><br><span class="line">         *&#x2F;</span><br><span class="line">        try &#123;</span><br><span class="line">            String line;</span><br><span class="line">            while ((line &#x3D; br.readLine()) !&#x3D; null) &#123;</span><br><span class="line"></span><br><span class="line">                if (line.startsWith(&quot;application_&quot;)) &#123;</span><br><span class="line"></span><br><span class="line">                    String[] property &#x3D; line.split(&quot;\t&quot;);</span><br><span class="line"></span><br><span class="line">                    YarnResponse yarnResponse &#x3D; new YarnResponse();</span><br><span class="line"></span><br><span class="line">                    yarnResponse.setApplicationId(property[0].trim());</span><br><span class="line">                    yarnResponse.setApplicationName(property[1].trim());</span><br><span class="line">                    yarnResponse.setApplicationType(property[2].trim());</span><br><span class="line">                    yarnResponse.setUser(property[3].trim());</span><br><span class="line">                    yarnResponse.setQueue(property[4].trim());</span><br><span class="line">                    yarnResponse.setState(property[5].trim());</span><br><span class="line">                    yarnResponse.setFinalState(property[6].trim());</span><br><span class="line">                    yarnResponse.setProgress(property[7].trim());</span><br><span class="line">                    yarnResponse.setTrackingUrl(property[8].trim());</span><br><span class="line"></span><br><span class="line">                    yarnResponseSet.add(yarnResponse);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            br.close();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return yarnResponseSet;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 打印执行命令</span><br><span class="line">     *</span><br><span class="line">     * @param cmd 命令字符串</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private void printCmd(String[] cmd) &#123;</span><br><span class="line"></span><br><span class="line">        String cmdStr &#x3D; &quot;&quot;;</span><br><span class="line">        for (String str : cmd) &#123;</span><br><span class="line">            cmdStr &#x3D; cmdStr + str + &quot; &quot;;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        LOG.info(&quot;Cmd str is:&#123;&#125;.&quot;, cmdStr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private YarnRequest getRequest(Map&lt;String, Object&gt; properties) &#123;</span><br><span class="line">        YarnRequest yarnRequest &#x3D; new YarnRequest(null);</span><br><span class="line">        if (properties &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return yarnRequest;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Object object &#x3D; properties.get(YARN_APPLICATION_ID_PROPERTY_ID);</span><br><span class="line">        if (object !&#x3D; null) &#123;</span><br><span class="line">            String applicationId &#x3D; properties.get(YARN_APPLICATION_ID_PROPERTY_ID).toString();</span><br><span class="line">            LOG.info(&quot;Request:applicationId:&#123;&#125;&quot;, applicationId);</span><br><span class="line"></span><br><span class="line">            yarnRequest &#x3D; new YarnRequest(applicationId);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return yarnRequest;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="接口测试"><a href="#接口测试" class="headerlink" title="接口测试"></a>接口测试</h1><p>这里使用 Postman  进行接口调用测试，分别测试查询全部 Yarn任务、模糊查询 Yarn 任务和查询某个 Yarn 任务的日志。</p>
+<ul>
+<li>获取全部 Yarn 任务</li>
+</ul>
+<p>查询全部 Yarn 任务，并且分页查询，每页显示 10 个，从第 1 个数据开始，以 applicationId 的倒序查询。</p>
+<p><code>http://IP:8080/api/v1/yarn?fields=yarn/*&amp;page_size=10&amp;from=0&amp;sortBy=yarn/applicationId.desc</code></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201211160422.png" alt=""></p>
+<ul>
+<li>模糊查询 Yarn 任务</li>
+</ul>
+<p>模糊查询符合 applicationId 条件的 Yarn 任务。</p>
+<p><code>http://IP:8080/api/v1/yarn?fields=yarn/*&amp;page_size=10&amp;from=0&amp;sortBy=yarn/applicationId.desc</code></p>
+<p>Body：<code>{&quot;RequestInfo&quot;:{&quot;query&quot;:&quot;yarn/applicationId.matches(.*002.*)&quot;}}</code><br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201211160457.png" alt=""></p>
+<ul>
+<li>获取单个 Yarn 任务的日志</li>
+</ul>
+<p>查询某个 applicationId 的日志。</p>
+<p><code>http://IP:8080/api/v1/yarn/application_1606871223118_0001?fields=yarn/applicationId,yarn/logInfo</code><br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201211160546.png" alt=""></p>
+<p>至此，自定义资源类型的查询功能开发完毕，也可以仿照其他资源类型开发增加（POST）、修改（PUT）和删除（DELETE）功能。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>主要介绍了自定义 Ambari 资源的流程，主要分为添加资源类型、新建控制器层、新建资源 Provider、新建资源定义、新建 reqquest 和 response等，涉及到数据库表的时候还要添加数据库的 DAO 层和 Entity 类，具体实现逻辑在资源 Provider 中实现。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Ambari/" rel="tag"># Ambari</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/13/solve-process-information-unavailable/" rel="prev" title="解决 process information unavailable 问题">
+      <i class="fa fa-chevron-left"></i> 解决 process information unavailable 问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/16/Ambari-service-configurations-validation-and-recommend/" rel="next" title="Ambari 服务配置校验和配置推荐介绍">
+      Ambari 服务配置校验和配置推荐介绍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#添加资源类型"><span class="nav-number">1.</span> <span class="nav-text">添加资源类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新建控制器层"><span class="nav-number">2.</span> <span class="nav-text">新建控制器层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新建资源-Provider"><span class="nav-number">3.</span> <span class="nav-text">新建资源 Provider</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新建资源定义"><span class="nav-number">4.</span> <span class="nav-text">新建资源定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加新的资源实例"><span class="nav-number">5.</span> <span class="nav-text">添加新的资源实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新建-request-和-response"><span class="nav-number">6.</span> <span class="nav-text">新建 request 和 response</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新建数据库相关类"><span class="nav-number">7.</span> <span class="nav-text">新建数据库相关类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现具体逻辑"><span class="nav-number">8.</span> <span class="nav-text">实现具体逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义资源属性"><span class="nav-number">8.1.</span> <span class="nav-text">定义资源属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置资源属性"><span class="nav-number">8.2.</span> <span class="nav-text">设置资源属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加注解"><span class="nav-number">8.3.</span> <span class="nav-text">添加注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询逻辑"><span class="nav-number">8.4.</span> <span class="nav-text">查询逻辑</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口测试"><span class="nav-number">9.</span> <span class="nav-text">接口测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍了大数据性能测试工具 HiBench 的基本概念，配置文件，介绍了 Spark 的 Teasort 和 WordCount 性能测试，并提供了测试脚本。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HiBench 性能测试工具使用方法">
+<meta property="og:url" content="http://yoursite.com/2020/11/06/HiBench-Introduction/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要介绍了大数据性能测试工具 HiBench 的基本概念，配置文件，介绍了 Spark 的 Teasort 和 WordCount 性能测试，并提供了测试脚本。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104194801.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104194935.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195049.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195124.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195721.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195756.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195852.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200012.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200107.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200201.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200245.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200314.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201114161924.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200420.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200451.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200516.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200547.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200646.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200721.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200733.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200832.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200846.png">
+<meta property="article:published_time" content="2020-11-06T10:36:13.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.455Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="BigData">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104194801.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/11/06/HiBench-Introduction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HiBench 性能测试工具使用方法 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/06/HiBench-Introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HiBench 性能测试工具使用方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-06 18:36:13" itemprop="dateCreated datePublished" datetime="2020-11-06T18:36:13+08:00">2020-11-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍了大数据性能测试工具 HiBench 的基本概念，配置文件，介绍了 Spark 的 Teasort 和 WordCount 性能测试，并提供了测试脚本。</p>
+<a id="more"></a>
+
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>HiBench是一个大数据基准套件，可帮助评估速度、吞吐量和系统资源利用率方面的不同大数据框架。 它包含一组Hadoop，Spark和streaming测试模式，包括Sort，WordCount，TeraSort，Repartition，Sleep，SQL，PageRank，Nutch indexing，Bayes，Kmeans，NWeight和增强的DFSIO等。它还包含一些用于Spark流的流工作负载 ，Flink，Storm和Gearpump。</p>
+<h1 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h1><p>Intel-bigdata/HiBench: HiBench is a big data benchmark suite.<br><a href="https://github.com/Intel-bigdata/HiBench" target="_blank" rel="noopener">https://github.com/Intel-bigdata/HiBench</a> </p>
+<h1 id="编译文件"><a href="#编译文件" class="headerlink" title="编译文件"></a>编译文件</h1><p>这里提供编译好的文件，下载地址：<br><a href="https://pan.baidu.com/s/11X_SxFyQLxrT45wm6XMoXg" target="_blank" rel="noopener">https://pan.baidu.com/s/11X_SxFyQLxrT45wm6XMoXg</a><br>提取码：zz75 </p>
+<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104194801.png" alt=""></p>
+<ul>
+<li>autogen：主要用于生成测试数据的源码目录</li>
+<li>bin：测试脚本放置目录</li>
+<li>common：公共依赖源码目录</li>
+<li>conf：配置文件目录（Hibench/Hadoop/Spark等配置文件存放目录）</li>
+<li>docker：HiBench的docker镜像</li>
+<li>flinkbench：Flink框架源码目录</li>
+<li>gearpumpbench：gearpumpbench框架源码目录</li>
+<li>hadoopbench：hadoop框架源码目录</li>
+<li>sparkbench：spark框架的源码目录</li>
+<li>stormbench：storm框架的源码目录</li>
+</ul>
+<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><h2 id="hibench-conf"><a href="#hibench-conf" class="headerlink" title="hibench.conf"></a>hibench.conf</h2><p>主要配置HiBench的运行参数及HiBench各个模块的home环境配置。<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104194935.png" alt=""><br>其中需要注意的参数为：</p>
+<ul>
+<li>hibench.scale.profile：主要配置HiBench测试的数据规模，有tiny, small, large, huge, gigantic 和bigdata六个级别；</li>
+<li>hibench.default.map.parallelism：测试MapReduce时是Mapper数量，测试Spark时是分区数；</li>
+<li>hibench.default.shuffle.parallelism：测试MapReduce时是Reduce数量测试Spark时是shuffle分区数。</li>
+</ul>
+<h3 id="数据规模"><a href="#数据规模" class="headerlink" title="数据规模"></a>数据规模</h3><p>数据规模对应的数据量在HiBench-master/conf/workloads/micro目录中设置<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195049.png" alt=""></p>
+<p><strong>dfsioe.conf</strong><br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195124.png" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>数据规模</th>
+<th>读文件数</th>
+<th>读文件单个大小(MB)</th>
+<th>写文件数</th>
+<th>写文件单个大小(MB)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tiny</td>
+<td>16</td>
+<td>1</td>
+<td>16</td>
+<td>1</td>
+</tr>
+<tr>
+<td>small</td>
+<td>32</td>
+<td>10</td>
+<td>32</td>
+<td>10</td>
+</tr>
+<tr>
+<td>large</td>
+<td>64</td>
+<td>10</td>
+<td>64</td>
+<td>10</td>
+</tr>
+<tr>
+<td>huge</td>
+<td>256</td>
+<td>100</td>
+<td>256</td>
+<td>100</td>
+</tr>
+<tr>
+<td>gigantic</td>
+<td>512</td>
+<td>400</td>
+<td>512</td>
+<td>400</td>
+</tr>
+<tr>
+<td>bigdata</td>
+<td>2048</td>
+<td>1000</td>
+<td>2048</td>
+<td>1000</td>
+</tr>
+</tbody></table>
+<p>DFSIOE测试用例通过定义读或写的文件数和文件的大小来指定测试数据量的规模，如果需要自定义测试规模则修改文件数和文件的大小即可，文件大小以MB为单位。</p>
+<p><strong>terasort.conf</strong></p>
+<p>数据量配置<strong>以条数为单位，每条数据约100byte</strong><br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195721.png" alt=""><br>比如，定义100G数据，则应设置为100<em>1024</em>1024*1024/100=1073741824<br>设置数据，既可修改原来的数据，也可以自定义数据规模</p>
+<p><strong>wordcount.conf</strong><br>数据量配置以byte为单位<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195756.png" alt=""><br>比如，要设置100G数据量，为100<em>1024</em>1024*1024=107374182400</p>
+<h4 id="hadoop-conf-template"><a href="#hadoop-conf-template" class="headerlink" title="hadoop.conf.template"></a>hadoop.conf.template</h4><p>hadoop.conf.template为测试Hadoop时的配置模板，测试Hadoop时需要重命名为hadoop.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp hadoop.conf.template hadoop.conf</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104195852.png" alt=""><br>主要修改hibench.hadoop.home、hibench.hdfs.master和hibench.hadoop.release三个参数，过HDFS启用HA模式，则hibench.hdfs.master设置为HA对应的访问方式。</p>
+<h4 id="spark-conf-template"><a href="#spark-conf-template" class="headerlink" title="spark.conf.template"></a>spark.conf.template</h4><p>spark.conf.template为Spark测试时的配置文件，测试Spark时需要重命名为spark.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp spark.conf.template spark.conf</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200012.png" alt=""><br>根据实际情况设置hibench.spark.home，hibench.spark.master为根据spark是standalone模式还是Yarn模式进行设置。当hibench.spark.master为yarn-client时，通过Yarn的ResourceManager的UI界面查看资源信息，然后设置hibench.yarn.executor.num、hibench.yarn.executor.cores、spark.executor.memory、spark.driver.memory进行性能调优。</p>
+<h1 id="Spark-性能测试"><a href="#Spark-性能测试" class="headerlink" title="Spark 性能测试"></a>Spark 性能测试</h1><h2 id="Teasort"><a href="#Teasort" class="headerlink" title="Teasort"></a>Teasort</h2><p>这里以最小的数据量 tiny 为例介绍 Spark  的 Teasort 性能测试步骤。<br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200107.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;erik&#x2F;hibench&#x2F;</span><br><span class="line">unzip HiBench-master.zip</span><br><span class="line">chmod -R 777 HiBench-master</span><br></pre></td></tr></table></figure>
+<p><strong>修改配置文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd HiBench-master&#x2F;conf&#x2F;</span><br><span class="line">cp hadoop.conf.template hadoop.conf</span><br><span class="line"></span><br><span class="line">vim hadoop.conf</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200201.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp spark.conf.template spark.conf</span><br><span class="line">vim spark.conf</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200245.png" alt=""></p>
+<p><strong>修改数据量</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim hibench.conf</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200314.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd workloads&#x2F;micro&#x2F;</span><br><span class="line">vim terasort.conf</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201114161924.png" alt=""></p>
+<p><strong>生成数据</strong></p>
+<p>执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 我的 HiBench 存放目录为：&#x2F;home&#x2F;erik&#x2F;hibench，根据自己情况修改切换路径</span><br><span class="line">cd &#x2F;home&#x2F;erik&#x2F;hibench&#x2F;HiBench-master&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;terasort&#x2F;prepare</span><br><span class="line">sh prepare.sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200420.png" alt=""></p>
+<p><strong>查询数据</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -ls &#x2F;HiBench&#x2F;Terasort&#x2F;Input</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200451.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -du -h &#x2F;HiBench&#x2F;Terasort&#x2F;Input</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200516.png" alt=""></p>
+<p><strong>测试性能</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 我的 HiBench 存放目录为：&#x2F;home&#x2F;erik&#x2F;hibench，根据自己情况修改切换路径</span><br><span class="line">su spark</span><br><span class="line">cd &#x2F;home&#x2F;erik&#x2F;hibench&#x2F;HiBench-master&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;terasort&#x2F;spark</span><br><span class="line">sh run.sh</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200547.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200646.png" alt=""></p>
+<p><strong>查看测试报告</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;erik&#x2F;hibench&#x2F;HiBench-master&#x2F;report</span><br><span class="line">cat hibench.report</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200721.png" alt=""><br><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200733.png" alt=""><br>持续时间（s）    吞吐量（b/s）    吞吐量/节点</p>
+<h2 id="WordCount"><a href="#WordCount" class="headerlink" title="WordCount"></a>WordCount</h2><p>Spark 的 WordCount 性能测试步骤与 Terasort 步骤类似，都需要修改配置、修改数据量、生成数据、执行测试。</p>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>与 Terasort 测试时一样。</p>
+<h3 id="修改数据量"><a href="#修改数据量" class="headerlink" title="修改数据量"></a>修改数据量</h3><p>如果需要修改数据量，可以到<code>workloads/micro/wordcount.conf</code> 中修改成自己想要的数据量。</p>
+<h3 id="生成数据"><a href="#生成数据" class="headerlink" title="生成数据"></a>生成数据</h3><p>生成 WordCount 的测试数据，需要执在 <code>bin/workloads/micro/wordcount/prepare</code> 目录中执行 <code>sh prepare.sh</code>。</p>
+<h3 id="执行测试"><a href="#执行测试" class="headerlink" title="执行测试"></a>执行测试</h3><p>在 <code>bin/workloads/micro/terasort/spark</code> 目录中执行 <code>sh run.sh</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;erik&#x2F;hibench&#x2F;HiBench-master&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;wordcount&#x2F;spark</span><br></pre></td></tr></table></figure>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200832.png" alt=""></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/20201104200846.png" alt=""></p>
+<p>查看报告</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;home&#x2F;erik&#x2F;hibench&#x2F;HiBench-master&#x2F;report</span><br><span class="line">cat hibench.report</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试脚本"><a href="#测试脚本" class="headerlink" title="测试脚本"></a>测试脚本</h2><p>这里提供一键测试脚本，仅供参考，主要测试 Spark 和 MR 的 Trasort 和 WordCount 在不同数据量下的测试，每种数据量执行三次。</p>
+<p>需要提前设置好配置文件，主要包括 conf 文件夹的 spark.conf 和 hadoop.conf，以及 <code>conf/workloads/micro/</code>文件夹中的 terasort.conf 和 wordcount.conf 的数据量大小。脚本中的 <code>hibench_home</code> 根据自己的目录位置进行修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">#&#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line"># HiBench 目录</span><br><span class="line">hibench_home&#x3D;&#x2F;home&#x2F;erik&#x2F;hibench&#x2F;HiBench-master</span><br><span class="line"></span><br><span class="line"># 数据量类型</span><br><span class="line">datasize_type&#x3D;(&quot;tiny&quot; &quot;small&quot; &quot;large&quot; &quot;huge&quot; &quot;gigantic&quot; &quot;bigdata&quot;)</span><br><span class="line">#datasize_type&#x3D;(&quot;tiny&quot;)</span><br><span class="line"></span><br><span class="line">echo &#39;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;Start execute hibench test &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#39;</span><br><span class="line"></span><br><span class="line">for datasize in $&#123;datasize_type[*]&#125;</span><br><span class="line">do</span><br><span class="line">	</span><br><span class="line">	# chance datasize</span><br><span class="line">	echo &#39;Start change datasize ...&#39;</span><br><span class="line">	hibench_conf_path&#x3D;$hibench_home&#x2F;conf&#x2F;hibench.conf</span><br><span class="line">	text&#x3D;&quot;hibench.scale.profile                $datasize&quot;</span><br><span class="line">	sed -i &quot;3c $text&quot; $hibench_conf_path</span><br><span class="line">	</span><br><span class="line">	echo &#39;Start clean teasort data ...&#39;</span><br><span class="line">	hadoop fs -rm -r &#x2F;HiBench&#x2F;Terasort&#x2F;Input</span><br><span class="line"></span><br><span class="line">	echo &#39;Create teasort data ...&#39;</span><br><span class="line">	sh $hibench_home&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;terasort&#x2F;prepare&#x2F;prepare.sh</span><br><span class="line">	</span><br><span class="line">	echo &#39;Start clean wordcount data ...&#39;</span><br><span class="line">	hadoop fs -rm -r &#x2F;HiBench&#x2F;Wordcount&#x2F;Input</span><br><span class="line"></span><br><span class="line">	echo &#39;Create Wordcount data ...&#39;</span><br><span class="line">	sh $hibench_home&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;wordcount&#x2F;prepare&#x2F;prepare.sh</span><br><span class="line"></span><br><span class="line">	for j in &#123;1..3&#125;</span><br><span class="line">	do</span><br><span class="line">		echo &#39;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;Start execute hibench datasize: $datasize, time:$j &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#39;</span><br><span class="line">		echo &#39;Run sprak teasort test ...&#39;</span><br><span class="line">		sh &#x2F;$hibench_home&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;terasort&#x2F;spark&#x2F;run.sh</span><br><span class="line"></span><br><span class="line">		sleep 10</span><br><span class="line">		echo &#39;Run MR teasort test ...&#39;</span><br><span class="line">		sh &#x2F;$hibench_home&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;terasort&#x2F;hadoop&#x2F;run.sh</span><br><span class="line"></span><br><span class="line">		echo &#39;Run sprak wordcount test ...&#39;</span><br><span class="line">		sh &#x2F;$hibench_home&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;wordcount&#x2F;spark&#x2F;run.sh</span><br><span class="line"></span><br><span class="line">		sleep 10</span><br><span class="line">		echo &#39;Run MR wordcount test ...&#39;</span><br><span class="line">		sh &#x2F;$hibench_home&#x2F;bin&#x2F;workloads&#x2F;micro&#x2F;wordcount&#x2F;hadoop&#x2F;run.sh</span><br><span class="line">	done</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p>[Hadoop] 使用DFSIO测试集群I/O性能_mryqu_新浪博客<br><a href="http://blog.sina.com.cn/s/blog_72ef7bea0102vr44.html" target="_blank" rel="noopener">http://blog.sina.com.cn/s/blog_72ef7bea0102vr44.html</a> </p>
+<p>linux下的缓存机制buffer、cache、swap - 运维总结  - 散尽浮华 - 博客园<br><a href="https://www.cnblogs.com/kevingrace/p/5991604.html" target="_blank" rel="noopener">https://www.cnblogs.com/kevingrace/p/5991604.html</a> </p>
+<p>TestDFSIO基准测试方法介绍_湖南频道_凤凰网<br><a href="http://hunan.ifeng.com/a/20190613/7496675_0.shtml" target="_blank" rel="noopener">http://hunan.ifeng.com/a/20190613/7496675_0.shtml</a> </p>
+<p>如何使用HiBench进行基准测试 - 云+社区 - 腾讯云<br><a href="https://cloud.tencent.com/developer/article/1158310" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1158310</a> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BigData/" rel="tag"># BigData</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/04/TestDFSIO-Introduction/" rel="prev" title="TestDFSIO性能测试工具使用方法">
+      <i class="fa fa-chevron-left"></i> TestDFSIO性能测试工具使用方法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/25/rpm2rpm/" rel="next" title="rpm2rpm 打包步骤">
+      rpm2rpm 打包步骤 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码地址"><span class="nav-number">2.</span> <span class="nav-text">源码地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译文件"><span class="nav-number">3.</span> <span class="nav-text">编译文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#目录结构"><span class="nav-number">4.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置文件"><span class="nav-number">5.</span> <span class="nav-text">配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#hibench-conf"><span class="nav-number">5.1.</span> <span class="nav-text">hibench.conf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据规模"><span class="nav-number">5.1.1.</span> <span class="nav-text">数据规模</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hadoop-conf-template"><span class="nav-number">5.1.1.1.</span> <span class="nav-text">hadoop.conf.template</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spark-conf-template"><span class="nav-number">5.1.1.2.</span> <span class="nav-text">spark.conf.template</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark-性能测试"><span class="nav-number">6.</span> <span class="nav-text">Spark 性能测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Teasort"><span class="nav-number">6.1.</span> <span class="nav-text">Teasort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WordCount"><span class="nav-number">6.2.</span> <span class="nav-text">WordCount</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">6.2.1.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改数据量"><span class="nav-number">6.2.2.</span> <span class="nav-text">修改数据量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成数据"><span class="nav-number">6.2.3.</span> <span class="nav-text">生成数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行测试"><span class="nav-number">6.2.4.</span> <span class="nav-text">执行测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试脚本"><span class="nav-number">6.3.</span> <span class="nav-text">测试脚本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

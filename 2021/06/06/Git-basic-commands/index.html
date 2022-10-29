@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-erik-ly.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-erik-ly.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-erik-ly.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍 Git 常用的基本命令。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 常用基本命令">
+<meta property="og:url" content="http://yoursite.com/2021/06/06/Git-basic-commands/index.html">
+<meta property="og:site_name" content="Erik-ly">
+<meta property="og:description" content="本文主要介绍 Git 常用的基本命令。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614095503728.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614095529290.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614095959894.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614094523563.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614100255144.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614100315234.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614100358673.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614094523563.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614094629934.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614094927469.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210613112929011.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210613113545159.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614084716254.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614084820056.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210613113936478.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210613114018124.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210613114155693.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614084321087.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210613110545114.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614085024101.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614085124801.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614090900079.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614091026594.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614091514290.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614091819551.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614091935163.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614144459410.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614144526764.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614144644304.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614094123232.png">
+<meta property="og:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614094148822.png">
+<meta property="article:published_time" content="2021-06-06T02:33:26.000Z">
+<meta property="article:modified_time" content="2022-06-11T14:23:52.455Z">
+<meta property="article:author" content="Erik_ly">
+<meta property="article:tag" content="Git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614095503728.png">
+
+<link rel="canonical" href="http://yoursite.com/2021/06/06/Git-basic-commands/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Git 常用基本命令 | Erik-ly</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Erik-ly</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">技术源于分享</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/06/Git-basic-commands/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+      <meta itemprop="name" content="Erik_ly">
+      <meta itemprop="description" content="我渴望的必将得到">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Erik-ly">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Git 常用基本命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-06 10:33:26" itemprop="dateCreated datePublished" datetime="2021-06-06T10:33:26+08:00">2021-06-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-11 22:23:52" itemprop="dateModified" datetime="2022-06-11T22:23:52+08:00">2022-06-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">软件工具</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍 Git 常用的基本命令。</p>
+<a id="more"></a>
+
+<h1 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h1><h2 id="仓库相关命令"><a href="#仓库相关命令" class="headerlink" title="仓库相关命令"></a>仓库相关命令</h2><ul>
+<li>创建新仓库</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>克隆项目</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/Erik-ly/git-test.git</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看当前配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置用户名</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name "xxx"</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置邮箱</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.email "xxx@xxx.com"</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="提交相关命令"><a href="#提交相关命令" class="headerlink" title="提交相关命令"></a>提交相关命令</h2><ul>
+<li>添加某个文件到暂存区</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add test.txt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加所有文件到暂存区</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看仓库当前状态</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>显示变更信息</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git diff</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>提交暂存区到本地仓库</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m "add test file"</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载远程代码并合并</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>上传远程代码并合并</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看历史提交记录</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="分支相关命令"><a href="#分支相关命令" class="headerlink" title="分支相关命令"></a>分支相关命令</h2><ul>
+<li>显示本地分支</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>显示所有分支</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -a</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取所有远程分支</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>切换远程分支到本地</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b dev origin/dev</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>切换分支</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout release</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建一个分支，并切换到该新分支</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b dev</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>基于当前 HEAD 创建新分支</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch release</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将本地分支上传到远程</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin dev</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除本地分支（删除其他分支，不能删除当前分支， -D 是强制删除）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -d dev2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>合并特定 commit 到另一个分支</li>
+</ul>
+<p>比如我在 dev 分支修改了一个bug，提交为 “fix bug-7”，现在需要把 dev 分支的这个代码合并到 release 分支。</p>
+<p>首先在需要合并的 commit 所在的分支下使用 <code>git log</code> 查看，找到 “fix bug-7” 的 commit 为 “072a2e524c9fe3d082dfce37762e4a43e200484c”，按 Q 键退出日志查看。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Erik@DESKTOP-M3B942V MINGW64 ~/IdeaProjects/git-test (dev)</span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span></span></span><br><span class="line">commit 072a2e524c9fe3d082dfce37762e4a43e200484c (HEAD -&gt; dev, origin/release-1.0, origin/dev, release-1.0)</span><br><span class="line">Author: “liuyang” &lt;liuyangerik@gmail.com&gt;</span><br><span class="line">Date:   Sun Jun 13 11:00:36 2021 +0800</span><br><span class="line"></span><br><span class="line">    fix bug-7</span><br></pre></td></tr></table></figure>
+
+<p>然后切换到 release 分支。</p>
+<p>在 release 分支上执行执行 pick 操作</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout release</span><br><span class="line">git cherry-pick 072a2e524c9fe3d082dfce37762e4a43e200484c</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="tag-相关命令"><a href="#tag-相关命令" class="headerlink" title="tag 相关命令"></a>tag 相关命令</h2><ul>
+<li>显示已存在的 tag</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建 tag</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -a v1.0 -m "v1.0 tag"</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除本地 tag</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -d v1.0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看 tag 信息</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git show v1.0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>推送所有 tag 到远程仓库</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push --tags</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="撤销相关命令"><a href="#撤销相关命令" class="headerlink" title="撤销相关命令"></a>撤销相关命令</h2><ul>
+<li>恢复暂存区的指定文件到工作区</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout file_name</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>恢复暂存区的所有文件到工作区</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout .</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重置暂存区的指定文件，与上一次commit保持一致，但工作区不变</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset [file]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重置暂存区与工作区，与上一次commit保持一致</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致，<strong>commit 之后的版本都会丢失</strong></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard [commit]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>撤销某次操作，此次操作之前和之后的 commit 都会保留</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git revert [commit]</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="IDEA-Git-相关操作"><a href="#IDEA-Git-相关操作" class="headerlink" title="IDEA Git 相关操作"></a>IDEA Git 相关操作</h1><h2 id="仓库相关操作"><a href="#仓库相关操作" class="headerlink" title="仓库相关操作"></a>仓库相关操作</h2><ul>
+<li>原有项目引入 Git 管理</li>
+</ul>
+<p>原有项目使用 IDEA 打开，依次点击 VCS — Import into Version Control — Create Git Repository…</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614095503728.png" alt="image-20210614095503728"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614095529290.png" alt="image-20210614095529290"></p>
+<p>在弹出的对话框中选择这个项目，点击 “OK” 即可。</p>
+<p>下面以项目放到 GitHub 为例，首先在 GitHub 上创建项目，</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614095959894.png" alt="image-20210614095959894"></p>
+<p>然后添加源端仓库，</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614094523563.png" alt="image-20210614094523563"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614100255144.png" alt="image-20210614100255144"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614100315234.png" alt="image-20210614100315234"></p>
+<p>commit 代码后，提交到远程仓库。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614100358673.png" alt="image-20210614100358673"></p>
+<ul>
+<li>添加其它远端仓库</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614094523563.png" alt="image-20210614094523563"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614094629934.png" alt="image-20210614094629934"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614094927469.png" alt="image-20210614094927469"></p>
+<p>Name 写为 非 “origin” 的名字，可根据 Git 仓库工具，比如：GitBucket。之后提交代码的时候可选择改仓库提交。</p>
+<h2 id="提交相关操作"><a href="#提交相关操作" class="headerlink" title="提交相关操作"></a>提交相关操作</h2><ul>
+<li>更新代码</li>
+</ul>
+<p>推荐使用下图红框中标注的按钮拉取更新代码，快捷键 <code>Ctrl + T</code> ，这种会更新全部，拉取新的分支，自动 merge 等，不容易出错。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210613112929011.png" alt="image-20210613112929011"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210613113545159.png" alt="image-20210613113545159"></p>
+<ul>
+<li>commit 提交代码</li>
+</ul>
+<p>使用快捷键 <code>Ctrl + K</code>， 提交代码</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614084716254.png" alt="image-20210614084716254"></p>
+<ul>
+<li>Push 代码</li>
+</ul>
+<p>使用快捷键 <code>Ctrl + Shift + K</code> push 代码</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210614084820056.png" alt="image-20210614084820056"></p>
+<h3 id="提交代码步骤"><a href="#提交代码步骤" class="headerlink" title="提交代码步骤"></a>提交代码步骤</h3><ol>
+<li>更新最新代码（快捷键：<code>Ctrl + T</code>），将代码更新到最新。</li>
+<li>修改代码。</li>
+<li>更新最新代码（快捷键：<code>Ctrl + T</code>），提交代码之前要先更新代码，在修改代码这段时间内，如果有其他人修改了代码，需要更新，否则可能会覆盖别人的代码，另外这时更新，如果有 Merge 的情况，会自动 Merge，或让自己来 Merge 代码，在提交记录里不会出现大量的 Merge 记录。</li>
+<li>Add 代码，无特殊情况，在项目上执行下 ADD 操作，将自己新加的或之前 Merge 的一些文件 add 进来；</li>
+<li>Commit 代码（快捷键：<code>Ctrl + K</code>），注意写清楚修改了哪些内容，尽量一个功能一个 commit，可以在 commit 对话框中选择本次要提交的文件；</li>
+<li>Push 代码（快捷键：<code>Ctrl + Shift + K</code>），提交代码时注意将要提交到哪个分支，这里 push 所有 commit，无法选择某个 commit push。</li>
+</ol>
+<h2 id="分支相关操作"><a href="#分支相关操作" class="headerlink" title="分支相关操作"></a>分支相关操作</h2><ul>
+<li>checkout 新分支</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2021/06/image-20210613113936478.png" alt="image-20210613113936478"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210613114018124.png" alt="image-20210613114018124"></p>
+<ul>
+<li>切换分支</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210613114155693.png" alt="image-20210613114155693"></p>
+<ul>
+<li>删除本地分支</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614084321087.png" alt="image-20210614084321087"></p>
+<ul>
+<li>将本地分支推送到远端</li>
+</ul>
+<p>如在本地 checkout 出一个 “release-1.0” 分支，需要将这个分支推送到远端，则可以使用 <code>Ctrl + Shift + K</code> 进行 Push，在弹出框中看到 ”release-1.0 → origin：release-1.0“，如果不是这样，则可点击分支进行手动修改（红框中带有下划线部分均可点击后修改），点击 ”Push“ 按钮进行提交即可。</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210613110545114.png" alt="image-20210613110545114"></p>
+<ul>
+<li>查看提交记录</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614085024101.png" alt="image-20210614085024101"></p>
+<ul>
+<li>查看某个分支的提交记录</li>
+</ul>
+<p>可以选择本地的分支</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614085124801.png" alt="image-20210614085124801"></p>
+<p>也可以通过 “Select…” 手动输入特定分支，按 <code>Ctrl + Enter</code> 确定</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614090900079.png" alt="image-20210614090900079"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614091026594.png" alt="image-20210614091026594"></p>
+<ul>
+<li>Pick 合并 commit 到其它分支</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614091514290.png" alt="image-20210614091514290"></p>
+<p>如果需要 Merge</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614091819551.png" alt="image-20210614091819551"></p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614091935163.png" alt="image-20210614091935163"></p>
+<h2 id="tag-相关操作"><a href="#tag-相关操作" class="headerlink" title="tag 相关操作"></a>tag 相关操作</h2><ul>
+<li>创建 tag</li>
+</ul>
+<p>在某个 commit 又键，选择 “New Tag …”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614144459410.png" alt="image-20210614144459410"></p>
+<p>然后输入 tag 名称</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614144526764.png" alt="image-20210614144526764"></p>
+<p>最后推送到远端，注意要勾选 “Push Tags”</p>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614144644304.png" alt="image-20210614144644304"></p>
+<h2 id="撤销相关操作"><a href="#撤销相关操作" class="headerlink" title="撤销相关操作"></a>撤销相关操作</h2><ul>
+<li>reset 操作</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614094123232.png" alt="image-20210614094123232"></p>
+<ul>
+<li>revert 操作</li>
+</ul>
+<p><img src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/raw/master/img/2021/06/image-20210614094148822.png" alt="image-20210614094148822"></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li>Git 基本操作 | 菜鸟教程：<a href="https://www.runoob.com/git/git-basic-operations.html" target="_blank" rel="noopener">https://www.runoob.com/git/git-basic-operations.html</a></li>
+<li>git命令大全：<a href="https://gist.github.com/Erik-ly/d68cc402fade0ef6b960ca8fc5603949" target="_blank" rel="noopener">https://gist.github.com/Erik-ly/d68cc402fade0ef6b960ca8fc5603949</a></li>
+<li>常用 Git 命令清单 - 阮一峰的网络日志：<a href="http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html</a></li>
+<li>Git恢复之前版本的两种方法reset、revert（图文详解）：<a href="https://blog.csdn.net/yxlshk/article/details/79944535" target="_blank" rel="noopener">https://blog.csdn.net/yxlshk/article/details/79944535</a></li>
+<li>git revert 用法 - demoblog - 博客园：<a href="https://www.cnblogs.com/0616--ataozhijia/p/3709917.html" target="_blank" rel="noopener">https://www.cnblogs.com/0616--ataozhijia/p/3709917.html</a></li>
+<li>Git合并特定commits 到另一个分支：<a href="https://blog.csdn.net/ybdesire/article/details/42145597" target="_blank" rel="noopener">https://blog.csdn.net/ybdesire/article/details/42145597</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Git/" rel="tag"># Git</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/06/linux-install-maven/" rel="prev" title="Linux 安装设置 Maven">
+      <i class="fa fa-chevron-left"></i> Linux 安装设置 Maven
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/14/Docker-basic-commands/" rel="next" title="Docker 常用基本命令">
+      Docker 常用基本命令 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本命令"><span class="nav-number">1.</span> <span class="nav-text">基本命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#仓库相关命令"><span class="nav-number">1.1.</span> <span class="nav-text">仓库相关命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提交相关命令"><span class="nav-number">1.2.</span> <span class="nav-text">提交相关命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分支相关命令"><span class="nav-number">1.3.</span> <span class="nav-text">分支相关命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tag-相关命令"><span class="nav-number">1.4.</span> <span class="nav-text">tag 相关命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#撤销相关命令"><span class="nav-number">1.5.</span> <span class="nav-text">撤销相关命令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA-Git-相关操作"><span class="nav-number">2.</span> <span class="nav-text">IDEA Git 相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#仓库相关操作"><span class="nav-number">2.1.</span> <span class="nav-text">仓库相关操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提交相关操作"><span class="nav-number">2.2.</span> <span class="nav-text">提交相关操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提交代码步骤"><span class="nav-number">2.2.1.</span> <span class="nav-text">提交代码步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分支相关操作"><span class="nav-number">2.3.</span> <span class="nav-text">分支相关操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tag-相关操作"><span class="nav-number">2.4.</span> <span class="nav-text">tag 相关操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#撤销相关操作"><span class="nav-number">2.5.</span> <span class="nav-text">撤销相关操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Erik_ly"
+      src="https://fastly.jsdelivr.net/gh/Erik-ly/images@master/img/2020/avatar.png">
+  <p class="site-author-name" itemprop="name">Erik_ly</p>
+  <div class="site-description" itemprop="description">我渴望的必将得到</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Erik-ly" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Erik-ly" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://erik-ly.blog.csdn.net/" title="CSDN → https:&#x2F;&#x2F;erik-ly.blog.csdn.net" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Erik_ly</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
